@@ -13,6 +13,13 @@ A=table2array(testfile);
 [W6,H6]=nnmf(A, 6, 'replicates', 50, 'algorithm', 'als');
 [W7,H7]=nnmf(A, 7, 'replicates', 50, 'algorithm', 'als');
 
+```
+- The n * m matrix A is transformed into Non-negative factors.
+    - W (*n*-by-k): Non-negative left factor A, is the number of rows of A, and k is the second input argument of `nnmf`
+        - `W` and `H` are normalized so that the *row* of `H` have unit length. The columns of `W` are ordered by decreasing length.
+    - H (k-by-*m*): Non-negative right factor of A, returned as as (k-by-*m*) matrix. `k` is the second argument of `nnmf`, and *m* is the number of columns of `A`
+
+```matlab
 C2=W2*H2;
 C3=W3*H3;
 C4=W4*H4;
