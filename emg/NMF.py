@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.decomposition import NMF
-from sklearn.decomposition import non_negative_factorization as nnf
 
 # Load Data
-data = pd.read_csv("normalize-turgay.csv")
+data = pd.read_excel("./test file.xlsx")
 A = data.to_numpy()
 
 # Number of components
@@ -50,6 +50,16 @@ R2All[5] = np.corrcoef(C7.flatten(), A.flatten())[0,1]**2
 X = np.array([2, 3, 4, 5, 6, 7])
 plt.plot(X, R2All)
 plt.show()
+
+# Ploting Selected number of components
+
+num_components = 4
+
+nmf = NMF(n_components=num_components, init='random', random_state=0)
+W = nmf.fit_transform(A)
+H = nmf.components_
+
+H_normalized = H / np.sum(H, axis=0)
 
 fig, axs = plt.subplots(num_components, 1, figsize=(6, 3*num_components))
 for i in range(num_components):
