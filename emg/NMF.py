@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import NMF
 
 # Load Data
-data = pd.read_excel("./test file.xlsx")
+data = pd.read_csv("./normalized-emg.csv", header=None)
 A = data.to_numpy()
 
 # Number of components
@@ -53,7 +53,7 @@ plt.show()
 
 # Ploting Selected number of components
 
-num_components = 4
+num_components = 7
 
 nmf = NMF(n_components=num_components, init='random', random_state=0)
 W = nmf.fit_transform(A)
