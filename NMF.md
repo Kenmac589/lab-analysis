@@ -1,4 +1,20 @@
-# Muscle Synergy Extraction
+---
+title: "Muscle Synergies"
+bibliography: "/Users/kenzie_mackinnon/Documents/zotero_m1_macbook.bib"
+---
+
+## Background
+
+- From @Rabbi2020
+
+Muscle activation patterns (x) can be reconstructed by multiplying the muscle synergy weights (w) and synergy excitation primitives (h).
+
+Eqn 1: $$x(t)=\mathop{\sum }\limits_{i=1}^{N}{w}_{i}{h}_{i}(t)+e(t)$$ 
+
+where e represents reconstruction error. Eqn 1 can be writen in vector form as
+
+Eqn 2: $${\boldsymbol{x}}={\boldsymbol{wh}}+{\boldsymbol{e}}$$
+
 
 Breaking down Turgay's MATLAB script
 
@@ -83,3 +99,5 @@ plt.show()
 
 
 ```
+
+
