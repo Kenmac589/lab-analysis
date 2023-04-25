@@ -1,3 +1,10 @@
+"""Non-Negative Matrix Factorization for Muscle Synergy Extraction
+
+This is a non-modularized version of the nnmf_function.py snippet.
+
+This is to show the step by step process of nnmf_function.
+
+"""
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -48,25 +55,25 @@ R2All[4] = np.corrcoef(C6.flatten(), A.flatten())[0,1]**2
 R2All[5] = np.corrcoef(C7.flatten(), A.flatten())[0,1]**2
 
 X = np.array([2, 3, 4, 5, 6, 7])
-# plt.plot(X, R2All)
-# plt.show()
+plt.plot(X, R2All)
+plt.show()
 
 # Using lineararity to determine number of components
-# r0 = np.corrcoef([2, 3], R2All[0:2])[0,1]
-# print("r0 = ", r0)
-# print()
-# r1 = np.corrcoef([2, 3, 4], R2All[0:3])[0,1]
-# print("r1 = ", r1)
-# print()
-# r2 = np.corrcoef([2, 3, 4, 5], R2All[0:4])[0,1]
-# print("r2 = ", r2)
-# print()
-# r3 = np.corrcoef([2, 3, 4, 5, 6], R2All[0:5])[0,1]
-# print("r3 = ", r3)
-# print()
-# r4 = np.corrcoef([2, 3, 4, 5, 6, 7], R2All[0:6])[0,1]
-# print("r4 = ", r4)
-# print()
+r0 = np.corrcoef([2, 3], R2All[0:2])[0,1]
+print("r0 = ", r0)
+print()
+r1 = np.corrcoef([2, 3, 4], R2All[0:3])[0,1]
+print("r1 = ", r1)
+print()
+r2 = np.corrcoef([2, 3, 4, 5], R2All[0:4])[0,1]
+print("r2 = ", r2)
+print()
+r3 = np.corrcoef([2, 3, 4, 5, 6], R2All[0:5])[0,1]
+print("r3 = ", r3)
+print()
+r4 = np.corrcoef([2, 3, 4, 5, 6, 7], R2All[0:6])[0,1]
+print("r4 = ", r4)
+print()
 
 for i in range(len(R2All)-1):
     r = np.corrcoef(X[0:i+2], R2All[0:i+2])[0,1]
