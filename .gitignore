@@ -129,8 +129,8 @@ dmypy.json
 .pyre/
 
 # Excluding data files
-!*.csv
-!*.json
-!*.xlsx
-!*.xls
-!*.smr
+*.csv
+*.json
+*.xlsx
+*.xls
+*.smr
