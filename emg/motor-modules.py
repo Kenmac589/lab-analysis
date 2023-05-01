@@ -27,14 +27,7 @@ A = data.to_numpy()
 num_components = 4
 H, W, C = nnmf_factorize(A, num_components)
 
-weights = np.random.rand(4)
-motor_modules = C
-motor_modules /= np.max(np.abs(motor_modules), axis=0)
-
-fig, ax = plt.subplots(nrows=4, ncols=1, figsize=(8, 8))
-for i in range(4):
-    ax[i].hist(motor_modules[:, i])
-    ax[i].set_ylim([0, 100])
-    ax[i].set_title(f"Synergy {i+1}")
-plt.tight_layout()
+# Plotting
+plt.figure()
+plt.hist(C[0])
 plt.show()
