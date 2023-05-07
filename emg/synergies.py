@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import scipy as sp
 from sklearn.decomposition import NMF
 
 def nnmf_factorize(A, k):
@@ -19,7 +20,35 @@ def nnmf_factorize(A, k):
     return W, H, C
 
 # Load Data
-data = pd.read_csv('./normalized-emg.csv')
+raw_emg = pd.read_csv('./raw-emg.csv')
+
+
+# Global Variables
+HPo = 4 # High Pass Filter Order
+HPf = 50 # High Pass Filter Frequency (Hz)
+LPo = HPo # Low Pass Filter Order
+LPf = 30 # Low Pass Filter Frequency (Hz)
+points = 200
+cycles = np.zeros(points) # To save number of cycles considered
+
+FILT_EMG = np.v
+
+# Will be using froom scipy.signal.butter
+
+for ii in range(R):
+
+
+
+
+
+
+
+
+
+
+
+
+
 A = data.to_numpy()
 
 # Defining set of components to use based on nnmf.py
@@ -28,7 +57,4 @@ num_components = 4
 # Calculating W, H, C for our chosen components
 W, H, C = nnmf_factorize(A, num_components)
 
-print(H)
-
-plot.figure()
 
