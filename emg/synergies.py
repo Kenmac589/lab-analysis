@@ -31,7 +31,8 @@ LPf = 30 # Low Pass Filter Frequency (Hz)
 points = 200
 cycles = np.zeros(points) # To save number of cycles considered
 
-FILT_EMG = np.v
+FILT_EMG = np.zeros(len(raw_emg))
+list_names = np.vectorize(raw_emg.columns)
 
 # Will be using froom scipy.signal.butter
 

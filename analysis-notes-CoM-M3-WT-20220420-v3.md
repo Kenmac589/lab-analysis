@@ -4,6 +4,7 @@
 - Hindlimb X(HRx) = Ch29
 - Forelimb Y(FRx) = Ch34
 - 24 toey (cm)"
+ 
 # Video Analysis log
 
 - Working on what appears to be 3rd recording from 373.589-381.919 second range.
