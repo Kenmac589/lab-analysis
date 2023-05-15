@@ -123,7 +123,7 @@ synsNMFn <- function (V, ...)
         }
         R2_interp <- as.data.frame(cbind(c(1:(r-iter+1)), R2_cross[iter:r]))
         colnames(R2_interp) <- c("synergies", "R2_values")
-        n <- nrow(R2_interp)
+       n <- nrow(R2_interp)
         linear <- lm(R2_values ~ synergies, R2_interp)
         linear_points <- linear[[5]]
         MSE <- sum((linear_points-R2_interp[,2])^2)/n

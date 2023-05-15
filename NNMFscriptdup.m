@@ -1,4 +1,4 @@
-uiimport('-file');
+%uiimport('-ui import');
 A=table2array(testfile);
 
 [W2,H2]=nnmf(A, 2, 'replicates', 50, 'algorithm', 'als');
@@ -22,5 +22,5 @@ R2All(4) =corr(C5(:),A(:))^2;
 R2All(5) =corr(C6(:),A(:))^2;
 R2All(6) =corr(C7(:),A(:))^2;
 
-X=[2 3 4 5 6 7]
-plot(X,R2All)
+X=[2 3 4 5 6 7];
+plot(X,R2All);

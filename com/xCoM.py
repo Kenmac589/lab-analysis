@@ -55,10 +55,6 @@ plt.xlabel("Time(s)")
 plt.legend(loc='lower right')
 plt.show()
 
-
-
-
-
 # Assign time along X axis
 time = kinData[0:selectedRange,0]
 treadmillSpeed = kinData[0:selectedRange,2]
