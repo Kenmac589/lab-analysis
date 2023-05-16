@@ -46,7 +46,7 @@ for i in range(len(R2All)):
     print("r =", i+2, ":", corrcoef[i])
 
 # Choosing best number of components
-W, H, C = nnmf_factorize(A, 2)
+W, H, C = nnmf_factorize(A, 3)
 
 print(H)
 print(H.shape)
@@ -72,24 +72,18 @@ print(motor_primitives[:,0])
 #     for j in range(0, len(motor_primitives), 200):
 #         ending_point = j+200
 #         starting_point = ending_point - 200
-#         plt.plot(samples[samples_binned], motor_primitives[starting_point, i])
+#         plt.plot(samples[samples_binned], motor_primitives[j:j+200, i])
 #         plt.title("Motor Primitives-010-{:04}".format(i))
 #         plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
+#         plt.clf()
 
-num_plots = len(motor_primitives) // 200
-
-for i in range(num_plots):
-    subset = motor_primitives[i*200:(i+1)*200, :]
-    plt.plot(subset[:,0], subset[:,1])
-    plt.title(f"Motor Primitives-010-{i+1}")
-    plt.show()
-
-# for i in range(0, len(motor_primitives), 200):
-#     # ending_point = i+200
-#     # starting_point = ending_point - 200
-#     plt.plot(samples[i:i+200], motor_primitives[i:i+200, 1])
-#     plt.title("Motor Primitives-010-{:04}".format(i))
-#     plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
+for i in range(0, len(motor_primitives), 200):
+    # ending_point = i+200
+    # starting_point = ending_point - 200
+    plt.plot(samples[samples_binned], motor_primitives[i:i+200, 2])
+    plt.title("Motor Primitives-010-{:04}".format(i))
+    plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
+    plt.clf()
 
 # plt.plot(samples[samples_binned], motor_primitives[starting_point, i])
 # plt.title("Motor Primitives-010-{:04}".format(i))
