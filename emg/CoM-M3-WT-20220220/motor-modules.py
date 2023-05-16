@@ -8,6 +8,7 @@ synergy extraction.
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import scipy as sp
 from sklearn.decomposition import NMF
 
 def nnmf_factorize(A, k):
@@ -24,6 +25,15 @@ def nnmf_factorize(A, k):
     H = nmf.components_
     C = np.dot(W, H)
     return W, H, C
+
+def normalize_emg(emg):
+    """Normalize EMG data
+    @param emg: EMG data
+    @return emg_norm: normalized EMG data
+    """
+
+    emg_norm = (emg - np.mean(emg)) / np.std(emg)
+    return emg_norm
 
 # Load Data
 data = pd.read_csv("./norm-emg-smooth-010.csv", header=None)
