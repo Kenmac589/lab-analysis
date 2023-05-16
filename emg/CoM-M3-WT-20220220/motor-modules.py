@@ -62,20 +62,6 @@ motor_primitives = W
 
 print(motor_modules[:,0])
 print(motor_primitives[:,0])
-# Taking every 200 values from motor_primitives and saving as new array
-# fig, axs = plt.subplots(2, 5, figsize=(3, 5))
-# for i, ax in enumerate(axs.flat):
-#     for j in range(0, len(motor_primitives), 200):
-#         ax.plot(samples[samples_binned], motor_primitives[j:j+200])
-
-# for i in range(2):
-#     for j in range(0, len(motor_primitives), 200):
-#         ending_point = j+200
-#         starting_point = ending_point - 200
-#         plt.plot(samples[samples_binned], motor_primitives[j:j+200, i])
-#         plt.title("Motor Primitives-010-{:04}".format(i))
-#         plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
-#         plt.clf()
 
 for i in range(0, len(motor_primitives), 200):
     # ending_point = i+200
@@ -85,11 +71,3 @@ for i in range(0, len(motor_primitives), 200):
     plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
     plt.clf()
 
-# plt.plot(samples[samples_binned], motor_primitives[starting_point, i])
-# plt.title("Motor Primitives-010-{:04}".format(i))
-# plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
-#plt.plot (samples, motor_primitives[:,0])
-# plt.title("Motor Primitives-010")
-# plt.savefig("motor_primitives-cumulative-010.png", dpi=300)
-# plt.tight_layout()
-# plt.show()
