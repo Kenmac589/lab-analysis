@@ -62,11 +62,6 @@ for i in range(len(R2All)):
 chosen_synergies = 3
 W, H, C = nnmf_factorize(A, chosen_synergies)
 
-print(H)
-print(H.shape)
-print(W)
-print(W.shape)
-np.savetxt("W2.csv", W, delimiter=",")
 samples = np.arange(0, len(C))
 samples_binned = np.arange(200)
 
@@ -79,15 +74,15 @@ print("--------------------------------")
 print(motor_primitives[:,0])
 print("--------------------------------")
 
-primitives_reshape = motor_primitives[:, chosen_synergies-2].reshape(200, number_cycles)
-print(primitives_reshape[:5,:])
 primitive_trace = np.zeros(200)
+
+# Plotting Primitive Selected Synergy Count
 
 # Iterate over the bins
 for i in range(number_cycles):
     # Get the data for the current bin
     time_point_average = motor_primitives[i * 200: (i + 1) * 200, chosen_synergies-2]
-
+    
     # Accumulate the trace values
     primitive_trace += time_point_average
 
@@ -122,18 +117,21 @@ plt.gca().spines['top'].set_visible(False)
 plt.gca().spines['right'].set_visible(False)
 plt.gca().spines['bottom'].set_visible(True)
 plt.gca().spines['left'].set_visible(True)
-plt.savefig('motor_primitives-cumulative-010.png', dpi=300)
+plt.savefig('synergy_2.png', dpi=300)
 
+# =======================================
+# Presenting Data as a mutliplot figure |
+# =======================================
 
-fig, axs = plt.subplots(3, 1, figsize=(8, 12))
+fig, axs = plt.subplots(2, chosen_synergies, figsize=(12, 8))
 
 # Calculate the average trace for each column
 number_cycles = len(motor_primitives) // 200  # Calculate the number of 200-value bins
 
-for col in range(3):
+for col in range(chosen_synergies):
     primitive_trace = np.zeros(200)  # Initialize an array for accumulating the trace values
 
-    # Iterate over the bins
+    # Iterate over the binned data by the number of cycles
     for i in range(number_cycles):
         # Get the data for the current bin in the current column
         time_point_average = motor_primitives[i * 200: (i + 1) * 200, col]
@@ -145,28 +143,58 @@ for col in range(3):
     primitive_trace /= number_cycles
 
     # Plot the average trace in the corresponding subplot
-    axs[col].plot(samples[samples_binned], primitive_trace, color='red', label='Average Trace')
-    axs[col].set_title('Column {}'.format(col+1))
-    axs[col].set_xlabel('Time')
-    axs[col].set_ylabel('Value')
-
-    # Create a new plot for the current column
-    plt.figure()
-    plt.plot(samples[samples_binned], primitive_trace, color='red', label='Average Trace')
-    plt.title('Column {}'.format(col+1))
-    plt.xlabel('Time')
-    plt.ylabel('Value')
+    axs[0, col].plot(samples[samples_binned], primitive_trace, color='red', label='Average Trace')
+    axs[0, col].set_title('Synergy {}'.format(col+1))
 
     # Iterate over the bins again to plot the individual bin data
     for i in range(number_cycles):
-        # Get the data for the current bin in the current column
+        # Get the data for the current bin in the current 0, column
         time_point_average = motor_primitives[i * 200: (i + 1) * 200, col]
 
         # Plot the bin data
-        axs[col].plot(samples[samples_binned], time_point_average, label='Bin {}'.format(i+1), color='black', alpha=0.2)
+        axs[0, col].plot(samples[samples_binned], time_point_average, label='Bin {}'.format(i+1), color='black', alpha=0.1)
 
-    # Add a legend
-    plt.legend()
+    # Add vertical lines at the halfway point in each subplot
+    axs[0, col].axvline(x=100, color='black')
+   
+    # Begin Presenting Motor Modules
+
+    # Get the data for the current column
+    motor_module_column_data = motor_modules[col, :]  # Select all rows for the current column
+
+    # Set the x-axis values for the bar graph
+    x_values = np.arange(len(motor_module_column_data))
+    
+    # Plot the bar graph for the current column in the corresponding subplot
+    axs[1, col].bar(x_values, motor_module_column_data)
+
+    # Remove top and right spines of each subplot
+    axs[0, col].spines['top'].set_visible(False)
+    axs[0, col].spines['right'].set_visible(False)
+    axs[1, col].spines['top'].set_visible(False)
+    axs[1, col].spines['right'].set_visible(False)
+
+    # Remove labels on x and y axes
+    axs[1, col].set_xticklabels([])
+    axs[0, col].set_yticklabels([])
+ 
+    # Remove x and y axis labels and ticks from the avg_trace subplot
+    axs[0, col].set_xticks([])
+    axs[0, col].set_yticks([])
+    axs[0, col].set_xlabel('')
+    axs[0, col].set_ylabel('')
+
+    # Remove x and y axis labels and ticks from the motor module subplot
+    axs[1, col].set_xticks([])
+    axs[1, col].set_yticks([])
+    axs[1, col].set_xlabel('')
+    axs[1, col].set_ylabel('')
+
+# Adjust spacing between subplots
+plt.tight_layout()
+fig.suptitle('Muscle Synergies (CoM-M3-WT-20220420-v3_norm-emg-smooth-10)', fontsize=16, fontweight='bold')
+plt.subplots_adjust(top=0.9)
+plt.savefig('CoM-M3-WT-20220420-v3-synergies.png', dpi=300)
 
 # Show all the plots
 plt.show()

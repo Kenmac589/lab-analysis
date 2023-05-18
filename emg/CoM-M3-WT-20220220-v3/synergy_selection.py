@@ -26,7 +26,7 @@ def nnmf_factorize(A, k):
     return W, H, C
 
 # Load Data
-data = pd.read_csv("./normalized-emg.csv",header=None)
+data = pd.read_csv("./normalized-emg.csv",header=0)
 A = data.to_numpy()
 
 # Defining set of components to use
