@@ -40,7 +40,7 @@ data = pd.read_csv("./norm-emg-smooth-010.csv", header=None)
 A = data.to_numpy()
 
 # Define some variables about the data
-number_cycles = 15
+number_cycles = len(A) // 200
 
 # Defining set of components to use
 num_components = np.array([2, 3, 4, 5, 6, 7])
@@ -68,7 +68,7 @@ print(W)
 print(W.shape)
 np.savetxt("W2.csv", W, delimiter=",")
 samples = np.arange(0, len(C))
-samples_binned = np.arange(0, 200)
+samples_binned = np.arange(200)
 
 # Plot
 motor_modules = H
@@ -82,40 +82,91 @@ print("--------------------------------")
 primitives_reshape = motor_primitives[:, chosen_synergies-2].reshape(200, number_cycles)
 print(primitives_reshape[:5,:])
 primitive_trace = np.zeros(200)
-time_point_sum = 0
-time_point_average = 0
 
-for i in range(200):
-    # time_point_sum = 0
-    time_point_sum = np.sum(primitives_reshape[i, :number_cycles])
-    time_point_average = time_point_sum / (number_cycles)
-    primitive_trace[i] = time_point_average
-    print(primitive_trace[i])
-    # print(time_point_average)
+# Iterate over the bins
+for i in range(number_cycles):
+    # Get the data for the current bin
+    time_point_average = motor_primitives[i * 200: (i + 1) * 200, chosen_synergies-2]
+
+    # Accumulate the trace values
+    primitive_trace += time_point_average
+
+# Calculate the average by dividing the accumulated values by the number of bins
+primitive_trace /= number_cycles
 
 # primitives_average = np.mean(primitives_reshape, axis=1)
 print("Average Primitives:", primitive_trace)
 print("--------------------------------")
 
+plt.plot(samples[samples_binned], primitive_trace, color='blue')
+
+# Plotting individual traces in the background
 for i in range(0, len(motor_primitives), 200):
-    # ending_point = i+200
-#    for j in range(0, 15):
-#        trace_average = np.mean(motor_primitives[i, chosen_synergies-2], axis=1)
     plt.plot(samples[samples_binned], motor_primitives[i:i+200, chosen_synergies-2], color='black', alpha=0.2)
     # plt.title("Motor Primitives-010-{:04}".format(i))
     # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
 
-# for i in range(0, len(motor_modules), 200):
-#     for j in range(0, 15):
-#         plt.plot(samples[samples_binned], motor_modules[i:i+200, j], color='black', alpha=0.2)
-# 
-plt.plot(samples[samples_binned], primitive_trace, color='red')
+# Removing axis values
 plt.xticks([])
 plt.yticks([])
+
+# Add a vertical line at the halfway point
+plt.axvline(x=100, color='black')
+
+# Add labels for swing and stance
+plt.text(50, -0.1 * np.max(primitive_trace), 'Swing', ha='center', va='center')
+plt.text(150, -0.1 * np.max(primitive_trace), 'Stance', ha='center', va='center')
+
+# Removing top and right spines of the plot
 plt.gca().spines['top'].set_visible(False)
 plt.gca().spines['right'].set_visible(False)
 plt.gca().spines['bottom'].set_visible(True)
 plt.gca().spines['left'].set_visible(True)
+plt.savefig('motor_primitives-cumulative-010.png', dpi=300)
+
+
+fig, axs = plt.subplots(3, 1, figsize=(8, 12))
+
+# Calculate the average trace for each column
+number_cycles = len(motor_primitives) // 200  # Calculate the number of 200-value bins
+
+for col in range(3):
+    primitive_trace = np.zeros(200)  # Initialize an array for accumulating the trace values
+
+    # Iterate over the bins
+    for i in range(number_cycles):
+        # Get the data for the current bin in the current column
+        time_point_average = motor_primitives[i * 200: (i + 1) * 200, col]
+
+        # Accumulate the trace values
+        primitive_trace += time_point_average
+
+    # Calculate the average by dividing the accumulated values by the number of bins
+    primitive_trace /= number_cycles
+
+    # Plot the average trace in the corresponding subplot
+    axs[col].plot(samples[samples_binned], primitive_trace, color='red', label='Average Trace')
+    axs[col].set_title('Column {}'.format(col+1))
+    axs[col].set_xlabel('Time')
+    axs[col].set_ylabel('Value')
+
+    # Create a new plot for the current column
+    plt.figure()
+    plt.plot(samples[samples_binned], primitive_trace, color='red', label='Average Trace')
+    plt.title('Column {}'.format(col+1))
+    plt.xlabel('Time')
+    plt.ylabel('Value')
+
+    # Iterate over the bins again to plot the individual bin data
+    for i in range(number_cycles):
+        # Get the data for the current bin in the current column
+        time_point_average = motor_primitives[i * 200: (i + 1) * 200, col]
+
+        # Plot the bin data
+        axs[col].plot(samples[samples_binned], time_point_average, label='Bin {}'.format(i+1), color='black', alpha=0.2)
+
+    # Add a legend
+    plt.legend()
+
+# Show all the plots
 plt.show()
-
-
