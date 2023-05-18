@@ -8,7 +8,6 @@ synergy extraction.
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import scipy as sp
 from sklearn.decomposition import NMF
 
 def nnmf_factorize(A, k):
@@ -16,8 +15,8 @@ def nnmf_factorize(A, k):
     @param A: input matrix
     @param k: number of components (muscle channels)
 
-    @return W: motor primitives
-    @return H: motor modules
+    @return W: factorized matrix
+    @return H: factorized matrix
     @return C: factorized matrix
     """
     nmf = NMF(n_components=k, init='random', random_state=0)
@@ -26,17 +25,8 @@ def nnmf_factorize(A, k):
     C = np.dot(W, H)
     return W, H, C
 
-def normalize_emg(emg):
-    """Normalize EMG data
-    @param emg: EMG data
-    @return emg_norm: normalized EMG data
-    """
-
-    emg_norm = (emg - np.mean(emg)) / np.std(emg)
-    return emg_norm
-
 # Load Data
-data = pd.read_csv("./norm-emg-smooth-010.csv", header=None)
+data = pd.read_csv("./normalized-emg.csv",header=None)
 A = data.to_numpy()
 
 # Defining set of components to use
@@ -47,37 +37,35 @@ R2All = np.zeros(len(num_components))
 for i in range(len(R2All)):
     W, H, C = nnmf_factorize(A, num_components[i])
     R2All[i] = np.corrcoef(C.flatten(), A.flatten())[0,1]**2
-    print ("R^2 =", i+2, ":", R2All[i])
+    print ("$R^2$ =", i+2, ":", R2All[i])
 
 # Calculating correlation coefficient for each component
 corrcoef = np.zeros(len(num_components))
 for i in range(len(R2All)):
     corrcoef[i] = np.corrcoef(num_components[0:i+2], R2All[0:i+2])[0,1]
     print("r =", i+2, ":", corrcoef[i])
+    
+# Plotting Both Methods for determining number of components
+plt.figure()
+plt.subplot(1,2,1)
+plt.plot(num_components, R2All)
+plt.axhline(y=0.95, color='r', linestyle='-')
+plt.xlabel("Number of Components")
+plt.ylabel("$R^2$ of $C^x$ fit to original matrix")
+plt.title("Muscle Synergy Determinance by Percentage")
+plt.subplot(1,2,2)
+plt.scatter(num_components, corrcoef)
+plt.xlabel("Number of Components")
+plt.ylabel("Correlation Coefficient")
+plt.title("Muscle Synergy Determinance by Linearity")
+plt.show()
 
-# Choosing best number of components
-W, H, C = nnmf_factorize(A, 3)
-
-print(H)
-print(H.shape)
-print(W)
-print(W.shape)
-np.savetxt("W2.csv", W, delimiter=",")
-samples = np.arange(0, len(C))
-samples_binned = np.arange(0, 200)
-
-# Plot
-motor_modules = H
-motor_primitives = W
-
-print(motor_modules[:,0])
-print(motor_primitives[:,0])
-
-for i in range(0, len(motor_primitives), 200):
-    # ending_point = i+200
-    # starting_point = ending_point - 200
-    plt.plot(samples[samples_binned], motor_primitives[i:i+200, 2])
-    plt.title("Motor Primitives-010-{:04}".format(i))
-    plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
-    plt.clf()
-
+# Plotting Both Methods overlapping
+plt.plot(num_components, R2All)
+plt.axhline(y=0.95, color='r', linestyle='-')
+plt.xlabel("Number of Components")
+plt.ylabel("$R^2$ of $C^x$ fit to original matrix")
+plt.title("Muscle Synergy Determinance by Percentage")
+plt.scatter(num_components, corrcoef)
+plt.title("Muscle Synergy Determinance by Linearity and $R^2$")
+plt.show()
