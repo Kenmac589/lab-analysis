@@ -36,7 +36,7 @@ def nnmf_factorize(A, k):
 #     return emg_norm
 
 # Load Data
-data = pd.read_csv("./norm-emg-smooth-010.csv", header=None)
+data = pd.read_csv("./normalized-emg.csv", header=0)
 A = data.to_numpy()
 
 # Define some variables about the data
@@ -192,9 +192,9 @@ for col in range(chosen_synergies):
 
 # Adjust spacing between subplots
 plt.tight_layout()
-fig.suptitle('Muscle Synergies (CoM-M3-WT-20220420-v3_norm-emg-smooth-10)', fontsize=16, fontweight='bold')
+fig.suptitle('Muscle Synergies (CoM-M3-WT-20220420-v3_normalized-emg)', fontsize=16, fontweight='bold')
 plt.subplots_adjust(top=0.9)
-plt.savefig('CoM-M3-WT-20220420-v3-synergies.png', dpi=300)
+plt.savefig('CoM-M3-WT-20220420-v3-synergies_normalized-emg.png', dpi=300)
 
 # Show all the plots
 plt.show()
