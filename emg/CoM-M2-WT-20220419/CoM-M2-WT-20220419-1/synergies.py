@@ -161,7 +161,7 @@ for col in range(chosen_synergies):
     # Begin Presenting Motor Modules
 
     # Get the data for the current column
-    motor_module_column_data = motor_modules[col, :chosen_synergies-1]  # Select all rows for the current column
+    motor_module_column_data = motor_modules[col, :chosen_synergies]  # Select all rows for the current column
 
     # Set the x-axis values for the bar graph
     x_values = np.arange(len(motor_module_column_data))

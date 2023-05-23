@@ -24,3 +24,20 @@
 - Data given:
     - raw EMG from two trials
 
+
+# CoM-M1-WT-20220420
+
+25 recordings
+
+
+
+# CoM-M1-WT-20220422
+
+27 recordings
+
+# CoM-M1-WT-20220419
+
+12 recordings
+
+
+
