@@ -26,6 +26,15 @@ def nnmf_factorize(A, k):
     C = np.dot(W, H)
     return W, H, C
 
+# def normalize_emg(emg):
+#     """Normalize EMG data
+#     @param emg: EMG data
+#     @return emg_norm: normalized EMG data
+#     """
+# 
+#     emg_norm = (emg - np.mean(emg)) / np.std(emg)
+#     return emg_norm
+
 # Load Data
 data = pd.read_csv("./norm-emg-smooth-010.csv", header=None)
 A = data.to_numpy()
@@ -50,7 +59,7 @@ for i in range(len(R2All)):
     print("r =", i+2, ":", corrcoef[i])
 
 # Choosing best number of components
-chosen_synergies = 4
+chosen_synergies = 3
 W, H, C = nnmf_factorize(A, chosen_synergies)
 
 samples = np.arange(0, len(C))
@@ -72,7 +81,7 @@ primitive_trace = np.zeros(200)
 # Iterate over the bins
 for i in range(number_cycles):
     # Get the data for the current bin
-    time_point_average = motor_primitives[i * 200: (i + 1) * 200, chosen_synergies-1]
+    time_point_average = motor_primitives[i * 200: (i + 1) * 200, chosen_synergies-2]
     
     # Accumulate the trace values
     primitive_trace += time_point_average
@@ -88,7 +97,7 @@ plt.plot(samples[samples_binned], primitive_trace, color='blue')
 
 # Plotting individual traces in the background
 for i in range(0, len(motor_primitives), 200):
-    plt.plot(samples[samples_binned], motor_primitives[i:i+200, chosen_synergies-1], color='black', alpha=0.2)
+    plt.plot(samples[samples_binned], motor_primitives[i:i+200, chosen_synergies-2], color='black', alpha=0.2)
     # plt.title("Motor Primitives-010-{:04}".format(i))
     # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
 
@@ -108,8 +117,8 @@ plt.gca().spines['top'].set_visible(False)
 plt.gca().spines['right'].set_visible(False)
 plt.gca().spines['bottom'].set_visible(True)
 plt.gca().spines['left'].set_visible(True)
-plt.title("synergy_2-norm-emg-smooth-020")
-plt.savefig('synergy_2-norm-emg-smooth-020.png', dpi=300)
+plt.title("synergy_2-norm-emg-smooth-010")
+plt.savefig('synergy_2-norm-emg-smooth-010.png', dpi=300)
 
 # =======================================
 # Presenting Data as a mutliplot figure |
@@ -184,9 +193,9 @@ for col in range(chosen_synergies):
 
 # Adjust spacing between subplots
 plt.tight_layout()
-fig.suptitle('Muscle Synergies (CoM-M3-WT-20220419-v1_norm-emg-smooth-010)', fontsize=16, fontweight='bold')
+fig.suptitle('Muscle Synergies (CoM-M3-WT-20220422-v1_norm-emg-smooth-010)', fontsize=16, fontweight='bold')
 plt.subplots_adjust(top=0.9)
-plt.savefig('CoM-M3-WT-20220419-v1-synergies_norm-emg-smooth-010.png', dpi=300)
+plt.savefig('CoM-M3-WT-20220422-v1-synergies_norm-emg-smooth-010.png', dpi=300)
 
 # Show all the plots
 plt.show()
