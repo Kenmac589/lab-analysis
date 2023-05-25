@@ -49,14 +49,15 @@ for i in range(len(R2All)):
     corrcoef[i] = np.corrcoef(num_components[0:i+2], R2All[0:i+2])[0,1]
     print("r =", i+2, ":", corrcoef[i])
 
-# Choosing best number of components
+# Choosing best number of components based on both methods
 chosen_synergies = 4
 W, H, C = nnmf_factorize(A, chosen_synergies)
 
+# This could be more effiecient honestly but conceptually was easier to follow at the time
 samples = np.arange(0, len(C))
 samples_binned = np.arange(200)
 
-# Plot
+# Crisp little summary of data
 motor_modules = H
 motor_primitives = W
 print("--------------------------------")
@@ -65,9 +66,9 @@ print("--------------------------------")
 print(motor_primitives[:,0])
 print("--------------------------------")
 
-primitive_trace = np.zeros(200)
 
-# Plotting Primitive Selected Synergy Count
+# Plotting just the primitive trace for the 
+primitive_trace = np.zeros(200)
 
 # Iterate over the bins
 for i in range(number_cycles):
