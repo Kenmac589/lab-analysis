@@ -71,7 +71,7 @@
 				<a Ty="1" D="0.01"/>
 			</p>
 		</ChanProc>
-		<View title="CoM M3 WT 20220420 TM.smr[32-bit]:2:2:2:2:2:2:1">
+		<View title="CoM M3 WT 20220420 TM.smr[32-bit]:2:2:2:2:2:2:2:1">
 			<WPlace flags="0" showc="1" minx="-1" miny="-1" maxx="0" maxy="32" t="81" b="832" l="231" r="1637"/>
 			<Font hgt="-11" wgt="400" paf="16" fnam="Times New Roman"/>
 			<Chan Chan="50" DMode="10" DTrig="-1" DBoth="1" DHLine="1" Vis="0" Ax="0" AdcAxMax="1" FreqAxMax="2" ChType="3" BackOv="0"/>
@@ -187,7 +187,7 @@
 			<CursRegs XZero="0" YZero="0"/>
 			<OvDraw3d YProp="0.5" XScale="0.5" YScale="0.5"/>
 		</View>
-		<View title="CoM M3 WT 20220420 TM.smr[32-bit]:2:2:2:2:2:2:2">
+		<View title="CoM M3 WT 20220420 TM.smr[32-bit]:2:2:2:2:2:2:2:2">
 			<WPlace flags="0" showc="3" minx="-1" miny="-1" maxx="-4" maxy="-30" t="106" b="857" l="249" r="1655"/>
 			<Font hgt="-11" wgt="400" paf="16" fnam="Times New Roman"/>
 			<Chan Chan="50" DMode="10" DTrig="-1" DBoth="1" DHLine="1" Vis="0" Ax="0" AdcAxMax="1" FreqAxMax="2" ChType="3" BackOv="0"/>
@@ -241,10 +241,10 @@
 			<Chan Chan="2" DMode="11" AxMin="-1.6476974487304688" AxMax="1.6499862670898438" AdcAxMin="-1.6476974487304688" AdcAxMax="1.6499862670898438" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
 			<Chan Chan="1" DMode="11" AxMax="0.342317204807955" AdcAxMax="0.342317204807955" FreqAxMax="500" AxType="1" ChType="1" BackOv="0"/>
 			<Chan Chan="0" DMode="11" AxMax="3.4430465698242188" AdcAxMax="3.4430465698242188" FreqAxMax="250" AxType="1" ChType="1" BackOv="0"/>
-			<XInfo Left="3580.5576242019797" Right="3633.850607824092" XAxSmall="5" CRBack="0" VCLabMode="2" HCLabMode="1" VCCount="3">
+			<XInfo Left="800.1389885763583" Right="821.5031943826533" XAxSmall="5" CRBack="0" VCLabMode="2" HCLabMode="1" VCCount="3">
 				<VCur id="0" LabMode="2" LabPos="0.2" Num="0"/>
-				<VCur id="1" Pos="3628.0713906894543" LabMode="2" LabPos="0.2" Num="1"/>
-				<VCur id="2" Pos="3632.6020509170166" LabMode="2" LabPos="0.2" Num="2"/>
+				<VCur id="1" Pos="373.46161399434106" LabMode="2" LabPos="0.2" Num="1"/>
+				<VCur id="2" Pos="808.1258251884119" LabMode="2" LabPos="0.2" Num="2"/>
 			</XInfo>
 			<ChOrder Chans="51">
 				<c id="0" Chan="50"/>
