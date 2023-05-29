@@ -32,18 +32,16 @@ for i in range(len(time_values)):
     time_diff = time_values[i] - time_values[i-1]
     time_differences.append(time_diff)
 
+print(len(time_values))
+print(len(time_differences))
 # Finding the average value for the list
 time_differences_array = np.array(time_differences)
 
 # Creating mask to filter any values above 1 as this would be between distinct recordings
-recording_cutoff_high = 1.0
-recording_cutoff_low = 0
+recording_cutoff = 1.0
 
 # Applying the filter to the array
-cutoff_high = time_differences_array <= recording_cutoff_high
-cutoff_low = time_differences_array >= recording_cutoff_low
-adjusted_time_differences = time_differences_array[cutoff_low & cutoff_high]
-
+adjusted_time_differences = time_differences_array <= recording_cutoff
 average_step_difference = np.mean(adjusted_time_differences)
 
 print(average_step_difference)
