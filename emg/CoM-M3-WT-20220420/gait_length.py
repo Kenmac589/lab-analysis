@@ -9,7 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-kinematicData = pd.read_csv("./com-m3-wt-20220420-swing_and_stance.csv", header=0)
+kinematicData = pd.read_csv("./sinusoidal.csv", header=0)
 kinData = np.array(kinematicData)
 
 # Define the value and column to search for
@@ -37,27 +37,31 @@ time_differences_array = np.array(time_differences)
 
 # Creating mask to filter any values above 1 as this would be between distinct recordings
 recording_cutoff_high = 1.0
-recording_cutoff_low = 0
+recording_cutoff_low = 0.000
 
 # Applying the filter to the array
 cutoff_high = time_differences_array <= recording_cutoff_high
 cutoff_low = time_differences_array >= recording_cutoff_low
 adjusted_time_differences = time_differences_array[cutoff_low & cutoff_high]
+adj_time_xaxis = np.arange(0, len(adjusted_time_differences))
 
 average_step_difference = np.mean(adjusted_time_differences)
 
 print(average_step_difference)
+# print(adjusted_time_differences)
+print(len(adjusted_time_differences))
+
 
 # Some exploration!
 
 # Finding where the cutoff values occur in the differential array
-for i in range(len(time_differences_array)):
-    if time_differences_array[i] >= 1:
-        print(i)
+# for i in range(len(time_differences_array)):
+#     if time_differences_array[i] >= 1:
+#         print(i)
 
 # Plot the time differences
-# plt.plot(time_differences_array)
-# plt.xlabel('Index')
-# plt.ylabel('Time Difference')
-# plt.title('Time Differences Plot')
-# plt.show()
+plt.scatter(adj_time_xaxis, adjusted_time_differences)
+plt.xlabel('Index')
+plt.ylabel('Time Difference')
+plt.title('Time Differences Plot')
+plt.show()

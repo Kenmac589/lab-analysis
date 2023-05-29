@@ -32,8 +32,8 @@ for i in range(len(time_values)):
     time_diff = time_values[i] - time_values[i-1]
     time_differences.append(time_diff)
 
-print(len(time_values))
-print(len(time_differences))
+# print(len(time_values))
+# print(len(time_differences))
 # Finding the average value for the list
 time_differences_array = np.array(time_differences)
 
@@ -45,13 +45,14 @@ adjusted_time_differences = time_differences_array <= recording_cutoff
 average_step_difference = np.mean(adjusted_time_differences)
 
 print(average_step_difference)
+print(adjusted_time_differences)
 
 # Some exploration!
 
 # Finding where the cutoff values occur in the differential array
-for i in range(len(time_differences_array)):
-    if time_differences_array[i] >= 1:
-        print(i)
+# for i in range(len(time_differences_array)):
+#     if time_differences_array[i] >= 1:
+#         print(i)
 
 # Plot the time differences
 # plt.plot(time_differences_array)
