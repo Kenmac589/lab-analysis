@@ -65,19 +65,19 @@ def step_duration(input_dataframe):
 non_perturbation_low = pd.read_csv("./non-perturbation-0.100.csv", header=0)
 non_perturbation_high = pd.read_csv("./non-perturbation-0.200.csv", header=0)
 perturbation_low = pd.read_csv("./perturbation-0.100.csv", header=0)
-perturbation_high = pd.read_csv("./perturbation-0.200.csv", header=0)
+# perturbation_high = pd.read_csv("./perturbation-0.200.csv", header=0)
 # sinusoidal = pd.read_csv("./sinusoidal.csv", header=0)
 
 non_perturbation_step_duration_low, non_perturbation_treadmill_low = step_duration(non_perturbation_low)
 non_perturbation_step_duration_high, non_perturbation_treadmill_high = step_duration(non_perturbation_high)
 perturbation_step_duration_low, perturbation_treadmill_low = step_duration(perturbation_low)
-perturbation_step_duration_high, perturbation_treadmill_high = step_duration(perturbation_high)
+# perturbation_step_duration_high, perturbation_treadmill_high = step_duration(perturbation_high)
 # sinusoidal_step_duration, sinusoidal_treadmill = step_duration(sinusoidal)
 
 print("Non-perturbation at speed 0.100 m/sec:", np.mean(non_perturbation_step_duration_low))
 print("Non-perturbation at speed 0.200 m/sec:",  np.mean(non_perturbation_step_duration_high))
 print("Perturbation at speed 0.100 m/sec:",  np.mean(perturbation_step_duration_low))
-print("Perturbation at speed 0.200 m/sec:",  np.mean(perturbation_step_duration_high))
+# print("Perturbation at speen 0.200 m/sec:",  np.mean(perturbation_step_duration_high))
 # print(np.mean(sinusoidal_step_duration))
 
 # Breaking up into individual recordings based on speed
@@ -107,9 +107,10 @@ print("Perturbation at speed 0.200 m/sec:",  np.mean(perturbation_step_duration_
 # for i in range(len(time_differences_array)):  
 #     if time_differences_array[i] >= 1:
 #         print(i)
-print(non_perturbation_step_duration_low)
 
 # Plot the time differences
-plt.boxplot(non_perturbation_step_duration_low)
-plt.title('Step Cycle')
-plt.show()
+# plt.scatter(non_perturbation_treadmill, non_perturbation_treadmill)
+# plt.xlabel('Treadmill Speeds')
+# plt.ylabel('Step Duration(s)')
+# plt.title('Time Differences Plot')
+# plt.show()

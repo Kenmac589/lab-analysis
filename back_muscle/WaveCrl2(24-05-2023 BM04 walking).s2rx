@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CEDResources>
+	<DocRes>
+		<View>
+			<WPlace flags="0" showc="3" minx="-1" miny="-1" maxx="-4" maxy="-30" t="173" b="963" l="-934" r="671"/>
+			<Font hgt="-11" wgt="400" paf="16" fnam="Times New Roman"/>
+			<Chan Chan="7" DMode="2" DWidth="-1" DDSize="-1" DError="1" AxMin="-0.18876992606850068" AxMax="0.5556253107085648" AdcAxMin="-0.18876992606850068" AdcAxMax="0.5556253107085648" AxType="1" ChType="127" BackOv="0"/>
+			<Chan Chan="6" DMode="2" DWidth="-1" DDSize="-1" DError="1" AxMin="-0.44093543483099035" AxMax="0.25825931662408913" AdcAxMin="-0.44093543483099035" AdcAxMax="0.25825931662408913" AxType="1" ChType="127" BackOv="0"/>
+			<Chan Chan="5" DMode="2" DWidth="-1" DDSize="-1" DError="1" AxMin="-0.45117984006666134" AxMax="0.2889083799102081" AdcAxMin="-0.45117984006666134" AdcAxMax="0.2889083799102081" AxType="1" ChType="127" BackOv="0"/>
+			<Chan Chan="4" DMode="2" DWidth="-1" DDSize="-1" DError="1" AxMin="-0.44755745431975547" AxMax="0.3781848427480778" AdcAxMin="-0.44755745431975547" AdcAxMax="0.3781848427480778" AxType="1" ChType="127" BackOv="0"/>
+			<Chan Chan="3" DMode="2" DWidth="-1" DDSize="-1" DError="1" AxMin="-0.19574949197649166" AxMax="0.3277701667834802" AdcAxMin="-0.19574949197649166" AdcAxMax="0.3277701667834802" AxType="1" ChType="127" BackOv="0"/>
+			<Chan Chan="2" DMode="2" DWidth="-1" DDSize="-1" DError="1" AxMin="-0.11594734361988344" AxMax="0.4660930113122201" AdcAxMin="-0.11594734361988344" AdcAxMax="0.4660930113122201" AxType="1" ChType="127" BackOv="0"/>
+			<Chan Chan="1" DMode="2" DWidth="-1" DDSize="-1" DError="1" AxMin="-0.1991417034497129" AxMax="0.41934939732802284" AdcAxMin="-0.1991417034497129" AdcAxMax="0.41934939732802284" AxType="1" ChType="127" BackOv="0"/>
+			<Chan Chan="0" DMode="2" DWidth="-1" DDSize="-1" DError="1" AxMin="-0.27190630918597536" AxMax="1.060567003702353" AdcAxMin="-0.27190630918597536" AdcAxMax="1.060567003702353" AxType="1" ChType="127" BackOv="0"/>
+			<XInfo Left="-0.39999999999999997" Right="0.39999999999999997" XAxSmall="5" CRBack="0" VCLabMode="2" HCLabMode="1" VCCount="2">
+				<VCur id="0" LabMode="2" LabPos="0.2" Num="1"/>
+				<VCur id="1" Pos="0.2354497354497354" LabMode="2" LabPos="0.2" Num="2"/>
+			</XInfo>
+			<ChOrder Chans="8">
+				<c id="0" Chan="7"/>
+				<c id="1" Chan="6"/>
+				<c id="2" Chan="5"/>
+				<c id="3" Chan="4"/>
+				<c id="4" Chan="3"/>
+				<c id="5" Chan="2"/>
+				<c id="6" Chan="1"/>
+				<c id="7"/>
+			</ChOrder>
+			<CursVals XZero="0" YZero="0"/>
+			<CursRegs XZero="0" YZero="0"/>
+		</View>
+	</DocRes>
+</CEDResources>

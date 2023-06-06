@@ -82,7 +82,7 @@
 			</p>
 		</ChanProc>
 		<View title="CoM M2 WT 20220419 TM.smr[32-bit]">
-			<WPlace flags="0" showc="1" minx="-1" miny="-1" maxx="-4" maxy="-23" t="84" b="737" l="75" r="1358"/>
+			<WPlace flags="2" showc="1" minx="0" miny="909" maxx="-4" maxy="-30" t="84" b="787" l="75" r="1346"/>
 			<Font hgt="-11" wgt="400" paf="16" fnam="Times New Roman"/>
 			<Chan Chan="49" DMode="10" DTrig="-1" DBoth="1" DHLine="1" Vis="0" Ax="0" AdcAxMax="1" FreqAxMax="2" ChType="3" BackOv="0"/>
 			<Chan Chan="48" DMode="10" DTrig="-1" DBoth="1" DHLine="1" Vis="0" Ax="0" AdcAxMax="1" FreqAxMax="2" ChType="3" BackOv="0"/>
@@ -123,21 +123,22 @@
 			<Chan Chan="13" DMode="11" Vis="0" AxMin="-5" AxMax="5" AdcAxMin="-5" AdcAxMax="5" FreqAxMax="125" AxType="1" ChType="9" BackOv="0"/>
 			<Chan Chan="12" DMode="11" Vis="0" AxMin="-5" AxMax="5" AdcAxMin="-5" AdcAxMax="5" FreqAxMax="125" AxType="1" ChType="9" BackOv="0"/>
 			<Chan Chan="11" DMode="10" DTrig="-1" DBoth="1" DHLine="1" Vis="0" Ax="0" AdcAxMax="1" FreqAxMax="2" ChType="3" BackOv="0"/>
-			<Chan Chan="10" DMode="11" AxMax="0.013427734375" AdcAxMax="0.013427734375" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
-			<Chan Chan="9" DMode="11" AxMax="0.02032470703125" AdcAxMax="0.02032470703125" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
-			<Chan Chan="8" DMode="11" AxMin="3.814697265625e-5" AxMax="0.00926971435546875" AdcAxMin="3.814697265625e-5" AdcAxMax="0.00926971435546875" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
-			<Chan Chan="7" DMode="11" AxMin="5.340576171875e-5" AxMax="0.00894927978515625" AdcAxMin="5.340576171875e-5" AdcAxMax="0.00894927978515625" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
-			<Chan Chan="6" DMode="11" AxMin="7.62939453125e-5" AxMax="0.0084686279296875" AdcAxMin="7.62939453125e-5" AdcAxMax="0.0084686279296875" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
-			<Chan Chan="5" DMode="11" AxMin="0.00043487548828125" AxMax="0.00429534912109375" AdcAxMin="0.00043487548828125" AdcAxMax="0.00429534912109375" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
-			<Chan Chan="4" DMode="11" AxMax="0.027374267578125" AdcAxMax="0.027374267578125" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
-			<Chan Chan="3" DMode="11" AxMin="5.340576171875e-5" AxMax="0.00894927978515625" AdcAxMin="5.340576171875e-5" AdcAxMax="0.00894927978515625" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
-			<Chan Chan="2" DMode="11" AxMin="-5" AxMax="5" AdcAxMin="-5" AdcAxMax="5" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
-			<Chan Chan="1" DMode="11" AxMin="-1.0000000149011612" AxMax="1.0000000149011612" AdcAxMin="-1.0000000149011612" AdcAxMax="1.0000000149011612" FreqAxMax="500" AxType="1" ChType="1" BackOv="0"/>
-			<Chan Chan="0" DMode="11" AxMin="-5" AxMax="5" AdcAxMin="-5" AdcAxMax="5" FreqAxMax="250" AxType="1" ChType="1" BackOv="0"/>
-			<XInfo Left="96.06069495242853" Right="105.3906420667992" XAxSmall="5" CRBack="0" VCLabMode="2" HCLabMode="1" VCCount="3">
+			<Chan Chan="10" DMode="11" AxMax="0.20601654052734375" AdcAxMax="0.20601654052734375" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
+			<Chan Chan="9" DMode="11" AxMax="0.6677627563476562" AdcAxMax="0.6677627563476562" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
+			<Chan Chan="8" DMode="11" AxMax="0.769500732421875" AdcAxMax="0.769500732421875" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
+			<Chan Chan="7" DMode="11" AxMax="0.5120315551757812" AdcAxMax="0.5120315551757812" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
+			<Chan Chan="6" DMode="11" AxMax="0.820770263671875" AdcAxMax="0.820770263671875" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
+			<Chan Chan="5" DMode="11" AxMax="0.16034698486328125" AdcAxMax="0.16034698486328125" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
+			<Chan Chan="4" DMode="11" AxMax="0.5445556640625" AdcAxMax="0.5445556640625" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
+			<Chan Chan="3" DMode="11" AxMax="0.36767578125" AdcAxMax="0.36767578125" FreqAxMax="5000" AxType="1" ChType="1" BackOv="0"/>
+			<Chan Chan="2" DMode="11" AxMin="-1.653289794921875" AxMax="1.639862060546875" AdcAxMin="-1.653289794921875" AdcAxMax="1.639862060546875" FreqAxMax="5000" AxType="1" CWeight="1.3286875725900118" ChType="1" BackOv="0"/>
+			<Chan Chan="1" DMode="11" AxMin="-0.03457641653085375" AxMax="0.45620728218864315" AdcAxMin="-0.03457641653085375" AdcAxMax="0.45620728218864315" FreqAxMax="500" AxType="1" CWeight="0.6771196283391406" ChType="1" BackOv="0"/>
+			<Chan Chan="0" DMode="11" AxMax="3.4436798095703125" AdcAxMax="3.4436798095703125" FreqAxMax="250" AxType="1" ChType="1" BackOv="0"/>
+			<XInfo Left="1559.521426663188" Right="2251.46728" XAxSmall="5" CRBack="0" VCLabMode="2" HCLabMode="1" VCCount="3" HCCount="1">
 				<VCur id="0" LabMode="2" LabPos="0.2" Num="0"/>
-				<VCur id="1" Pos="96.59377943197624" LabMode="2" LabPos="0.2" Num="1"/>
-				<VCur id="2" Pos="103.64813779076204" LabMode="2" LabPos="0.2" Num="2"/>
+				<VCur id="1" Pos="357.2963565989837" LabMode="2" LabPos="0.2" Num="1"/>
+				<VCur id="2" Pos="365.05754335440685" LabMode="2" LabPos="0.2" Num="2"/>
+				<HCur id="0" Pos="0.23934936880095845" LabMode="1" LabPos="0.2" Num="1" Chan="1"/>
 			</XInfo>
 			<ChOrder Chans="50">
 				<c id="0" Chan="49"/>
