@@ -78,6 +78,7 @@ print("Non-perturbation at speed 0.100 m/sec:", np.mean(non_perturbation_step_du
 print("Non-perturbation at speed 0.200 m/sec:",  np.mean(non_perturbation_step_duration_high))
 print("Perturbation at speed 0.100 m/sec:",  np.mean(perturbation_step_duration_low))
 print("Perturbation at speed 0.200 m/sec:",  np.mean(perturbation_step_duration_high))
+
 # print(np.mean(sinusoidal_step_duration))
 
 # Breaking up into individual recordings based on speed
@@ -109,7 +110,53 @@ print("Perturbation at speed 0.200 m/sec:",  np.mean(perturbation_step_duration_
 #         print(i)
 print(non_perturbation_step_duration_low)
 
-# Plot the time differences
-plt.boxplot(non_perturbation_step_duration_low)
-plt.title('Step Cycle')
+
+# Combine the data into a list
+data = [non_perturbation_step_duration_low, perturbation_step_duration_low, non_perturbation_step_duration_high, perturbation_step_duration_high]
+
+# Create x-coordinates for the box plots
+x = np.arange(1, len(data) + 1)
+
+# Plot the box and whisker plots
+plt.boxplot(data, positions=x)
+
+# Add x-axis labels
+plt.xticks(x, ['non-per-100', 'per-100', 'non-per-200', 'per-200'])
+
+# Add a title
+plt.title('Multiple Box and Whisker Plots')
+
+# Display the plot
 plt.show()
+
+
+# Create a figure and axes for subplots
+
+fig, ax = plt.subplots(1, 4, figsize=(10, 4))
+
+# Plot the box and whisker plots
+ax[0].boxplot(non_perturbation_step_duration_low)
+ax[0].set_title('non-per-100')
+
+ax[1].boxplot(perturbation_step_duration_low)
+ax[1].set_title('per-100')
+
+ax[2].boxplot(non_perturbation_step_duration_high)
+ax[2].set_title('non-per-200')
+
+ax[3].boxplot(perturbation_step_duration_high)
+ax[3].set_title('per-200')
+
+# Adjust the spacing between subplots
+plt.tight_layout()
+
+# Display the plot
+plt.show()
+
+# Plot the time differences
+# plt.boxplot(non_perturbation_step_duration_low)
+# plt.boxplot(perturbation_step_duration_low)
+# plt.boxplot(non_perturbation_step_duration_high)
+# plt.boxplot(perturbation_step_duration_high)
+# plt.title('Step Cycle')
+# plt.show()
