@@ -7,8 +7,6 @@ This program is supposed to find the average
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
-
 
 def step_duration(input_dataframe):
 
@@ -136,8 +134,7 @@ x = np.arange(len(cumulative_data))
 plt.bar(x, means)
 
 # Plot the error bars
-plt.errorbar(x, means, yerr=stds, fmt='.k', capsize=0)
-
+plt.errorbar(x, means, yerr=stds, fmt='.k', capsize=3)
 
 # Display the plot
 plt.show()
