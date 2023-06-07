@@ -62,23 +62,21 @@ def step_duration(input_dataframe):
     return adjusted_time_differences, adjusted_treadmill_speeds
 
 # Main Code Body
-M3_non_low = pd.read_csv("./M3-non-100.csv", header=0)
-M3_non_high = pd.read_csv("./M3-non-200.csv", header=0)
-M3_per_low = pd.read_csv("./M3-per-100.csv", header=0)
-M3_per_high = pd.read_csv("./M3-per-200.csv", header=0)
+M3_non_perturbation_low = pd.read_csv("./M3-non-100.csv", header=0)
+M3_non_perturbation_high = pd.read_csv("./M3-non-200.csv", header=0)
+M3_perturbation_low = pd.read_csv("./M3-per-100.csv", header=0)
+M3_perturbation_high = pd.read_csv("./M3-per-200.csv", header=0)
 
 # sinusoidal = pd.read_csv("./sinusoidal.csv", header=0)
+M3_non_low_step_duration, M3_non_low_treadmill = step_duration(M3_non_perturbation_low)
+M3_non_high_step_duration, M3_non_high_treadmill = step_duration(M3_non_perturbation_high)
+M3_per_low_step_duration, M3_per_low_treadmill = step_duration(M3_perturbation_low)
+M3_per_high_step_duration, M3_per_high_treadmill = step_duration(M3_perturbation_high)
 
-non_perturbation_step_duration_low, non_perturbation_treadmill_low = step_duration(non_perturbation_low)
-non_perturbation_step_duration_high, non_perturbation_treadmill_high = step_duration(non_perturbation_high)
-perturbation_step_duration_low, perturbation_treadmill_low = step_duration(perturbation_low)
-perturbation_step_duration_high, perturbation_treadmill_high = step_duration(perturbation_high)
-# sinusoidal_step_duration, sinusoidal_treadmill = step_duration(sinusoidal)
-
-print("Non-perturbation at speed 0.100 m/sec:", np.mean(non_perturbation_step_duration_low))
-print("Non-perturbation at speed 0.200 m/sec:",  np.mean(non_perturbation_step_duration_high))
-print("Perturbation at speed 0.100 m/sec:",  np.mean(perturbation_step_duration_low))
-print("Perturbation at speed 0.200 m/sec:",  np.mean(perturbation_step_duration_high))
+print("Non-perturbation for M3 at speed 0.100 m/sec:", np.mean(M3_non_low_step_duration))
+print("Non-perturbation for M3 at speed 0.200 m/sec:",  np.mean(M3_non_high_step_duration))
+print("Perturbation for M3 at speed 0.100 m/sec:",  np.mean(M3_per_low_step_duration))
+print("Perturbation for M3 at speed 0.200 m/sec:",  np.mean(M3_per_high_step_duration))
 
 # print(np.mean(sinusoidal_step_duration))
 
@@ -109,17 +107,18 @@ print("Perturbation at speed 0.200 m/sec:",  np.mean(perturbation_step_duration_
 # for i in range(len(time_differences_array)):  
 #     if time_differences_array[i] >= 1:
 #         print(i)
-print(non_perturbation_step_duration_low)
+# print("Perturbation print(non_perturbation_step_duration_low)
 
 
 # Combine the data into a list
-data = [non_perturbation_step_duration_low, perturbation_step_duration_low, non_perturbation_step_duration_high, perturbation_step_duration_high]
+# data = [non_perturbation_step_duration_low, perturbation_step_duration_low, non_perturbation_step_duration_high, perturbation_step_duration_high]
+M3_data = [M3_non_low_step_duration, M3_per_low_step_duration, M3_non_high_step_duration, M3_per_high_step_duration]
 
 # Create x-coordinates for the box plots
-x = np.arange(1, len(data) + 1)
+x = np.arange(1, len(M3_data) + 1)
 
 # Plot the box and whisker plots
-plt.boxplot(data, positions=x)
+plt.boxplot(M3_data, positions=x)
 
 # Add x-axis labels
 plt.xticks(x, ['non-per-100', 'per-100', 'non-per-200', 'per-200'])
@@ -136,16 +135,16 @@ plt.show()
 fig, ax = plt.subplots(1, 4, figsize=(10, 4))
 
 # Plot the box and whisker plots
-ax[0].boxplot(non_perturbation_step_duration_low)
+ax[0].boxplot(M3_non_low_step_duration)
 ax[0].set_title('non-per-100')
 
-ax[1].boxplot(perturbation_step_duration_low)
+ax[1].boxplot(M3_per_low_step_duration)
 ax[1].set_title('per-100')
 
-ax[2].boxplot(non_perturbation_step_duration_high)
+ax[2].boxplot(M3_non_high_step_duration)
 ax[2].set_title('non-per-200')
 
-ax[3].boxplot(perturbation_step_duration_high)
+ax[3].boxplot(M3_per_high_step_duration)
 ax[3].set_title('per-200')
 
 # Adjust the spacing between subplots
@@ -153,11 +152,3 @@ plt.tight_layout()
 
 # Display the plot
 plt.show()
-
-# Plot the time differences
-# plt.boxplot(non_perturbation_step_duration_low)
-# plt.boxplot(perturbation_step_duration_low)
-# plt.boxplot(non_perturbation_step_duration_high)
-# plt.boxplot(perturbation_step_duration_high)
-# plt.title('Step Cycle')
-# plt.show()
