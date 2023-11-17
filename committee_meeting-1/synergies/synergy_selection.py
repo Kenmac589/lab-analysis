@@ -44,7 +44,7 @@ corrcoef = np.zeros(len(num_components))
 for i in range(len(R2All)):
     corrcoef[i] = np.corrcoef(num_components[0:i+2], R2All[0:i+2])[0,1]
     print("r =", i+2, ":", corrcoef[i])
-    
+
 # Plotting Both Methods for determining number of components
 plt.figure()
 plt.subplot(1,2,1)
