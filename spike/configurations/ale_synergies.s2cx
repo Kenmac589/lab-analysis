@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CEDResources>
+	<DocTime>
+		<View title="Data2[32-bit]">
+			<WPlace flags="2" showc="3" minx="-1" miny="-1" maxx="-8" maxy="-31" t="-17" b="510" l="14" r="578"/>
+			<Font hgt="-11" wgt="400" paf="16" fnam="Times New Roman"/>
+			<Chan Chan="30" DMode="9" DTrig="-1" DBoth="1" DHLine="1" DSubMd="2" Vis="0" Ax="0" AdcAxMax="1" FreqAxMax="2" ChType="5"/>
+			<Chan Chan="3" DMode="11" DSubMd="2" AxMin="-0.01850128173828125" AxMax="0.00919342041015625" AdcAxMin="-0.01850128173828125" AdcAxMax="0.00919342041015625" FreqAxMax="5000" AxType="1" ChType="1"/>
+			<Chan Chan="4" DMode="11" DSubMd="2" AxMin="-0.0231475830078125" AxMax="-0.0140838623046875" AdcAxMin="-0.0231475830078125" AdcAxMax="-0.0140838623046875" FreqAxMax="5000" AxType="1" ChType="1"/>
+			<Chan Chan="5" DMode="11" DSubMd="2" AxMin="-0.00576019287109375" AxMax="0.01354217529296875" AdcAxMin="-0.00576019287109375" AdcAxMax="0.01354217529296875" FreqAxMax="5000" AxType="1" ChType="1"/>
+			<Chan Chan="6" DMode="11" DSubMd="2" AxMin="-0.02971649169921875" AxMax="-0.01041412353515625" AdcAxMin="-0.02971649169921875" AdcAxMax="-0.01041412353515625" FreqAxMax="5000" AxType="1" ChType="1"/>
+			<Chan Chan="7" DMode="11" DSubMd="2" AxMin="-0.03992462158203125" AxMax="-0.00753021240234375" AdcAxMin="-0.03992462158203125" AdcAxMax="-0.00753021240234375" FreqAxMax="5000" AxType="1" ChType="1"/>
+			<Chan Chan="8" DMode="11" DSubMd="2" AxMin="-0.03595733642578125" AxMax="0.02329254150390625" AdcAxMin="-0.03595733642578125" AdcAxMax="0.02329254150390625" FreqAxMax="5000" AxType="1" ChType="1"/>
+			<Chan Chan="9" DMode="11" DSubMd="2" AxMin="-0.05173492431640625" AxMax="0.04578399658203125" AdcAxMin="-0.05173492431640625" AdcAxMax="0.04578399658203125" FreqAxMax="5000" AxType="1" ChType="1"/>
+			<Chan Chan="10" DMode="11" DSubMd="2" AxMin="-0.03366851806640625" AxMax="0.02558135986328125" AdcAxMin="-0.03366851806640625" AdcAxMax="0.02558135986328125" FreqAxMax="4901.9607843137255" AxType="1" ChType="1"/>
+			<Chan Chan="11" DMode="11" DSubMd="2" Vis="0" AxMin="-0.0028228759765625" AxMax="0.0022125244140625" AdcAxMin="-0.0028228759765625" AdcAxMax="0.0022125244140625" FreqAxMax="4901.9607843137255" AxType="1" ChType="1"/>
+			<Chan Chan="2" DMode="11" DSubMd="2" Vis="0" AxMin="-2850.244140625002" AxMax="3649.755859375001" AdcAxMin="-2850.244140625002" AdcAxMax="3649.755859375001" FreqAxMax="5000" AxType="1" ChType="1"/>
+			<Chan Chan="1" DMode="11" DSubMd="2" AxMin="-0.0005279541094296292" AxMax="-0.00166931154831218" AdcAxMin="-0.0005279541094296292" AdcAxMax="-0.00166931154831218" FreqAxMax="500" AxType="1" ChType="1"/>
+			<Chan Chan="0" DMode="11" DSubMd="2" AxMin="-5" AxMax="5" AdcAxMin="-5" AdcAxMax="5" FreqAxMax="125" AxType="1" ChType="1"/>
+			<XInfo Right="2.1163245999284754" XAxSmall="5" VCLabMode="2" HCLabMode="1" VCCount="1">
+				<VCur id="0" LabMode="2" LabPos="0.2" Num="0"/>
+			</XInfo>
+			<ChOrder Chans="13">
+				<c id="0" Chan="30"/>
+				<c id="1" Chan="3"/>
+				<c id="2" Chan="4"/>
+				<c id="3" Chan="5"/>
+				<c id="4" Chan="6"/>
+				<c id="5" Chan="7"/>
+				<c id="6" Chan="8"/>
+				<c id="7" Chan="9"/>
+				<c id="8" Chan="10"/>
+				<c id="9" Chan="11"/>
+				<c id="10" Chan="2"/>
+				<c id="11" Chan="1"/>
+				<c id="12"/>
+			</ChOrder>
+			<CursVals XZero="0" YZero="0"/>
+			<CursRegs XZero="0" YZero="0"/>
+			<OvDraw3d YProp="0.5" XScale="0.5" YScale="0.5"/>
+		</View>
+	</DocTime>
+	<Sample S2Ver="806" ARange="5">
+		<!--Sampling configuration saved to C:\Users\Experiments\Documents\Ale\ale_synergies.s2cx on July 19, 2019 12:24:11 PM-->
+		<Chans Chans="150" BigFile="0" IdealWMRate="20000">
+			<Chan id="0" Type="1" Title="Synch" Rate="250" ActRate="251.38259887695312" Comment="No comment" Units=" Volt" Divide="663" SerBaud="9600" SerHand="1"/>
+			<Chan id="1" Type="1" Title="Treadmil" Port="1" Rate="1000" ActRate="980.3921508789062" Units="m/sec" Scale="-0.20000000298023224" Divide="170" AType="1" SerBaud="9600" SerHand="1"/>
+			<Chan id="2" Type="1" Title="Current" Port="2" Rate="10000" ActRate="9803.921875" Units="micA" Scale="200" Divide="17" AType="1" SerBaud="9600" SerHand="1"/>
+			<Chan id="3" Type="1" Title="MA" Port="3" Rate="10000" ActRate="9803.921875" Divide="17" AType="1" SerBaud="9600" SerHand="1"/>
+			<Chan id="4" Type="1" Title="VM" Port="4" Rate="10000" ActRate="9803.921875" Divide="17" AType="1" SerBaud="9600" SerHand="1"/>
+			<Chan id="5" Type="1" Title="VL" Port="5" Rate="10000" ActRate="9803.921875" Divide="17" AType="1" SerBaud="9600" SerHand="1"/>
+			<Chan id="6" Type="1" Title="ST" Port="6" Rate="10000" ActRate="9803.921875" Divide="17" AType="1" SerBaud="9600" SerHand="1"/>
+			<Chan id="7" Type="1" Title="BF" Port="7" Rate="10000" ActRate="9803.921875" Divide="17" AType="1" SerBaud="9600" SerHand="1"/>
+			<Chan id="8" Type="1" Title="TA" Port="8" Rate="10000" ActRate="9803.921875" Divide="17" AType="1" SerBaud="9600" SerHand="1"/>
+			<Chan id="9" Type="1" Title="GM" Port="9" Rate="10000" ActRate="9803.921875" Divide="17" AType="1" SerBaud="9600" SerHand="1"/>
+			<Chan id="10" Type="1" Title="GL" Port="10" Traces="1" Rate="10000" ActRate="9803.921875" Divide="17" AType="1" SerBaud="9600" SerHand="1"/>
+			<Chan id="11" Type="1" Port="11" Traces="1" Rate="10000" ActRate="9803.921875" Divide="17" AType="1" SerBaud="9600" SerHand="1"/>
+			<Chan id="30" Type="5" Title="Keyboard" ActRate="100" Comment="No comment" Units=" Volt" Divide="0" SerBaud="9600" SerHand="1"/>
+		</Chans>
+		<Resol uspt="2" tpa="3" recalc="0" Assume1401="2" OptMeth="1" OptUSFrom="2" OptUSTo="50" GrpRates="1" QuickDum="5"/>
+		<Mode For="60" EveryUn="1">
+			<Trigs id="0" Chan="-4" Code="-1" Post="1" Chans="-1"/>
+			<Trigs id="1" Chan="-4" Code="-1" Post="1" Chans="-1"/>
+			<Trigs id="2" Chan="-4" Code="-1" Post="1" Chans="-1"/>
+			<Trigs id="3" Chan="-4" Code="-1" Post="1" Chans="-1"/>
+		</Mode>
+		<Seq OutType="2" SeqPer="0.10000000149011612" DacMask="7" DigMask="3" DacUnits="V">
+			<Pulses States="27">
+				<State id="1" Com="50 5V sing">
+					<PulseList id="0">
+						<Pulse id="0" Type="0" Name="" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="1">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+						<Pulse id="1" Type="7" Name="" Before="0.10000000149011613" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="5" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+					</PulseList>
+					<PulseList id="2">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="3">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="4">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="5">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="6">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="7">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="8">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="9">
+						<Pulse id="0" Type="0" Name="A" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="60.00000089406968" Reps="1" Next="0"/>
+					</PulseList>
+				</State>
+				<State id="2" Com="10 sitm 500Hz">
+					<PulseList id="0">
+						<Pulse id="0" Type="0" Name="" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="1">
+						<Pulse id="0" Type="0" Name="" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+						<Pulse id="1" Type="7" Name="" Before="0.010000000149011612" Length="0.00020000000949949026" Flags="0" Delta="1" Amp="5" Dig="255" NumPul="5" Gap="0.0018000000854954123"/>
+					</PulseList>
+					<PulseList id="2">
+						<Pulse id="0" Type="0" Name="" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="3">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="4">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="5">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="6">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="7">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="8">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="9">
+						<Pulse id="0" Type="0" Name="B" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="2.0000000949949026" Reps="20" Next="0"/>
+					</PulseList>
+				</State>
+				<State id="3" Com="double 500Hz">
+					<PulseList id="0">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="1">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+						<Pulse id="1" Type="7" Name="" Before="0.010000000149011612" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="5" Dig="255" NumPul="2" Gap="0.0018000000268220903"/>
+					</PulseList>
+					<PulseList id="2">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="3">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="4">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="5">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="6">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="7">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="8">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="9">
+						<Pulse id="0" Type="0" Name="C" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="2.0000000298023224" Reps="20" Next="0"/>
+					</PulseList>
+				</State>
+				<State id="4" Com="Stop">
+					<PulseList id="0">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="1">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="2">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="3">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="4">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="5">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="6">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="7">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="8">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="9">
+						<Pulse id="0" Type="0" Name="D" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1.0000000149011612" Reps="1" Next="0"/>
+					</PulseList>
+				</State>
+				<State id="5">
+					<PulseList id="0">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="1">
+						<Pulse id="0" Type="0" Name="" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+						<Pulse id="1" Type="7" Name="" Before="0" Length="0.00020000000949949026" Flags="0" Delta="1" Amp="5" Dig="255" NumPul="5" Gap="0.0018000000854954123"/>
+					</PulseList>
+					<PulseList id="2">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+						<Pulse id="1" Type="7" Name="" Before="0" Length="0.00020000000949949026" Flags="0" Delta="1" Amp="5" Dig="255" NumPul="5" Gap="0.0018000000854954123"/>
+					</PulseList>
+					<PulseList id="3">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="4">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="5">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="6">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="7">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="8">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="9">
+						<Pulse id="0" Type="0" Name="E" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1.0000000474974513" Reps="1" Next="0"/>
+					</PulseList>
+				</State>
+				<State id="19">
+					<PulseList id="0">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+						<Pulse id="1" Type="1" Name="" Before="0.010000000149011612" Length="0.10000000149011613" Flags="0" Delta="1" Amp="3" Dig="255"/>
+					</PulseList>
+					<PulseList id="1">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="2">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="3">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="4">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="5">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="6">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="7">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="8">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="9">
+						<Pulse id="0" Type="0" Name="S" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1.0000000149011612" Reps="1" Next="0"/>
+					</PulseList>
+				</State>
+				<State id="20">
+					<PulseList id="0">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="1">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+						<Pulse id="1" Type="1" Name="T" Before="0.020000000298023225" Length="20.000000949949026" Flags="0" Delta="1" Amp="2.5" Dig="255"/>
+					</PulseList>
+					<PulseList id="2">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="3">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="4">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="5">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="6">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="7">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="8">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="9">
+						<Pulse id="0" Type="0" Name="T" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="30.00000044703484" Reps="1" Next="0"/>
+					</PulseList>
+				</State>
+				<State id="24">
+					<PulseList id="0">
+						<Pulse id="0" Type="0" Name="" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="1">
+						<Pulse id="0" Type="0" Name="" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+						<Pulse id="1" Type="7" Name="" Before="0.010000000149011612" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.25" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="2" Type="7" Name="" Before="59.990000893920666" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.3" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="3" Type="7" Name="" Before="60.00000089406968" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.35" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="4" Type="7" Name="" Before="60.00000089406966" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.4" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="5" Type="7" Name="" Before="60.0000008940697" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.45" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="6" Type="7" Name="" Before="60.00000089406964" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.5" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="7" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.55" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="8" Type="7" Name="" Before="60.00000089406973" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.6" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="9" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.65" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="10" Type="7" Name="" Before="60.000000894069615" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.7" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="11" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.75" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="12" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.8" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="13" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.85" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="14" Type="7" Name="" Before="60.000000894069785" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.9" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="15" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="0.95" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="16" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="1" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="17" Type="7" Name="" Before="60.00000089406968" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="1.125" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="18" Type="7" Name="" Before="60.000000894069665" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="1.25" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="19" Type="7" Name="" Before="60.00000089406956" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="1.375" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="20" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="1.5" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="21" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="1.75" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="22" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="2" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="23" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="2.5" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="24" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="3" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="25" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="3.5" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="26" Type="7" Name="" Before="60.0000008940699" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="4" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="27" Type="7" Name="" Before="60.00000089406967" Length="0.00020000000298023225" Flags="0" Delta="1" Amp="4.5" Dig="255" NumPul="50" Gap="0.999800014898181"/>
+						<Pulse id="28" Type="7" Name="X" Before="60.00000089406967" Length="0.00020000000949949026" Flags="0" Delta="1" Amp="5" Dig="255" NumPul="50" Gap="0.9998000474879518"/>
+					</PulseList>
+					<PulseList id="2">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="3">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="4">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="5">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="6">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="7">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="8">
+						<Pulse id="0" Type="0" Name="" Before="0.2" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1" Reps="1" Next="0"/>
+					</PulseList>
+					<PulseList id="9">
+						<Pulse id="0" Type="0" Name="X" Before="0" Length="0.1" Flags="0" Delta="1" Amp="0" Dig="0" Frame="1699.9999807456625" Reps="1" Next="0"/>
+					</PulseList>
+				</State>
+			</Pulses>
+		</Seq>
+		<Waves/>
+		<Auto/>
+		<CondPorts Count="2">
+			<c id="1" Scale="-3.0517578125e-5" Units="Volts" Source="2"/>
+			<c id="2" Scale="0.030517578125" Units="Volts" Source="2"/>
+		</CondPorts>
+		<ForceOP/>
+		<Talkers/>
+		<SampCtl t="73" b="0" l="62" r="2"/>
+		<SeqCtl t="103" b="0" l="62" r="2"/>
+		<SampSta t="133" b="0" l="62" r="2"/>
+	</Sample>
+	<App>
+		<WPlace flags="2" showc="3" minx="-1" miny="-1" maxx="-1" maxy="-1" t="264" b="1022" l="13" r="1183"/>
+	</App>
+</CEDResources>

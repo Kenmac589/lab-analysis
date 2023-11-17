@@ -1,0 +1,55 @@
+var pawch%, kneech%, anklech%, hipch%, I%, II%, III%, swbeg%, swend%,markch%, swbeg2%, toex%;
+var nsteps%, nsteps2%, CP, swdur, stdur, nxttime, nxttime2, nmark%, nxtmark, nxtmark2, swend, phunit, nextt;
+var hipv[200][100], kneev[200][100], anklev[200][100], pawv[200][100], swonpos, swofpos;
+
+hipch%:=15;
+kneech%:=16;
+anklech%:=17;
+toex%:=12;
+
+swbeg%:=19;
+swend%:=20;
+swbeg2%:=21;
+
+nsteps2%:=count(swbeg2%, cursor(1), cursor(2));
+nxttime:=cursor(1);
+
+	Printlog("n","	", "time of cyc","	","CP","	","swing dur","	","stance dur","	","swonpos","	","swofpos");
+	for I%:=1 to nsteps2% do
+		nxttime:=nexttime(swbeg2%, nxttime);
+		nxttime2:=nexttime(swbeg%, nxttime+0.2);
+		swend:=nexttime(swend%, nxttime);
+		CP:=nxttime2-nxttime;
+		swdur:=swend-nxttime;
+		stdur:=nxttime2-swend;
+		swonpos:=chanvalue(toex%, nxttime);
+		swofpos:=chanvalue(toex%, swend);
+		printlog(I%,"	", nxttime, "	",CP,"	",swdur,"	",stdur,"	",swonpos,"	",swofpos);
+	 
+		for III%:=0 to 49 do
+			phunit:=(nxttime2-nxttime)/50;
+			nextt:=nxttime+III%*phunit;
+			hipv[I%][III%]:=chanvalue(hipch%, nextt);
+			kneev[I%][III%]:=chanvalue(kneech%, nextt);
+			anklev[I%][III%]:=chanvalue(anklech%, nextt);
+		next;
+	next;
+
+	
+	printlog("phase analysis", "");
+	Printlog("Hip", "");
+	for I%:=0 to 49 do
+		printlog(hipv[][I%]);
+	next;
+
+	Printlog("virt knee","");
+	for I%:=0 to 49 do
+		printlog(kneev[][I%]);
+	next;
+
+	Printlog("ankle","");
+	for I%:=0 to 49 do
+		printlog(anklev[][I%]);
+	next;
+
+
