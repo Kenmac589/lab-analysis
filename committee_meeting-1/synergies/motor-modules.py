@@ -41,7 +41,7 @@ A = data.to_numpy()
 
 # Setting various paramaters through the script I often change
 selected_primitive_filename = 'preDTX-100-non.png'
-selected_primitive_title =  'Motor Primitive for DTR-M5 preDTX without pertubration at 0.100'
+selected_primitive_title = 'Motor Primitive for DTR-M5 preDTX without pertubration at 0.100'
 modules_and_primitives_filename = 'preDTX-100.png'
 modules_and_primitives_title = 'Muscle Synergies for DTR-M5 preDTX non-perturbation 0.100 m/s'
 chosen_synergies = 3
@@ -57,8 +57,8 @@ R2All = np.zeros(len(num_components))
 # Calculating R2 for each component
 for i in range(len(R2All)):
     W, H, C = nnmf_factorize(A, num_components[i])
-    R2All[i] = np.corrcoef(C.flatten(), A.flatten())[0,1]**2
-    print ("R^2 =", i+2, ":", R2All[i])
+    R2All[i] = np.corrcoef(C.flatten(), A.flatten())[0, 1] ** 2
+    print("R^2 =", i + 2, ":", R2All[i])
 
 # Calculating correlation coefficient for each component
 corrcoef = np.zeros(len(num_components))
@@ -76,9 +76,9 @@ samples_binned = np.arange(200)
 motor_modules = H
 motor_primitives = W
 print("--------------------------------")
-print("motor_modules",motor_modules[:,0])
+print("motor_modules", motor_modules[:, 0])
 print("--------------------------------")
-print(motor_primitives[:,0])
+print(motor_primitives[:, 0])
 print("--------------------------------")
 
 primitive_trace = np.zeros(200)
@@ -107,7 +107,7 @@ plt.plot(samples[samples_binned], primitive_trace, color='blue')
 
 # Plotting individual traces in the background
 for i in range(0, len(motor_primitives), 200):
-    plt.plot(samples[samples_binned], motor_primitives[i:i+200, chosen_synergies-2], color='black', alpha=0.2)
+    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 2], color='black', alpha=0.2)
     # plt.title("Motor Primitives-010-{:04}".format(i))
     # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
 
@@ -155,7 +155,7 @@ for col in range(chosen_synergies):
 
     # Plot the average trace in the corresponding subplot
     axs[0, col].plot(samples[samples_binned], primitive_trace, color='red', label='Average Trace')
-    axs[0, col].set_title('Synergy {}'.format(col+1))
+    axs[0, col].set_title('Synergy {}'.format(col + 1))
 
     # Iterate over the bins again to plot the individual bin data
     for i in range(number_cycles):
@@ -163,11 +163,11 @@ for col in range(chosen_synergies):
         time_point_average = motor_primitives[i * 200: (i + 1) * 200, col]
 
         # Plot the bin data
-        axs[0, col].plot(samples[samples_binned], time_point_average, label='Bin {}'.format(i+1), color='black', alpha=0.1)
+        axs[0, col].plot(samples[samples_binned], time_point_average, label='Bin {}'.format(i + 1), color='black', alpha=0.1)
 
     # Add vertical lines at the halfway point in each subplot
     axs[0, col].axvline(x=100, color='black')
-   
+
     # Begin Presenting Motor Modules
 
     # Get the data for the current column
@@ -175,7 +175,7 @@ for col in range(chosen_synergies):
 
     # Set the x-axis values for the bar graph
     x_values = np.arange(len(motor_module_column_data))
-    
+
     # Plot the bar graph for the current column in the corresponding subplot
     axs[1, col].bar(x_values, motor_module_column_data)
 
@@ -188,7 +188,7 @@ for col in range(chosen_synergies):
     # Remove labels on x and y axes
     axs[1, col].set_xticklabels([])
     axs[0, col].set_yticklabels([])
- 
+
     # Remove x and y axis labels and ticks from the avg_trace subplot
     axs[0, col].set_xticks([])
     axs[0, col].set_yticks([])

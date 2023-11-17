@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 from scipy.stats import ttest_ind
 from scipy.stats import f_oneway
 
-def read_all_csv(directory_path):
 
+def read_all_csv(directory_path):
     data_dict = {}  # Initialize an empty dictionary to store the data
 
     if not os.path.isdir(directory_path):

@@ -1,0 +1,159 @@
+11-11-07
+
+First minimum used!
+Start 1
+End 68
+Half width height 0.02958258672781858
+before max min index 0 value 0.004372537351606177
+max value 121 value 0.06353771080724334
+after max min value 190 value 0.005161207922838422
+Length 200
+0.005161207922838422
+<class 'numpy.ndarray'>
+
+Second minimum used
+Start 1
+End 94
+Half width height 0.04641919349641654
+before max min index 36 value 0.008000803021323048
+max value 145 value 0.09874002108742856
+after max min value 185 value 0.005901634094595493
+Length 200
+0.005901634094595493
+<class 'numpy.ndarray'>
+
+Second minimum used
+Start 1
+End 90
+Half width height 0.033148007753742825
+before max min index 32 value 0.005801535747003999
+max value 110 value 0.06927911834482856
+after max min value 187 value 0.0029831028373429012
+Length 199
+0.0029831028373429012
+<class 'numpy.ndarray'>
+
+Second minimum used
+Start 1
+End 84
+Half width height 0.03139940742228043
+before max min index 0 value 0.007394439568299873
+max value 99 value 0.06707909811648634
+after max min value 189 value 0.004280283271925479
+Length 200
+0.004280283271925479
+<class 'numpy.ndarray'>
+
+First minimum used!
+Start 1
+End 70
+Half width height 0.03471040698120535
+before max min index 5 value 0.005146504658279825
+max value 106 value 0.07456731862069053
+after max min value 195 value 0.005810451418597128
+Length 200
+0.005810451418597128
+<class 'numpy.ndarray'>
+
+Second minimum used
+Start 1
+End 69
+Half width height 0.0418620620696377
+before max min index 0 value 0.00544561629792825
+max value 117 value 0.0881846342118921
+after max min value 184 value 0.004460510072616702
+Length 200
+0.004460510072616702
+<class 'numpy.ndarray'>
+
+First minimum used!
+Start 1
+End 84
+Half width height 0.03278682310070267
+before max min index 2 value 0.0017236079745932202
+max value 113 value 0.06729725417599855
+after max min value 186 value 0.004384675155305805
+Length 200
+0.004384675155305805
+<class 'numpy.ndarray'>
+
+First minimum used!
+Start 1
+End 79
+Half width height 0.03216045593561271
+before max min index 10 value 0.004970191899713855
+max value 141 value 0.06929110377093928
+after max min value 194 value 0.0064045873026786874
+Length 200
+0.0064045873026786874
+<class 'numpy.ndarray'>
+
+Second minimum used
+Start 1
+End 101
+Half width height 0.03540401687766803
+before max min index 0 value 0.004382329513264439
+max value 163 value 0.07361873772845266
+after max min value 192 value 0.0028107039731166024
+Length 200
+0.0028107039731166024
+<class 'numpy.ndarray'>
+
+Second minimum used
+Start 1
+End 82
+Half width height 0.02924064419324034
+before max min index 32 value 0.0035245881516975724
+max value 102 value 0.0611621883309019
+after max min value 192 value 0.002680899944421221
+Length 199
+0.002680899944421221
+<class 'numpy.ndarray'>
+
+First minimum used!
+Start 1
+End 100
+Half width height 0.03706182904908734
+before max min index 0 value 0.00015050621948638313
+max value 110 value 0.07427416431766107
+after max min value 190 value 0.001564979331856012
+Length 195
+0.001564979331856012
+<class 'numpy.ndarray'>
+
+First minimum used!
+Start 1
+End 70
+Half width height 0.0333544955217941
+before max min index 0 value 0.0026121363269588998
+max value 98 value 0.0693211273705471
+after max min value 194 value 0.0047602305141742655
+Length 200
+0.0047602305141742655
+<class 'numpy.ndarray'>
+
+Second minimum used
+Start 1
+End 74
+Half width height 0.03724105905764613
+before max min index 0 value 0.005873904761028216
+max value 113 value 0.07774662617215469
+after max min value 192 value 0.003264508056862433
+Length 200
+0.003264508056862433
+<class 'numpy.ndarray'>
+
+First minimum used!
+Start 1
+End 72
+Half width height 0.027412117045308174
+before max min index 4 value 0.004744131939958752
+max value 139 value 0.0595683660305751
+after max min value 188 value 0.010742119636383714
+Length 200
+0.010742119636383714
+<class 'numpy.ndarray'>
+
+
+
+

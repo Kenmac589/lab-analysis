@@ -273,3 +273,39 @@ The output of this code will be:
 ```
 This shows that the resulting tuple from applying a mask to a NumPy array has been converted into a separate array using `numpy.asarray()`.
 
+# Some real basic stuff
+
+How do i initialize an empty numpy array that i will go on to append and unknown amount of values to
+You can use the following code to create an empty NumPy array:
+```
+import numpy as np
+arr = np.array([])
+```
+This creates an empty NumPy array with zero elements. You can then append new values to it using the `append()` method:
+```
+arr = np.array([])
+for i in range(10):
+    arr = np.append(arr, [i])
+print(arr)
+# Output: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
+Alternatively, you can also use the `np.empty()` function to create an empty NumPy array with a specific size:
+```
+arr = np.empty(10)
+for i in range(10):
+    arr[i] = i
+print(arr)
+# Output: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
+In this case, the `np.empty()` function creates an empty NumPy array with a size of 10 elements, which you can then fill with values using a loop.
+
+It's worth noting that when you create an empty NumPy array, it will have a data type of float64 by default. If you want to change the data type, you can use the `np.dtype` parameter:
+```
+arr = np.empty(10, dtype=int)
+for i in range(10):
+    arr[i] = i
+print(arr)
+# Output: [0 1 2 3 4 5 6 7 8 9]
+```
+In this case, the `dtype` parameter specifies that the array should have an integer data type.
+
