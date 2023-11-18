@@ -1,0 +1,96 @@
+var chcyc%:=5, chsyn1%:=1, chsyn2%:=2, chsyn3%:=3, chmin1%:=6, chmin2%:=8, chmin3%:=10, a%[4], arr1[200], arr2[200], arr3[200], I%, II%, n%;
+var cyc, cycon, cycoff, harrs1t, harrs2t, harrs3t; 
+var arrs1, arrs2, arrs3, harrs1, harrs2, harrs3, arrsum1:=0, arrsum2:=0, arrsum3:=0;
+var amp2, hamp2, hampon2, hampoff2, hampwidth2, min2, max2, mint2, maxt2, mint1b, mint2b, mint3b;
+var amp3, hamp3, hampon3, hampoff3, hampwidth3, min3, max3, mint3, maxt3, mint1;
+
+'*************************creates the nessecarry buffer channels**************************************
+for I%:=0 to 2 do
+a%[I%]:=memchan(3);
+next;
+'***************************************************************************************************
+chantitle$(a%[0],"syn1 cnt");
+chantitle$(a%[1],"syn2 cnt");
+chantitle$(a%[2],"syn3 cnt");
+mint1:=0;
+mint2:=0;
+mint3:=0;
+
+n%:=count(chcyc%, cursor(1), cursor(2));
+
+Printlog("n","	","syn1","	","syn2","	","syn3");
+
+For I%:=1 to n%-1 do
+    if I%=1 then 
+        cycon:=0;
+        cycoff:=nexttime(chcyc%, cycon);
+        else; 
+        cycon:=nexttime(chcyc%, cycon);
+        cycoff:=nexttime(chcyc%, cycon);
+    endif;
+    if I%=1 then
+        mint1:=0;
+        mint2:=0;
+        mint3:=0;
+    else;
+        mint1:=nexttime(chmin1%, mint1);
+        mint2:=nexttime(chmin2%, mint2);
+        mint3:=nexttime(chmin3%, mint3);
+    endif;
+    mint1b:=nexttime(chmin1%, mint1);
+    mint2b:=nexttime(chmin2%, mint2);
+    mint3b:=nexttime(chmin3%, mint3);
+    chandata(chsyn1%, arr1[], mint1, mint1b);
+    chandata(chsyn2%, arr2[], mint2, mint2b);
+    chandata(chsyn3%, arr3[], mint3, mint3b);
+    arrs1:=arrsum(arr1[]);
+    arrs2:=arrsum(arr2[]);
+    arrs3:=arrsum(arr3[]);
+    harrs1:=arrs1/2;
+    harrs2:=arrs2/2;
+    harrs3:=arrs3/2;
+    For II%:=0 to 199 do
+        arrsum1:=arrsum1+arr1[II%];
+        if arrsum1<harrs1 then
+            harrs1t:=II%;
+            else break;
+        endif; 
+    next;
+    For II%:=0 to 199 do
+        arrsum2:=arrsum2+arr2[II%];
+        if arrsum2<harrs2 then
+            harrs2t:=II%;
+            else break;
+        endif;
+    next;
+    For II%:=0 to 199 do
+        arrsum3:=arrsum3+arr3[II%];
+        if arrsum3<harrs3 then
+            harrs3t:=II%;
+            else break;
+        endif;
+    next;
+    memsetitem(a%[0], 0, harrs1t+mint1); 
+    memsetitem(a%[1], 0, harrs2t+mint2);
+    memsetitem(a%[2], 0, harrs3t+mint3);
+    arrsum1:=0;
+    arrsum2:=0;
+    arrsum3:=0;   
+next;
+
+n%:=count(chcyc%, 0, cursor(2));
+
+For I%:=1 to n%-1 do
+    if I%=1 then 
+        cycon:=0;
+        else; 
+        cycon:=nexttime(chcyc%, cycon);
+    endif;    
+    mint1:=nexttime(a%[0], cycon);
+    mint2:=nexttime(a%[1], cycon);
+    mint3:=nexttime(a%[2], cycon);
+    harrs1t:=mint1-cycon;
+    harrs2t:=mint2-cycon;
+    harrs3t:=mint3-cycon;
+    Printlog(I%,"	",harrs1t,"	",harrs2t,"	",harrs3t); 
+next;

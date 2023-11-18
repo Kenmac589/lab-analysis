@@ -15,7 +15,7 @@ from sklearn.decomposition import NMF
 
 def nnmf_factorize(A, k):
     """Non-Negative Matrix Factorization for Muscle Synergy Extraction
-    @param A: input matrix
+    @param A: input numpy array of normalized values
     @param k: number of components (muscle channels)
 
     @return W: motor primitives
@@ -28,21 +28,6 @@ def nnmf_factorize(A, k):
     C = np.dot(W, H)
     return W, H, C
 
-def read_all_csv(directory_path):
-    data_dict = {}  # Initialize an empty dictionary to store the data
-
-    if not os.path.isdir(directory_path):
-        print(f"{directory_path} is not a valid directory.")
-        return
-
-    for filename in os.listdir(directory_path):
-        if filename.endswith(".csv"):
-            file_path = os.path.join(directory_path, filename)
-            data = pd.read_csv(file_path)
-            data_dict[filename] = data
-
-    return data_dict
-
 def synergy_extraction(data_input, synergy_selection):
     """Synergy Extraction from factorized matricies
     @param data_input: path to csv data file
@@ -50,7 +35,6 @@ def synergy_extraction(data_input, synergy_selection):
 
     @return W: motor primitives
     @return H: motor modules
-    @return C: factorized matrix
     """
 
     # Load Data
@@ -72,11 +56,26 @@ def synergy_extraction(data_input, synergy_selection):
 
     return motor_primitives, motor_modules
 
+def read_all_csv(directory_path):
+    data_dict = {}  # Initialize an empty dictionary to store the data
+
+    if not os.path.isdir(directory_path):
+        print(f"{directory_path} is not a valid directory.")
+        return
+
+    for filename in os.listdir(directory_path):
+        if filename.endswith(".csv"):
+            file_path = os.path.join(directory_path, filename)
+            data = pd.read_csv(file_path)
+            data_dict[filename] = data
+
+    return data_dict
+
 def full_width_half_abs_min(motor_p_full, synergy_selection):
     """Full width half maxiumum calculation
     @param: motor_p_full_full: full length numpy array of selected motor primitives
 
-    @return: mean_fwhm: Mean value for the width of the primitives
+    @return: width measurements for each primitive
     """
 
     number_cycles = len(motor_p_full) // 200
@@ -151,17 +150,16 @@ def full_width_half_abs_min(motor_p_full, synergy_selection):
 
 def main():
 
-    directory_path = './full_width_test/'
-    trial_list = read_all_csv(directory_path)
+    data_selection_non, syn_selection_non = './norm-emg-preDTX-100.csv', 3
+    motor_p_non, motor_m_non = synergy_extraction(data_selection_non, syn_selection_non)
+    fwhl_non = full_width_half_abs_min(motor_p_non, syn_selection_non)
+    print(fwhl_non)
 
+    data_selection_per, syn_selection_per = './norm-emg-preDTX-100.csv', 3
+    motor_p_per, motor_m_per = synergy_extraction(data_selection_per, syn_selection_per)
+    fwhl_per = full_width_half_abs_min(motor_p_per, syn_selection_per)
+    print(fwhl_per)
 
-    data_selection, syn_selection = './norm-emg-preDTX-100.csv', 3
-    motor_p, motor_m = synergy_extraction(data_selection, syn_selection)
-    average_fwhl = full_width_half_abs_min(motor_p, syn_selection)
-
-    
-
-    print(average_fwhl)
     # print(full_width_half_min)
     # print('Motor Primitives', motor_p)
     # print('Motor Modules', motor_m)

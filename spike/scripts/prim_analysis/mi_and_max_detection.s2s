@@ -1,0 +1,42 @@
+var chcyc%:=5, chsyn1%:=1, chsyn2%:=2, chsyn3%:=3, chsyn1mx%, chsyn2mx%, chsyn3mx%, I%, n%, a%[7];
+var cyc, cycon, cycoff; 
+var amp1, hamp1, hampon1, hampoff1, hampwidth1, min1, max1, mint1, maxt1;
+var amp2, hamp2, hampon2, hampoff2, hampwidth2, min2, max2, mint2, maxt2;
+var amp3, hamp3, hampon3, hampoff3, hampwidth3, min3, max3, mint3, maxt3;
+
+n%:=count(chcyc%, cursor(1), cursor(2));
+'cursor(1, 0);
+
+'*************************creates the nessecarry buffer channels**************************************
+for I%:=0 to 5 do
+a%[I%]:=memchan(3);
+next;
+'***************************************************************************************************
+chantitle$(a%[0],"syn1 min");
+chantitle$(a%[1],"syn1 max");
+chantitle$(a%[2],"syn2 min");
+chantitle$(a%[3],"syn2 max");
+chantitle$(a%[4],"syn3 min");
+chantitle$(a%[5],"syn3 max");
+
+
+For I%:=1 to n%-1 do
+    if I%=1 then 
+        cycon:=0;
+        cycoff:=nexttime(chcyc%, cycon);
+        else; 
+        cycon:=nexttime(chcyc%, cycon);
+        cycoff:=nexttime(chcyc%, cycon);
+    endif;
+    cyc:=cycoff-cycon;
+        minmax(chsyn1%, cycon, cycoff, min1, max1, mint1, maxt1);
+        minmax(chsyn2%, cycon, cycoff, min2, max2, mint2, maxt2);
+        minmax(chsyn3%, cycon, cycoff, min3, max3, mint3, maxt3);
+    memsetitem(a%[0], 0, mint1); 
+    memsetitem(a%[1], 0, maxt1);
+    memsetitem(a%[2], 0, mint2); 
+    memsetitem(a%[3], 0, maxt2);
+    memsetitem(a%[4], 0, mint3); 
+    memsetitem(a%[5], 0, maxt3);
+    
+next;
