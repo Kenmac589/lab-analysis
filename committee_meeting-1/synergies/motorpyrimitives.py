@@ -76,8 +76,8 @@ def full_width_half_abs_min(motor_p_full, synergy_selection):
     number_cycles = len(motor_p_full) // 200
 
     # Save
-    full_width_length_arr = np.array([])
-    fwhl_start_stop = np.empty((0, 0))
+    fwhl = np.array([])
+    fwhl_start_stop = np.empty((number_cycles, 0))
 
     for i in range(number_cycles):
         current_primitive = motor_p_full[i * 200: (i + 1) * 200, synergy_selection - 2]
@@ -85,7 +85,8 @@ def full_width_half_abs_min(motor_p_full, synergy_selection):
         primitive_mask = current_primitive > 0.0
 
         # applying mask to exclude values which were subject to rounding errors
-        mcurrent_primitive = np.asarray(current_primitive[primitive_mask])
+        mcurrent_primitive_raw = np.asarray(current_primitive[primitive_mask])
+        mcurrent_primitive = sp.ndimage.median_filter(mcurrent_primitive_raw, size=3)
 
         # getting maximum
         max_ind = np.argmax(mcurrent_primitive)
@@ -112,29 +113,33 @@ def full_width_half_abs_min(motor_p_full, synergy_selection):
         half_width_start = np.argmax(mcurrent_primitive[::max_ind] > half_width_height)
         half_width_end = np.argmax(mcurrent_primitive[:max_ind] > half_width_height)
 
+        # Adding start and stop coordinates appropriate to array
+        fwhl_start_stop_list = np.append(fwhl_start_stop, [[half_width_start, half_width_end]])
+        fwhl_start_stop = fwhl_start_stop_list.reshape((len(fwhl_start_stop_list) // 2), 2)
+
         # Determing length for primitive and appending
         full_width_length = half_width_end - half_width_start
-        full_width_length_arr = np.append(full_width_length_arr, [full_width_length])
+        fwhl = np.append(fwhl, [full_width_length])
 
-        print("Start", half_width_start)
-        print("End", half_width_end)
+        # print("Start", half_width_start)
+        # print("End", half_width_end)
 
-        print("Half width height", half_width_height)
+        # print("Half width height", half_width_height)
 
-        print("before max min index", min_ind_before, "value", mcurrent_primitive[min_ind_before])
-        print("max value", max_ind, "value", mcurrent_primitive[max_ind])
-        print("after max min value", min_ind_after, "value", mcurrent_primitive[min_ind_after])
-        print("Length", len(mcurrent_primitive))
-        print(mcurrent_primitive[min_ind_after])
+        # print("before max min index", min_ind_before, "value", mcurrent_primitive[min_ind_before])
+        # print("max value", max_ind, "value", mcurrent_primitive[max_ind])
+        # print("after max min value", min_ind_after, "value", mcurrent_primitive[min_ind_after])
+        # print("Length", len(mcurrent_primitive))
+        # print(mcurrent_primitive[min_ind_after])
 
         # np.savetxt('primitive-{:04}.csv'.format(i), mcurrent_primitive)
 
         # Getting overview of all motor primitives
         # plt.plot(mcurrent_primitive)
 
-    print("Width Values", full_width_length_arr)
+    print("Width Values", fwhl_start_stop)
 
-    return full_width_length_arr, 
+    return fwhl, fwhl_start_stop
 
 # Plotting Section
 def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title="Output"):
@@ -146,51 +151,45 @@ def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title=
     """
 
     motor_primitives, motor_modules = synergy_extraction(data_input, synergy_selection)
-    fwhl = full_width_half_abs_min(motor_primitives, synergy_selection)
+
+    # Smoothen the data
+
+    fwhl, fwhl_start_stop = full_width_half_abs_min(motor_primitives, synergy_selection)
 
     samples = np.arange(0, len(motor_primitives))
     samples_binned = np.arange(200)
     number_cycles = len(motor_primitives) // 200
-    # print("Length of A", len(A))
-    # print("Length of C", len(C))
-    # print("Length of W", len(W))
 
     # Plot
-    print("--------------------------------")
-    print("motor_modules", motor_modules[:, 0])
-    print("--------------------------------")
-    print(motor_primitives[:, 0])
-    print("--------------------------------")
-
-    primitive_trace = np.zeros(200)
-
-    # Labels for Modules for M5 of the 6 month group ***** ALWAYS check this
-    # plt.xticks(x, ['GM', 'Ip', 'BF', 'VL', 'Gs', 'TA', 'St', 'Gr'])
+    primitive_trace_raw = np.zeros(200)
 
     # Plotting Primitive Selected Synergy Count
+
 
     # Iterate over the bins
     for i in range(number_cycles):
         # Get the data for the current bin
-        time_point_average = motor_primitives[i * 200: (i + 1) * 200, synergy_selection - 1]
+
+        time_point_average = motor_primitives[i * 200: (i + 1) * 200, synergy_selection - 2]
 
         # Accumulate the trace values
-        primitive_trace += time_point_average
+        primitive_trace_raw += time_point_average
 
     # Calculate the average by dividing the accumulated values by the number of bins
-    primitive_trace /= number_cycles
-
-    # primitives_average = np.mean(primitives_reshape, axis=1)
-    print("Average Primitives:", primitive_trace)
-    print("--------------------------------")
+    primitive_trace_raw /= number_cycles
+    primitive_trace = sp.ndimage.median_filter(primitive_trace_raw, size=5)
 
     plt.plot(samples[samples_binned], primitive_trace, color='blue')
 
-    # Plotting individual traces in the background
-    for i in range(0, len(motor_primitives), 200):
-        plt.plot(samples[samples_binned], motor_primitives[i:i + 200, synergy_selection - 1], color='black', alpha=0.2)
-        # plt.title("Motor Primitives-010-{:04}".format(i))
-        # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
+    # Plotting individual primitives inthe background
+    selected_primitive = motor_primitives[:, synergy_selection - 2]
+
+    # Using the order F so the values are in column order
+    binned_primitives_raw = selected_primitive.reshape((200, -1), order='F')
+    binned_primitives = sp.ndimage.median_filter(binned_primitives_raw, size=5)
+    plt.plot(binned_primitives, color='black', alpha=0.2)
+    print(fwhl_start_stop[3, 1])
+
 
     # Removing axis values
     plt.xticks([])
@@ -210,6 +209,7 @@ def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title=
     plt.gca().spines['left'].set_visible(True)
     plt.title(selected_primitive_title, fontsize=16, fontweight='bold')
     # plt.savefig(selected_primitive_filename, dpi=300)
+    plt.show()
 
 # Main Function
 
@@ -217,22 +217,23 @@ def main():
 
     data_selection_non, syn_selection_non = './full_width_test/norm-emg-preDTX-100.csv', 3
     motor_p_non, motor_m_non = synergy_extraction(data_selection_non, syn_selection_non)
-    fwhl_non = full_width_half_abs_min(motor_p_non, syn_selection_non)
+    fwhl_non, fwhl_non_start_stop = full_width_half_abs_min(motor_p_non, syn_selection_non)
 
     data_selection_per, syn_selection_per = './full_width_test/norm-emg-preDTX-per.csv', 3
     motor_p_per, motor_m_per = synergy_extraction(data_selection_per, syn_selection_per)
-    fwhl_per = full_width_half_abs_min(motor_p_per, syn_selection_per)
+    fwhl_per, fwhl_per_start_stop = full_width_half_abs_min(motor_p_per, syn_selection_per)
 
-    print(fwhl_non)
-    print(fwhl_per)
+    print(fwhl_non_start_stop)
+    print(fwhl_per_start_stop)
 
     sel_primitive_trace(data_selection_non, syn_selection_non, "M5 PreDTX Non-pertubation 0.100m/s")
+
+    sel_primitive_trace(data_selection_per, syn_selection_per, "M5 PreDTX wiht Perturbation 0.100m/s")
     # print(full_width_half_min)
     # print('Motor Primitives', motor_p)
     # print('Motor Modules', motor_m)
     # Calculate the number of 200-value bins
 
-    plt.show()
 
 if __name__ == "__main__":
     main()

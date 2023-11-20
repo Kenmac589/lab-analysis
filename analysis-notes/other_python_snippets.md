@@ -348,3 +348,30 @@ plt.show()
 ```
 The resulting image will have reduced noise and a smoother appearance. You can adjust the `kernel_size` parameter to control the degree of smoothing.
 
+
+would I rearrange a 1D numpy array so the values are split up into 200 value rows
+You can use NumPy's `reshape` function to reshape your 1D array into a 2D array with 200 rows. For example:
+```python
+import numpy as np
+
+# create a 1D array with 500 elements
+arr = np.arange(500)
+
+# reshape the array into a 2D array with 200 rows
+reshaped_arr = arr.reshape((-1, 200))
+```
+In this example, we use the `-1` as one of the dimensions to automatically infer the number of rows from the length of the original array. The resulting `reshaped_arr` will be a 2D array with 250 rows (500 elements / 200 columns).
+
+Alternatively, you can also use the `numpy.split` function to split the 1D array into a list of 200-element arrays:
+```python
+import numpy as np
+
+# create a 1D array with 500 elements
+arr = np.arange(500)
+
+# split the array into a list of 200-element arrays
+split_arr = np.array([arr[i:i+200] for i in range(0, len(arr), 200)])
+```
+This will create a list of 25 elements (since there are 500 elements in the original array and each element contains 200 values). Each element in the list is a 1D array containing 200 values.
+
+
