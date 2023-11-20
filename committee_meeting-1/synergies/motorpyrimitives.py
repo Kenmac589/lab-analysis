@@ -180,9 +180,9 @@ def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title=
 
         time_point_average = motor_primitives[i * 200: (i + 1) * 200, synergy_selection - 2]
 
-        plt.axhline(y=fwhl_height[i], xmin=fwhl_start_stop[i, 0], xmax=fwhl_start_stop[i, 1], color='black', alpha=0.2)
-        print(fwhl_start_stop[i, 0])
-        print(fwhl_start_stop[i, 1])
+        fwhl_line_start = fwhl_start_stop[i, 0]
+        fwhl_line_stop = fwhl_start_stop[i, 1]
+        plt.hlines(fwhl_height[i], fwhl_line_start, fwhl_line_stop, color='black', alpha=0.2)
         # Accumulate the trace values
         primitive_trace += time_point_average
 
@@ -210,7 +210,9 @@ def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title=
     # Adding a horizontal line for fwhl
 
 
-    plt.axhline(y=np.mean(fwhl_height), color='red')
+    fwhl_line_start = np.mean(fwhl_start_stop[:, 0])
+    fwhl_line_stop = np.mean(fwhl_start_stop[:, 1])
+    plt.hlines(y=np.mean(fwhl_height), xmin=fwhl_line_start, xmax=fwhl_line_stop, color='red')
 
     # Add labels for swing and stance
     plt.text(50, -0.2 * np.max(primitive_trace), 'Swing', ha='center', va='center')
@@ -229,18 +231,15 @@ def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title=
 
 def main():
 
+    # Pre DTX group
     data_selection_non, syn_selection_non = './full_width_test/norm-emg-preDTX-100.csv', 3
     motor_p_non, motor_m_non = synergy_extraction(data_selection_non, syn_selection_non)
     fwhl_non, fwhl_non_start_stop, fwhl_height_non = full_width_half_abs_min(motor_p_non, syn_selection_non)
 
-    # data_selection_per, syn_selection_per = './full_width_test/norm-emg-preDTX-per.csv', 3
-    # motor_p_per, motor_m_per = synergy_extraction(data_selection_per, syn_selection_per)
-    # fwhl_per, fwhl_per_start_stop = full_width_half_abs_min(motor_p_per, syn_selection_per)
 
     sel_primitive_trace(data_selection_non, syn_selection_non, "M5 PreDTX Non-pertubation 0.100m/s")
 
     # sel_primitive_trace(data_selection_per, syn_selection_per, "M5 PreDTX wiht Perturbation 0.100m/s")
-    print(fwhl_non_start_stop)
     # print('Motor Primitives', motor_p)
     # print('Motor Modules', motor_m)
     # Calculate the number of 200-value bins
