@@ -31,12 +31,12 @@ def nnmf_factorize(A, k):
 #     @param emg: EMG data
 #     @return emg_norm: normalized EMG data
 #     """
-# 
+#
 #     emg_norm = (emg - np.mean(emg)) / np.std(emg)
 #     return emg_norm
 
 # Load Data
-data = pd.read_csv("./norm-emg-postDTX-100-per.csv", header=None)
+data = pd.read_csv("./norm-emg-preDTX-100.csv", header=None)
 A = data.to_numpy()
 
 # Define some variables about the data
@@ -59,7 +59,7 @@ for i in range(len(R2All)):
     print("r =", i+2, ":", corrcoef[i])
 
 # Choosing best number of components
-chosen_synergies = 4
+chosen_synergies = 7
 W, H, C = nnmf_factorize(A, chosen_synergies)
 
 samples = np.arange(0, len(C))
@@ -82,7 +82,7 @@ primitive_trace = np.zeros(200)
 for i in range(number_cycles):
     # Get the data for the current bin
     time_point_average = motor_primitives[i * 200: (i + 1) * 200, chosen_synergies-2]
-    
+
     # Accumulate the trace values
     primitive_trace += time_point_average
 

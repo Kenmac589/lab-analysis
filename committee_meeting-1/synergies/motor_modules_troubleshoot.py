@@ -26,26 +26,26 @@ def nnmf_factorize(A, k):
     return W, H, C
 
 # Load Data
-data = pd.read_csv("./norm-emg-preDTX-100.csv", header=None)
+data = pd.read_csv("./full_width_test/norm-emg-preDTX-per.csv", header=None)
 A = data.to_numpy()
 
 # Setting various paramaters through the script I often change
-selected_primitive_filename = 'preDTX-100-non.png'
-selected_primitive_title = 'Motor Primitive for DTR-M5 preDTX without pertubration at 0.100'
-modules_and_primitives_filename = 'preDTX-100.png'
-modules_and_primitives_title = 'Muscle Synergies for DTR-M5 preDTX non-perturbation 0.100 m/s'
+selected_primitive_filename = 'preDTX-100-per.png'
+selected_primitive_title = 'Motor Primitive for DTR-M5 preDTX with pertubration at 0.100'
+modules_and_primitives_filename = 'preDTX-100-per-prim.png'
+modules_and_primitives_title = 'Muscle Synergies for DTR-M5 preDTX perturbation 0.100 m/s'
 chosen_synergies = 3
 
 # Define some variables about the data
 number_cycles = len(A) // 200
 
 # Choosing best number of components
-chosen_synergies = 3
+chosen_synergies = 7
 W, H, C = nnmf_factorize(A, chosen_synergies)
 
-np.savetxt('./DTR-M5/primitives-preDTX-non-100.csv', W, delimiter=',')
-np.savetxt('./DTR-M5/modules-preDTX-non-100.csv', H, delimiter=',')
-np.savetxt('./DTR-M5/C3-preDTX-non-100.csv', C, delimiter=',')
+np.savetxt('./DTR-M5/primitives-preDTX-per-100.csv', W, delimiter=',')
+np.savetxt('./DTR-M5/modules-preDTX-per-100.csv', H, delimiter=',')
+np.savetxt('./DTR-M5/C3-preDTX-per-100.csv', C, delimiter=',')
 
 samples = np.arange(0, len(C))
 samples_binned = np.arange(200)
@@ -57,7 +57,7 @@ samples_binned = np.arange(200)
 motor_modules = H
 motor_primitives = W
 print("--------------------------------")
-print("motor_modules",motor_modules[:,0])
+print("motor_modules", motor_modules[:,0])
 print("--------------------------------")
 print(motor_primitives[:,0])
 print("--------------------------------")
@@ -73,7 +73,7 @@ primitive_trace = np.zeros(200)
 for i in range(number_cycles):
     # Get the data for the current bin
     time_point_average = motor_primitives[i * 200: (i + 1) * 200, chosen_synergies-1]
-    
+
     # Accumulate the trace values
     primitive_trace += time_point_average
 

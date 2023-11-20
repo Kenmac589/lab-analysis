@@ -77,6 +77,7 @@ def full_width_half_abs_min(motor_p_full, synergy_selection):
 
     # Save
     fwhl = np.array([])
+    half_width_height_array = np.array([])
     fwhl_start_stop = np.empty((number_cycles, 0))
 
     for i in range(number_cycles):
@@ -85,8 +86,7 @@ def full_width_half_abs_min(motor_p_full, synergy_selection):
         primitive_mask = current_primitive > 0.0
 
         # applying mask to exclude values which were subject to rounding errors
-        mcurrent_primitive_raw = np.asarray(current_primitive[primitive_mask])
-        mcurrent_primitive = sp.ndimage.median_filter(mcurrent_primitive_raw, size=3)
+        mcurrent_primitive = np.asarray(current_primitive[primitive_mask])
 
         # getting maximum
         max_ind = np.argmax(mcurrent_primitive)
@@ -105,41 +105,50 @@ def full_width_half_abs_min(motor_p_full, synergy_selection):
             # Half Width formula
             half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[min_ind_before]) / 2
 
+            half_width_start = np.argmax(mcurrent_primitive[::max_ind] < half_width_height) + min_ind_before
+            half_width_end = np.argmax(mcurrent_primitive[:max_ind] > half_width_height)
         else:
             print("Second minimum used")
             half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[min_ind_after]) / 2
 
+        # largest_index = np.argmax(arr[np.logical_and(arr > 2, arr < 8)])
         # Getting the closest indicies on either side of the max closest to half width
-        half_width_start = np.argmax(mcurrent_primitive[::max_ind] > half_width_height)
-        half_width_end = np.argmax(mcurrent_primitive[:max_ind] > half_width_height)
+        # half_width_start = np.argmax(mcurrent_primitive[::max_ind] > half_width_height)
+        # half_width_end = np.argmax(mcurrent_primitive[:max_ind] > half_width_height)
+
+        area_above_half = [i for i in range(len(mcurrent_primitive)) if mcurrent_primitive[i] > half_width_height]
+        half_width_start = area_above_half[0]
+        half_width_end = area_above_half[-1]
 
         # Adding start and stop coordinates appropriate to array
-        fwhl_start_stop_list = np.append(fwhl_start_stop, [[half_width_start, half_width_end]])
-        fwhl_start_stop = fwhl_start_stop_list.reshape((len(fwhl_start_stop_list) // 2), 2)
+        half_width_height_array = np.append(half_width_height_array, [half_width_height])
+        # fwhl_height = fwhl_start_stop_list.reshape((len(fwhl_start_stop_list) // 2), 2)
+        fwhl_start_stop = np.append(fwhl_start_stop, [[half_width_start, half_width_end]])
+        fwhl_start_stop = fwhl_start_stop.reshape((len(fwhl_start_stop) // 2), 2)
 
         # Determing length for primitive and appending
         full_width_length = half_width_end - half_width_start
         fwhl = np.append(fwhl, [full_width_length])
 
-        # print("Start", half_width_start)
-        # print("End", half_width_end)
+        # print("Start of half width line", half_width_start)
+        # print("End of half width line", half_width_end)
 
-        # print("Half width height", half_width_height)
+        # # print("Half width height", half_width_height)
 
         # print("before max min index", min_ind_before, "value", mcurrent_primitive[min_ind_before])
+        # print("half width height", half_width_height)
         # print("max value", max_ind, "value", mcurrent_primitive[max_ind])
         # print("after max min value", min_ind_after, "value", mcurrent_primitive[min_ind_after])
-        # print("Length", len(mcurrent_primitive))
+        # print("Length", full_width_length)
         # print(mcurrent_primitive[min_ind_after])
+        # print()
 
         # np.savetxt('primitive-{:04}.csv'.format(i), mcurrent_primitive)
 
         # Getting overview of all motor primitives
         # plt.plot(mcurrent_primitive)
 
-    print("Width Values", fwhl_start_stop)
-
-    return fwhl, fwhl_start_stop
+    return fwhl, fwhl_start_stop, half_width_height_array
 
 # Plotting Section
 def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title="Output"):
@@ -154,17 +163,16 @@ def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title=
 
     # Smoothen the data
 
-    fwhl, fwhl_start_stop = full_width_half_abs_min(motor_primitives, synergy_selection)
+    fwhl, fwhl_start_stop, fwhl_height = full_width_half_abs_min(motor_primitives, synergy_selection)
 
     samples = np.arange(0, len(motor_primitives))
     samples_binned = np.arange(200)
     number_cycles = len(motor_primitives) // 200
 
     # Plot
-    primitive_trace_raw = np.zeros(200)
+    primitive_trace = np.zeros(200)
 
     # Plotting Primitive Selected Synergy Count
-
 
     # Iterate over the bins
     for i in range(number_cycles):
@@ -172,12 +180,14 @@ def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title=
 
         time_point_average = motor_primitives[i * 200: (i + 1) * 200, synergy_selection - 2]
 
+        plt.axhline(y=fwhl_height[i], xmin=fwhl_start_stop[i, 0], xmax=fwhl_start_stop[i, 1], color='black', alpha=0.2)
+        print(fwhl_start_stop[i, 0])
+        print(fwhl_start_stop[i, 1])
         # Accumulate the trace values
-        primitive_trace_raw += time_point_average
+        primitive_trace += time_point_average
 
     # Calculate the average by dividing the accumulated values by the number of bins
-    primitive_trace_raw /= number_cycles
-    primitive_trace = sp.ndimage.median_filter(primitive_trace_raw, size=5)
+    primitive_trace /= number_cycles
 
     plt.plot(samples[samples_binned], primitive_trace, color='blue')
 
@@ -186,10 +196,9 @@ def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title=
 
     # Using the order F so the values are in column order
     binned_primitives_raw = selected_primitive.reshape((200, -1), order='F')
-    binned_primitives = sp.ndimage.median_filter(binned_primitives_raw, size=5)
+    binned_primitives = sp.ndimage.median_filter(binned_primitives_raw, size=3)
     plt.plot(binned_primitives, color='black', alpha=0.2)
-    print(fwhl_start_stop[3, 1])
-
+    # print(fwhl_start_stop[3, 1])
 
     # Removing axis values
     plt.xticks([])
@@ -197,6 +206,11 @@ def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title=
 
     # Add a vertical line at the halfway point
     plt.axvline(x=100, color='black')
+
+    # Adding a horizontal line for fwhl
+
+
+    plt.axhline(y=np.mean(fwhl_height), color='red')
 
     # Add labels for swing and stance
     plt.text(50, -0.2 * np.max(primitive_trace), 'Swing', ha='center', va='center')
@@ -217,19 +231,16 @@ def main():
 
     data_selection_non, syn_selection_non = './full_width_test/norm-emg-preDTX-100.csv', 3
     motor_p_non, motor_m_non = synergy_extraction(data_selection_non, syn_selection_non)
-    fwhl_non, fwhl_non_start_stop = full_width_half_abs_min(motor_p_non, syn_selection_non)
+    fwhl_non, fwhl_non_start_stop, fwhl_height_non = full_width_half_abs_min(motor_p_non, syn_selection_non)
 
-    data_selection_per, syn_selection_per = './full_width_test/norm-emg-preDTX-per.csv', 3
-    motor_p_per, motor_m_per = synergy_extraction(data_selection_per, syn_selection_per)
-    fwhl_per, fwhl_per_start_stop = full_width_half_abs_min(motor_p_per, syn_selection_per)
-
-    print(fwhl_non_start_stop)
-    print(fwhl_per_start_stop)
+    # data_selection_per, syn_selection_per = './full_width_test/norm-emg-preDTX-per.csv', 3
+    # motor_p_per, motor_m_per = synergy_extraction(data_selection_per, syn_selection_per)
+    # fwhl_per, fwhl_per_start_stop = full_width_half_abs_min(motor_p_per, syn_selection_per)
 
     sel_primitive_trace(data_selection_non, syn_selection_non, "M5 PreDTX Non-pertubation 0.100m/s")
 
-    sel_primitive_trace(data_selection_per, syn_selection_per, "M5 PreDTX wiht Perturbation 0.100m/s")
-    # print(full_width_half_min)
+    # sel_primitive_trace(data_selection_per, syn_selection_per, "M5 PreDTX wiht Perturbation 0.100m/s")
+    print(fwhl_non_start_stop)
     # print('Motor Primitives', motor_p)
     # print('Motor Modules', motor_m)
     # Calculate the number of 200-value bins
