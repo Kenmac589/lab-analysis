@@ -309,3 +309,42 @@ print(arr)
 ```
 In this case, the `dtype` parameter specifies that the array should have an integer data type.
 
+# Regarding smoothening of Data
+
+There are several ways to smoothen the values in a NumPy array, depending on the desired outcome and the type of smoothing technique you want to use. Here are some common techniques:
+
+1. Average filtering: This involves taking the average of the values in a window of a certain size around each element in the array. The size of the window can be adjusted to control the degree of smoothing.
+2. Median filtering: This involves replacing each element with the median value of the elements in a window of a certain size around it. The size of the window can also be adjusted to control the degree of smoothing.
+3. Gaussian filtering: This involves convolving the array with a Gaussian filter, which is a mathematical function that has a bell-shaped curve that tapers off rapidly as you move further away from the center.
+4. Savitzky-Golay filtering: This is a more advanced technique that uses a polynomial fit to smooth out the data. It involves fitting a polynomial of a certain degree to the data in a window of a certain size around each element, and then replacing each element with the fitted value.
+5. Using a library: There are several libraries available for Python that provide functions for smoothing arrays, such as scipy.signal.savgol_filter() and scipy.signal.medfilt2d().
+
+It's important to note that the choice of technique will depend on the specific characteristics of your data and the desired outcome.
+
+>>> how to apply a median filter to a numpy arrya
+
+A median filter is a type of image processing technique that can be applied to a NumPy array to smooth out noise in an image. Here's how you can apply a median filter to a NumPy array:
+
+1. First, import the necessary libraries:
+```python
+import numpy as np
+from scipy.signal import medfilt2d
+```
+2. Next, create a sample NumPy array:
+```python
+arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+```
+3. Apply the median filter to the array using the `medfilt2d` function from scipy.signal:
+```python
+arr_filtered = medfilt2d(arr, kernel_size=(3, 3), mode='reflect')
+```
+The `kernel_size` parameter specifies the size of the filter kernel, which determines the degree of smoothing. The `mode` parameter specifies the boundary conditions for the filter. In this case, we are using the reflect mode to ensure that the filtered array has the same dimensions as the original array.
+4. Visualize the filtered array:
+```python
+import matplotlib.pyplot as plt
+
+plt.imshow(arr_filtered)
+plt.show()
+```
+The resulting image will have reduced noise and a smoother appearance. You can adjust the `kernel_size` parameter to control the degree of smoothing.
+
