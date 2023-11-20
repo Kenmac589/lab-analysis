@@ -91,6 +91,7 @@ def full_width_half_abs_min(motor_p_full, synergy_selection):
         # getting maximum
         max_ind = np.argmax(mcurrent_primitive)
 
+        # abs_min_ind = np.argmin(mcurrent_primitive)
         # getting the minimum before
         min_ind_before = np.argmin(mcurrent_primitive[:max_ind])
 
@@ -100,7 +101,7 @@ def full_width_half_abs_min(motor_p_full, synergy_selection):
 
         # Determing the smaller minimum to use
         if mcurrent_primitive[min_ind_before] < mcurrent_primitive[min_ind_after]:
-            print("First minimum used!")
+            # print("First minimum used!")
 
             # Half Width formula
             half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[min_ind_before]) / 2
@@ -108,13 +109,14 @@ def full_width_half_abs_min(motor_p_full, synergy_selection):
             half_width_start = np.argmax(mcurrent_primitive[::max_ind] < half_width_height) + min_ind_before
             half_width_end = np.argmax(mcurrent_primitive[:max_ind] > half_width_height)
         else:
-            print("Second minimum used")
+            # print("Second minimum used")
             half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[min_ind_after]) / 2
 
         # largest_index = np.argmax(arr[np.logical_and(arr > 2, arr < 8)])
         # Getting the closest indicies on either side of the max closest to half width
         # half_width_start = np.argmax(mcurrent_primitive[::max_ind] > half_width_height)
         # half_width_end = np.argmax(mcurrent_primitive[:max_ind] > half_width_height)
+        # half_width_height = (max_ind - abs_min_ind) / 2
 
         area_above_half = [i for i in range(len(mcurrent_primitive)) if mcurrent_primitive[i] > half_width_height]
         half_width_start = area_above_half[0]
@@ -143,10 +145,6 @@ def full_width_half_abs_min(motor_p_full, synergy_selection):
         # print(mcurrent_primitive[min_ind_after])
         # print()
 
-        # np.savetxt('primitive-{:04}.csv'.format(i), mcurrent_primitive)
-
-        # Getting overview of all motor primitives
-        # plt.plot(mcurrent_primitive)
 
     return fwhl, fwhl_start_stop, half_width_height_array
 
@@ -231,19 +229,24 @@ def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title=
 
 def main():
 
-    # Pre DTX group
+
     data_selection_non, syn_selection_non = './full_width_test/norm-emg-preDTX-100.csv', 3
     motor_p_non, motor_m_non = synergy_extraction(data_selection_non, syn_selection_non)
     fwhl_non, fwhl_non_start_stop, fwhl_height_non = full_width_half_abs_min(motor_p_non, syn_selection_non)
 
+    data_selection_per, syn_selection_per = './full_width_test/norm-emg-preDTX-per.csv', 3
+    motor_p_per, motor_m_per = synergy_extraction(data_selection_per, syn_selection_per)
+    fwhl_per, fwhl_per_start_stop, fwhl_height_per = full_width_half_abs_min(motor_p_per, syn_selection_per)
 
     sel_primitive_trace(data_selection_non, syn_selection_non, "M5 PreDTX Non-pertubation 0.100m/s")
+    sel_primitive_trace(data_selection_per, syn_selection_per, "M5 PreDTX with Pertubation 0.100m/s")
 
-    # sel_primitive_trace(data_selection_per, syn_selection_per, "M5 PreDTX wiht Perturbation 0.100m/s")
-    # print('Motor Primitives', motor_p)
-    # print('Motor Modules', motor_m)
-    # Calculate the number of 200-value bins
+    # Post DTX Group
+    data_selection_non_post, syn_selection_non_post = './full_width_test/norm-emg-postDTX-100.csv', 2
+    motor_p_non_post, motor_m_non_post = synergy_extraction(data_selection_non_post, syn_selection_non_post)
+    fwhl_non_post, fwhl_non_start_stop_post, fwhl_height_non_post = full_width_half_abs_min(motor_p_non_post, syn_selection_non_post)
 
+    sel_primitive_trace(data_selection_non_post, syn_selection_non_post, "M5 PostDTX with Pertubation 0.100m/s")
 
 if __name__ == "__main__":
     main()

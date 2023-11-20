@@ -26,14 +26,14 @@ def nnmf_factorize(A, k):
     return W, H, C
 
 # Load Data
-data = pd.read_csv("./full_width_test/norm-emg-preDTX-per.csv", header=None)
+data = pd.read_csv("./full_width_test/norm-emg-postDTX-100.csv", header=None)
 A = data.to_numpy()
 
 # Setting various paramaters through the script I often change
-selected_primitive_filename = 'preDTX-100-per.png'
-selected_primitive_title = 'Motor Primitive for DTR-M5 preDTX with pertubration at 0.100'
-modules_and_primitives_filename = 'preDTX-100-per-prim.png'
-modules_and_primitives_title = 'Muscle Synergies for DTR-M5 preDTX perturbation 0.100 m/s'
+selected_primitive_filename = 'postDTX-100-per.png'
+selected_primitive_title = 'Motor Primitive for DTR-M5 postDTX with pertubration at 0.100'
+modules_and_primitives_filename = 'postDTX-100-non-prim.png'
+modules_and_primitives_title = 'Muscle Synergies for DTR-M5 postDTX without perturbation 0.100 m/s'
 chosen_synergies = 3
 
 # Define some variables about the data
@@ -43,9 +43,9 @@ number_cycles = len(A) // 200
 chosen_synergies = 7
 W, H, C = nnmf_factorize(A, chosen_synergies)
 
-np.savetxt('./DTR-M5/primitives-preDTX-per-100.csv', W, delimiter=',')
-np.savetxt('./DTR-M5/modules-preDTX-per-100.csv', H, delimiter=',')
-np.savetxt('./DTR-M5/C3-preDTX-per-100.csv', C, delimiter=',')
+np.savetxt('./DTR-M5/primitives-postDTX-non-100.csv', W, delimiter=',')
+np.savetxt('./DTR-M5/modules-postDTX-non-100.csv', H, delimiter=',')
+np.savetxt('./DTR-M5/C3-postDTX-non-100.csv', C, delimiter=',')
 
 samples = np.arange(0, len(C))
 samples_binned = np.arange(200)
