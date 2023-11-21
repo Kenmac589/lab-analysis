@@ -36,7 +36,7 @@ def nnmf_factorize(A, k):
 #     return emg_norm
 
 # Load Data
-data = pd.read_csv("./norm-emg-preDTX-100.csv", header=None)
+data = pd.read_csv("./full_width_test/norm-emg-preDTX-per-cleaned.csv", header=None)
 A = data.to_numpy()
 
 # Define some variables about the data
@@ -59,7 +59,7 @@ for i in range(len(R2All)):
     print("r =", i+2, ":", corrcoef[i])
 
 # Choosing best number of components
-chosen_synergies = 7
+chosen_synergies = 4
 W, H, C = nnmf_factorize(A, chosen_synergies)
 
 samples = np.arange(0, len(C))

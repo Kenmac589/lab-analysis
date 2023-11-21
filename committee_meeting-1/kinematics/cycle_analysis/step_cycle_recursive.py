@@ -102,10 +102,10 @@ cycle_results_csv = 'cycle_analysis.csv'
 
 with open(cycle_results_csv, 'w', newline='') as file:
     writer = csv.writer(file)
-    
+
     # Write the header row (optional)
     writer.writerow(['Data Point', 'Mean', 'Standard Deviation'])
-    
+
     # Write data from the dictionary
     for key, (mean, std_dev) in cycle_results.items():
         writer.writerow([key, mean, std_dev])
@@ -114,6 +114,7 @@ print(f'Data has been saved to {cycle_results_csv}')
 
 # Plotting values
 trials = list(cycle_results.keys())
+print(trials)
 mean_step_cycle = [value[0] for value in cycle_results.values()]
 sd_step_cycle = [value[1] for value in cycle_results.values()]
 

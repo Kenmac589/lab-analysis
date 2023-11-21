@@ -36,14 +36,14 @@ def nnmf_factorize(A, k):
 #     return emg_norm
 
 # Load Data
-data = pd.read_csv("./full_width_test/norm-emg-postDTX-100.csv", header=None)
+data = pd.read_csv("./full_width_test/norm-emg-preDTX-per-cleaned.csv", header=None)
 A = data.to_numpy()
 
 # Setting various paramaters through the script I often change
-selected_primitive_filename = 'potDTX-100-non.png'
-selected_primitive_title = 'Motor Primitive for DTR-M5 postDTX without pertubration at 0.100'
-modules_and_primitives_filename = 'postDTX-100-mod.png'
-modules_and_primitives_title = 'Muscle Synergies for DTR-M5 postDTX without perturbation 0.100 m/s'
+selected_primitive_filename = './full_width_test/preDTX-100-per.png'
+selected_primitive_title = 'Motor Primitive for DTR-M5 preDTX with pertubration at 0.100'
+modules_and_primitives_filename = './full_width_test/preDTX-100-per.png'
+modules_and_primitives_title = 'Muscle Synergies for DTR-M5 preDTX with perturbation 0.100 m/s'
 chosen_synergies = 7
 
 
@@ -63,8 +63,8 @@ for i in range(len(R2All)):
 # Calculating correlation coefficient for each component
 corrcoef = np.zeros(len(num_components))
 for i in range(len(R2All)):
-    corrcoef[i] = np.corrcoef(num_components[0:i+2], R2All[0:i+2])[0,1]
-    print("r =", i+2, ":", corrcoef[i])
+    corrcoef[i] = np.corrcoef(num_components[0:i + 2], R2All[0:i + 2])[0, 1]
+    print("r =", i + 2, ":", corrcoef[i])
 
 # Choosing best number of components
 W, H, C = nnmf_factorize(A, chosen_synergies)

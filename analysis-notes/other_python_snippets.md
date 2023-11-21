@@ -375,3 +375,91 @@ split_arr = np.array([arr[i:i+200] for i in range(0, len(arr), 200)])
 This will create a list of 25 elements (since there are 500 elements in the original array and each element contains 200 values). Each element in the list is a 1D array containing 200 values.
 
 
+To perform an independent t-test with scipy, you can use the `scipy.stats.ttest_ind` function. This function takes two arguments: the first is a vector of sample data from the first group, and the second is a vector of sample data from the second group. The function returns the p-value associated with the test.
+
+Here is an example of how to use `scipy.stats.ttest_ind`:
+```
+import scipy.stats as stats
+
+# Example data from two groups
+group1 = [3, 5, 7, 9]
+group2 = [10, 15, 18, 22]
+
+# Perform t-test on the two groups
+t_stat, p_value = stats.ttest_ind(group1, group2)
+
+print("P-value:", p_value)
+```
+This code will output the p-value associated with the test. The p-value is a measure of the probability that the difference between the two groups occurs by chance. If the p-value is less than a certain significance level (usually 0.05), the null hypothesis that there is no significant difference between the two groups can be rejected.
+
+You can also specify additional parameters for the test, such as the alternative hypothesis and the confidence level, by using the appropriate keyword arguments. For example:
+```
+# Perform t-test on the two groups with an alternative hypothesis
+t_stat, p_value = stats.ttest_ind(group1, group2, alternative='greater')
+
+print("P-value:", p_value)
+
+# Perform t-test on the two groups with a confidence level of 0.95
+t_stat, p_value = stats.ttest_ind(group1, group2, confidence=0.95)
+
+print("P-value:", p_value)
+```
+This code will perform a two-sample t-test with an alternative hypothesis of "greater" and a confidence level of 0.95. The output will be the same as before.
+
+# Ignoring local maxima at the end of arrays
+
+```python
+# create a sample array with a local maximum at the end
+arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+arr[-1] = 10
+
+# find the differences between consecutive elements in each row
+diff_arr = np.diff(arr, axis=1)
+
+# find the indices of the maximum values in each row
+idx = diff_arr.argmax(axis=1)
+
+# extract the rows corresponding to the highest full curve, ignoring any local maxima at the ends of the rows
+highest_full_curve = arr[np.arange(arr.shape[0]), idx]
+```
+
+> how do I get the indices of the local maxima, and flanking local minima of the first peak that satisfies filters given by scipy.signal.find_peaks()
+
+To find the indices of the local maxima and flanking local minima of the first peak that satisfies filters given by `scipy.signal.find_peaks()`, you can use the following code:
+```python
+import numpy as np
+from scipy import signal
+
+# Generate a sample signal with a first peak
+t = np.linspace(0, 1, 100)
+x = np.sin(2 * np.pi * 10 * t) + 0.5 * np.sin(2 * np.pi * 20 * t)
+x[50:60] += 1
+
+# Find the first peak that satisfies the filters given by find_peaks()
+peak_idx = signal.find_peaks(x, height=0.5)[0][0]
+
+# Get the indices of the local maxima and flanking local minima of the first peak
+local_max_idxs = np.where(np.diff(x[peak_idx]) < 0)[0] + peak_idx
+local_min_idxs = np.where(np.diff(x[peak_idx]) > 0)[0] + peak_idx
+```
+In this code, we first generate a sample signal `x` with a first peak. We then use `signal.find_peaks()` to find the indices of the local maxima and flanking local minima of the first peak that satisfies the filters given by `height=0.5`. Finally, we use NumPy's `np.where()` function to get the indices of the local maxima and flanking local minima.
+
+Note that the output of `signal.find_peaks()` is a tuple containing the indices of the peaks and their corresponding heights. In this case, we are only interested in the first peak, so we use `[0]` to index into the tuple and extract its indices.
+
+# From scipy documentation
+
+```python
+>>> x = electrocardiogram()[17000:18000]
+>>> peaks, properties = find_peaks(x, prominence=1, width=20)
+>>> properties["prominences"], properties["widths"]
+(array([1.495, 2.3  ]), array([36.93773946, 39.32723577]))
+>>> plt.plot(x)
+>>> plt.plot(peaks, x[peaks], "x")
+>>> plt.vlines(x=peaks, ymin=x[peaks] - properties["prominences"],
+...            ymax = x[peaks], color = "C1")
+>>> plt.hlines(y=properties["width_heights"], xmin=properties["left_ips"],
+...            xmax=properties["right_ips"], color = "C1")
+>>> plt.show()
+```
+
+

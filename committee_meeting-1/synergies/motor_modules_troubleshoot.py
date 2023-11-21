@@ -26,26 +26,25 @@ def nnmf_factorize(A, k):
     return W, H, C
 
 # Load Data
-data = pd.read_csv("./full_width_test/norm-emg-postDTX-100.csv", header=None)
+data = pd.read_csv("./full_width_test/norm-emg-preDTX-per.csv", header=None)
 A = data.to_numpy()
 
 # Setting various paramaters through the script I often change
-selected_primitive_filename = 'postDTX-100-per.png'
-selected_primitive_title = 'Motor Primitive for DTR-M5 postDTX with pertubration at 0.100'
-modules_and_primitives_filename = 'postDTX-100-non-prim.png'
-modules_and_primitives_title = 'Muscle Synergies for DTR-M5 postDTX without perturbation 0.100 m/s'
-chosen_synergies = 3
+selected_primitive_filename = './full_width_test/preDTX-100-per-cleaned.png'
+selected_primitive_title = 'Motor Primitive for DTR-M5 preDTX with pertubration at 0.100 cleaned'
+modules_and_primitives_filename = './full_width_test/preDTX-100-per-prim.png'
+modules_and_primitives_title = 'Muscle Synergies for DTR-M5 preDTX with perturbation 0.100 m/s cleaned'
+chosen_synergies = 7
 
 # Define some variables about the data
 number_cycles = len(A) // 200
 
 # Choosing best number of components
-chosen_synergies = 7
 W, H, C = nnmf_factorize(A, chosen_synergies)
 
-np.savetxt('./DTR-M5/primitives-postDTX-non-100.csv', W, delimiter=',')
-np.savetxt('./DTR-M5/modules-postDTX-non-100.csv', H, delimiter=',')
-np.savetxt('./DTR-M5/C3-postDTX-non-100.csv', C, delimiter=',')
+# np.savetxt('./DTR-M5/primitives-preDTX-per-100-cleaned.csv', W, delimiter=',')
+# np.savetxt('./DTR-M5/modules-preDTX-per-100-cleaned.csv', H, delimiter=',')
+# np.savetxt('./DTR-M5/C3-preDTX-per-100-cleaned.csv', C, delimiter=',')
 
 samples = np.arange(0, len(C))
 samples_binned = np.arange(200)
@@ -57,9 +56,9 @@ samples_binned = np.arange(200)
 motor_modules = H
 motor_primitives = W
 print("--------------------------------")
-print("motor_modules", motor_modules[:,0])
+print("motor_modules", motor_modules[:, 0])
 print("--------------------------------")
-print(motor_primitives[:,0])
+print(motor_primitives[:, 0])
 print("--------------------------------")
 
 primitive_trace = np.zeros(200)
@@ -72,10 +71,17 @@ primitive_trace = np.zeros(200)
 # Iterate over the bins
 for i in range(number_cycles):
     # Get the data for the current bin
-    time_point_average = motor_primitives[i * 200: (i + 1) * 200, chosen_synergies-1]
+    time_point_average = motor_primitives[i * 200: (i + 1) * 200, chosen_synergies - 1]
 
     # Accumulate the trace values
     primitive_trace += time_point_average
+
+# Showing individual primitives
+for i in range(0, len(motor_primitives), 200):
+    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 1], color='black')
+    plt.title("Motor Primitives-010-per{:04}".format(i))
+    plt.show()
+    # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
 
 # Calculate the average by dividing the accumulated values by the number of bins
 primitive_trace /= number_cycles
@@ -86,9 +92,15 @@ print("--------------------------------")
 
 plt.plot(samples[samples_binned], primitive_trace, color='blue')
 
+# Showing individual primitives
+for i in range(0, len(motor_primitives), 200):
+    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 1], color='black', alpha=0.2)
+    plt.title("Motor Primitives-010-per{:04}".format(i))
+    # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
+
 # Plotting individual traces in the background
 for i in range(0, len(motor_primitives), 200):
-    plt.plot(samples[samples_binned], motor_primitives[i:i+200, chosen_synergies-1], color='black', alpha=0.2)
+    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 1], color='black', alpha=0.2)
     # plt.title("Motor Primitives-010-{:04}".format(i))
     # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
 
@@ -148,7 +160,7 @@ for col in range(chosen_synergies):
 
     # Add vertical lines at the halfway point in each subplot
     axs[0, col].axvline(x=100, color='black')
-   
+
     # Begin Presenting Motor Modules
 
     # Get the data for the current column
@@ -156,7 +168,7 @@ for col in range(chosen_synergies):
 
     # Set the x-axis values for the bar graph
     x_values = np.arange(len(motor_module_column_data))
-    
+
     # Plot the bar graph for the current column in the corresponding subplot
     axs[1, col].bar(x_values, motor_module_column_data)
 
