@@ -36,15 +36,15 @@ def nnmf_factorize(A, k):
 #     return emg_norm
 
 # Load Data
-data = pd.read_csv("./full_width_test/norm-emg-preDTX-per-cleaned.csv", header=None)
+data = pd.read_csv("./test_output.csv", header=None)
 A = data.to_numpy()
 
 # Setting various paramaters through the script I often change
-selected_primitive_filename = './full_width_test/preDTX-100-per.png'
+selected_primitive_filename = './test_output.png'
 selected_primitive_title = 'Motor Primitive for DTR-M5 preDTX with pertubration at 0.100'
-modules_and_primitives_filename = './full_width_test/preDTX-100-per.png'
+modules_and_primitives_filename = './test_output.png'
 modules_and_primitives_title = 'Muscle Synergies for DTR-M5 preDTX with perturbation 0.100 m/s'
-chosen_synergies = 7
+chosen_synergies = 3
 
 
 # Define some variables about the data

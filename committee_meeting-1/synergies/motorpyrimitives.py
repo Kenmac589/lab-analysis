@@ -10,7 +10,7 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from scipy import ndimage, signal
+from scipy import ndimage, signal, interpolate
 from sklearn.decomposition import NMF
 
 def nnmf_factorize(A, k):
@@ -64,7 +64,6 @@ def read_all_csv(directory_path):
             data_dict[filename] = data
 
     return data_dict
-
 
 
 def full_width_half_first_min(motor_p_full, synergy_selection):
@@ -254,11 +253,11 @@ def full_width_half_abs_min_scipy(motor_p_full, synergy_selection):
         # Find peaks
         peaks, properties = signal.find_peaks(mcurrent_primitive, distance=40, width=2)
         max_ind = np.argmax(peaks)
-        min_ind = np.argmin(mcurrent_primitive[peaks[max_ind - 1]: max_ind])
+        # min_ind = np.argmin(mcurrent_primitive[0:max_ind])
 
-        half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[min_ind]) / 2
+        # half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[min_ind]) / 2
 
-        print("Manually Calculated", half_width_height)
+        # print("Manually Calculated", half_width_height)
 
         print("Scipy calculated", properties['widths'][max_ind])
         # print(peaks[max_ind])
@@ -278,7 +277,7 @@ def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title=
 
     # Smoothen the data
 
-    fwhl, fwhl_start_stop, fwhl_height = full_width_half_first_min(motor_primitives, synergy_selection)
+    fwhl, fwhl_start_stop, fwhl_height = full_width_half_abs_min(motor_primitives, synergy_selection)
 
     samples = np.arange(0, len(motor_primitives))
     samples_binned = np.arange(200)
@@ -311,8 +310,11 @@ def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title=
 
     # Using the order F so the values are in column order
     binned_primitives_raw = selected_primitive.reshape((200, -1), order='F')
+
+
+
     binned_primitives = ndimage.median_filter(binned_primitives_raw, size=3)
-    plt.plot(binned_primitives, color='black', alpha=0.2)
+    plt.plot(binned_primitives[:, i], color='black', alpha=0.2)
     # print(fwhl_start_stop[3, 1])
 
     # Removing axis values
@@ -349,21 +351,21 @@ def main():
 
     data_selection_non, syn_selection_non = './full_width_test/norm-emg-preDTX-100.csv', 3
     motor_p_non, motor_m_non = synergy_extraction(data_selection_non, syn_selection_non)
-    fwhl_non, fwhl_non_start_stop, fwhl_height_non = full_width_half_abs_min_scipy(motor_p_non, syn_selection_non)
+    fwhl_non, fwhl_non_start_stop, fwhl_height_non = full_width_half_abs_min(motor_p_non, syn_selection_non)
 
     data_selection_per, syn_selection_per = './full_width_test/norm-emg-preDTX-per.csv', 3
     motor_p_per, motor_m_per = synergy_extraction(data_selection_per, syn_selection_per)
-    fwhl_per, fwhl_per_start_stop, fwhl_height_per = full_width_half_abs_min_scipy(motor_p_per, syn_selection_per)
+    fwhl_per, fwhl_per_start_stop, fwhl_height_per = full_width_half_abs_min(motor_p_per, syn_selection_per)
 
-    # sel_primitive_trace(data_selection_non, syn_selection_non, "M5 PreDTX Non-pertubation 0.100m/s")
-    # sel_primitive_trace(data_selection_per, syn_selection_per, "M5 PreDTX with Pertubation 0.100m/s")
+    sel_primitive_trace(data_selection_non, syn_selection_non, "M5 PreDTX Non-pertubation 0.100m/s")
+    sel_primitive_trace(data_selection_per, syn_selection_per, "M5 PreDTX with Pertubation 0.100m/s")
 
     # Post DTX Group
     data_selection_non_post, syn_selection_non_post = './full_width_test/norm-emg-postDTX-100.csv', 2
     motor_p_non_post, motor_m_non_post = synergy_extraction(data_selection_non_post, syn_selection_non_post)
-    fwhl_non_post, fwhl_non_start_stop_post, fwhl_height_non_post = full_width_half_abs_min_scipy(motor_p_non_post, syn_selection_non_post)
+    fwhl_non_post, fwhl_non_start_stop_post, fwhl_height_non_post = full_width_half_abs_min(motor_p_non_post, syn_selection_non_post)
 
-    # sel_primitive_trace(data_selection_non_post, syn_selection_non_post, "M5 PostDTX with Pertubation 0.100m/s")
+    sel_primitive_trace(data_selection_non_post, syn_selection_non_post, "M5 PostDTX with Pertubation 0.100m/s")
 
     # synergies_considered = 2
     # for i in range(1, synergies_considered):
