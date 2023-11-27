@@ -462,4 +462,36 @@ Note that the output of `signal.find_peaks()` is a tuple containing the indices 
 >>> plt.show()
 ```
 
+# For interpolating the primitive data
+
+To apply cubic interpolation to all columns of a NumPy array, you can use the `np.interp()` function and specify the `axis` parameter as 1 (or "columns"). Here's an example:
+```
+import numpy as np
+
+# Generate some sample data
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+A = np.array([[x, y], [x**2, y**2]])
+
+# Apply cubic interpolation to all columns
+B = np.interp(A[:, 0], A[:, 1], kind="cubic", axis=1)
+print(B)
+```
+In this example, `A` is a NumPy array with two columns and 100 rows. The first column contains the x-coordinates of the data points, and the second column contains the y-coordinates. We use the `np.interp()` function to apply cubic interpolation to all columns of `A`, and store the results in a new array `B`.
+
+The `kind` parameter specifies the type of interpolation to perform. In this case, we set it to "cubic" to apply cubic spline interpolation to each column. The `axis` parameter specifies that we want to interpolate along the columns of the input array.
+
+The resulting array `B` will have the same number of rows as `A`, but only one column containing the interpolated values for each column of `A`. You can then use this new array to plot the interpolated data using a 2D plotting function like `matplotlib.pyplot.imshow()` or `seaborn.heatmap()`.
+
+Can you give me an overview of Bayesian statistics
+
+Sure! Bayesian statistics is a method for making statistical inferences based on probability distributions. It is named after Thomas Bayes, who proposed the theory in 1763. In this approach, prior probabilities are used to inform how we should update our beliefs about an unknown parameter given new data. The goal of Bayesian analysis is to arrive at a posterior distribution that represents the revised belief about the unknown quantity after considering all available information. This method can be useful in situations where we have some degree of uncertainty about the true value of the parameter, as it allows us to incorporate our prior knowledge into our estimation process.
+
+>>> Can you give me a more detailed description
+> Certainly! To start, let's suppose we have an unknown quantity called X that takes values in some continuous interval, say [0,1]. We also know there is uncertainty about the true value of X. For example, perhaps we don't have any direct observations of X and must rely on inferring its value based on other information.
+In Bayesian analysis, we use prior probability distributions to represent our beliefs about the possible values of X before observing any data. These priors are typically based on expert opinion or some other form of knowledge about the subject matter at hand. For example, we might know from historical data that the true value of X lies somewhere between 0.4 and 0.7, so our prior distribution would be [0.4,0.7].
+
+Once we observe new information about X, such as an experimental measurement or a collection of observed data points, we update our beliefs using Bayes' theorem. This theorem tells us that the posterior probability distribution for X is proportional to the product of its prior and likelihood distributions. In other words, given the available information, we integrate over all possible values of X to arrive at the posterior distribution for X.
+
+The key benefit of Bayesian analysis is that it allows us to incorporate our prior beliefs about a quantity into our estimation process without having to make any strong assumptions about the data generating process. This means that we can be more flexible in our approach and adapt to new evidence as it becomes available, rather than making strong assumptions about the distribution of X beforehand.
 
