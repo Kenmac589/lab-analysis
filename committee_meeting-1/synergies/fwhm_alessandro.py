@@ -4,7 +4,7 @@ import sys
 import pandas as pd
 from pandas import DataFrame as df
 import seaborn as sns
-from scipy import signal
+from scipy import stats as st
 from statannotations.Annotator import Annotator
 
 def fwhm(motor_p_full, synergy_selection):
@@ -52,6 +52,9 @@ def fwhm(motor_p_full, synergy_selection):
 
 
 def main():
+    # Capturing output
+    file = open('./output.txt', 'w')
+    sys.stdout = file
 
     # For preDTX primitives
     synergy_selection = 1
@@ -155,107 +158,58 @@ def main():
     fwhm_syn2 = fwhm_df.loc[:, [col for col in fwhm_df.columns if 'Syn 2' in col]]
     fwhm_syn3 = fwhm_df.loc[:, [col for col in fwhm_df.columns if 'Syn 3' in col]]
 
-    pairs_syn1 = [("PreDTX Per Syn 1", "PreDTX Non Syn 1"), ("PreDTX Per Syn 1", "PostDTX Non Syn 1"), ("PreDTX Per Syn 1", "PostDTX Per Syn 1"), ("PostDTX Non Syn 1", "PreDTX Non Syn 1")]
-    pairs_syn2 = [("PreDTX Per Syn 2", "PreDTX Non Syn 2"), ("PreDTX Per Syn 2", "PostDTX Non Syn 2"), ("PreDTX Per Syn 2", "PostDTX Per Syn 2"), ("PostDTX Non Syn 2", "PreDTX Non Syn 2")]
-    pairs_syn3 = [("PreDTX Per Syn 3", "PostDTX Non Syn 3"), ("PreDTX Per Syn 3", "PostDTX Non Syn 3"), ("PreDTX Per Syn 3", "PostDTX Per Syn 3"), ("PostDTX Non Syn 3", "PreDTX Non Syn 3")]
+    pairs_syn1_mann = [("PreDTX Per Syn 1", "PreDTX Non Syn 1"), ("PreDTX Per Syn 1", "PostDTX Non Syn 1"), ("PreDTX Per Syn 1", "PostDTX Per Syn 1"), ("PostDTX Non Syn 1", "PreDTX Non Syn 1")]
+    pairs_syn2_mann = [("PreDTX Per Syn 2", "PreDTX Non Syn 2"), ("PreDTX Per Syn 2", "PostDTX Non Syn 2"), ("PreDTX Per Syn 2", "PostDTX Per Syn 2"), ("PostDTX Non Syn 2", "PreDTX Non Syn 2")]
+    pairs_syn3_mann = [("PreDTX Per Syn 3", "PostDTX Non Syn 3"), ("PreDTX Per Syn 3", "PostDTX Non Syn 3"), ("PreDTX Per Syn 3", "PostDTX Per Syn 3"), ("PostDTX Non Syn 3", "PreDTX Non Syn 3")]
 
     # Plotting
-    sns.set_style("whitegrid")
+    custom_params = {"axes.spines.right": False, "axes.spines.top": False}
+    sns.set(style="white", rc=custom_params)
 
     plt.title("Full Width Half Length for Synergy 1")
     plt.ylim(0, 200)
-    ax = sns.barplot(x=fwhm_syn1.columns, y=fwhm_syn1.mean(), order=fwhm_syn1.columns)
-    ax.errorbar(x=fwhm_syn1.columns, y=fwhm_syn1.mean(), yerr=fwhm_syn1.std(), capsize=2, fmt="none", c="k")
-    annotator = Annotator(ax, pairs_syn1, data=fwhm_syn1)
+    syn1 = sns.barplot(
+        x=fwhm_syn1.columns,
+        y=fwhm_syn1.mean(),
+        order=fwhm_syn1.columns,
+        zorder=2
+    )
+    syn1.errorbar(x=fwhm_syn1.columns, y=fwhm_syn1.mean(), yerr=fwhm_syn1.std(), capsize=3, fmt="none", c="k", zorder=1)
+    annotator = Annotator(syn1, pairs_syn1_mann, data=fwhm_syn1)
     annotator.configure(test='Mann-Whitney', text_format='star')
     annotator.apply_and_annotate()
     plt.show()
 
     plt.title("Full Width Half Length for Synergy 2")
     plt.ylim(0, 200)
-    ax = sns.barplot(x=fwhm_syn2.columns, y=fwhm_syn2.mean(), order=fwhm_syn2.columns)
-    ax.errorbar(x=fwhm_syn2.columns, y=fwhm_syn2.mean(), yerr=fwhm_syn2.std(), capsize=2, fmt="none", c="k")
-    annotator = Annotator(ax, pairs_syn2, data=fwhm_syn2)
+    syn2 = sns.barplot(
+        x=fwhm_syn2.columns,
+        y=fwhm_syn2.mean(),
+        order=fwhm_syn2.columns,
+        zorder=2
+    )
+    syn2.errorbar(x=fwhm_syn2.columns, y=fwhm_syn2.mean(), yerr=fwhm_syn2.std(), capsize=3, fmt="none", c="k", zorder=1)
+    annotator = Annotator(syn2, pairs_syn2_mann, data=fwhm_syn2)
     annotator.configure(test='Mann-Whitney', text_format='star')
     annotator.apply_and_annotate()
     plt.show()
 
     plt.title("Full Width Half Length for Synergy 3")
     plt.ylim(0, 200)
-    ax = sns.barplot(x=fwhm_syn3.columns, y=fwhm_syn3.mean(), order=fwhm_syn3.columns)
-    ax.errorbar(x=fwhm_syn3.columns, y=fwhm_syn3.mean(), yerr=fwhm_syn3.std(), capsize=2, fmt="none", c="k")
-    annotator = Annotator(ax, pairs_syn3, data=fwhm_syn3)
+    syn3 = sns.barplot(
+        x=fwhm_syn3.columns,
+        y=fwhm_syn3.mean(),
+        order=fwhm_syn3.columns,
+        zorder=2
+    )
+    syn3.errorbar(x=fwhm_syn3.columns, y=fwhm_syn3.mean(), yerr=fwhm_syn3.std(), capsize=3, fmt="none", c="k", zorder=1)
+    annotator = Annotator(syn3, pairs_syn3_mann, data=fwhm_syn3)
     annotator.configure(test='Mann-Whitney', text_format='star')
     annotator.apply_and_annotate()
     plt.show()
-
-    # Results Dictionnary
-    results = dict()
-    results.update({'PreDTX Non Syn 1': [np.mean(fwhl_non_syn1), np.std(fwhl_non_syn1)]})
-    results.update({'PreDTX Non Syn 2': [np.mean(fwhl_non_syn2), np.std(fwhl_non_syn2)]})
-    results.update({'PreDTX Non Syn 3': [np.mean(fwhl_non_syn3), np.std(fwhl_non_syn3)]})
-    results.update({'PreDTX Per Syn 1': [np.mean(fwhl_per_syn1), np.std(fwhl_per_syn1)]})
-    results.update({'PreDTX Per Syn 2': [np.mean(fwhl_per_syn2), np.std(fwhl_per_syn2)]})
-    results.update({'PreDTX Per Syn 3': [np.mean(fwhl_per_syn3), np.std(fwhl_per_syn3)]})
-    results.update({'PostDTX Non Syn 1': [np.mean(fwhl_post_non_syn1), np.std(fwhl_post_non_syn1)]})
-    results.update({'PostDTX Non Syn 2': [np.mean(fwhl_post_non_syn2), np.std(fwhl_post_non_syn2)]})
-    results.update({'PostDTX Non Syn 3': [np.mean(fwhl_post_non_syn3), np.std(fwhl_post_non_syn3)]})
-    results.update({'PostDTX Per Syn 1': [np.mean(fwhl_post_per_syn1), np.std(fwhl_post_per_syn1)]})
-    results.update({'PostDTX Per Syn 2': [np.mean(fwhl_post_per_syn2), np.std(fwhl_post_per_syn2)]})
-    results.update({'PostDTX Per Syn 3': [np.mean(fwhl_post_per_syn3), np.std(fwhl_post_per_syn3)]})
-
-    # Moving
-
-    # Synergy based comparison
-    # res_syn1 = {key: results[key] for key in results.keys() & {'PreDTX Non Syn 1', 'PreDTX Per Syn 1', 'PostDTX Non Syn 1', 'PostDTX Per Syn 1'}}
-    # res_syn2 = {key: results[key] for key in results.keys() & {'PreDTX Non Syn 2', 'PreDTX Per Syn 2', 'PostDTX Non Syn 2', 'PostDTX Per Syn 2'}}
-    # res_syn3 = {key: results[key] for key in results.keys() & {'PreDTX Non Syn 3', 'PreDTX Per Syn 3', 'PostDTX Non Syn 3', 'PostDTX Per Syn 3'}}
-    res_syn1 = dict((sel, results[sel]) for sel in ['PreDTX Non Syn 1', 'PreDTX Per Syn 1', 'PostDTX Non Syn 1', 'PostDTX Per Syn 1'] if sel in results)
-    res_syn2 = dict((sel, results[sel]) for sel in ['PreDTX Non Syn 2', 'PreDTX Per Syn 2', 'PostDTX Non Syn 2', 'PostDTX Per Syn 2'] if sel in results)
-    res_syn3 = dict((sel, results[sel]) for sel in ['PreDTX Non Syn 3', 'PreDTX Per Syn 3', 'PostDTX Non Syn 3', 'PostDTX Per Syn 3'] if sel in results)
-
-    # For Synergy 1
-    trials_one = list(res_syn1.keys())
-    mean_fwhl_one = [value[0] for value in res_syn1.values()]
-    std_fwhl_one = [value[1] for value in res_syn1.values()]
-    # print(res_syn1)
-
-    # For Synergy 2
-    trials_two = list(res_syn2.keys())
-    mean_fwhl_two = [value[0] for value in res_syn2.values()]
-    std_fwhl_two = [value[1] for value in res_syn2.values()]
-    # print(res_syn2)
-
-    # For Synergy 3
-    trials_three = list(res_syn3.keys())
-    mean_fwhl_three = [value[0] for value in res_syn3.values()]
-    std_fwhl_three = [value[1] for value in res_syn3.values()]
-    # print(res_syn3)
-
-    # Plotting
-
-    plt.title("Full Width Half Length for Synergy 1")
-    plt.ylim(0, 200)
-    ax = sns.barplot(x=trials_one, y=mean_fwhl_one)
-    ax.errorbar(x=trials_one, y=mean_fwhl_one, yerr=std_fwhl_one, capsize=2, lolims=True, fmt="none", c="k")
-    plt.tight_layout()
-    plt.show()
-
-    plt.title("Full Width Half Length for Synergy 2")
-    plt.ylim(0, 200)
-    ax = sns.barplot(x=trials_two, y=mean_fwhl_two)
-    ax.errorbar(x=trials_two, y=mean_fwhl_two, yerr=std_fwhl_two, capsize=2, fmt="none", c="k")
-    plt.tight_layout()
-
-    plt.title("Full Width Half Length for Synergy 3")
-    plt.ylim(0, 200)
-    ax = sns.barplot(x=trials_three, y=mean_fwhl_three)
-    ax.errorbar(x=trials_three, y=mean_fwhl_three, yerr=std_fwhl_three, capsize=2, fmt="none", c="k")
-    plt.tight_layout()
 
     # Save output to txt file
-    sys.stdout = open("./log.txt", "a")
-    sys.stdout.close()
+    file.close()
 
 if __name__ == "__main__":
     main()

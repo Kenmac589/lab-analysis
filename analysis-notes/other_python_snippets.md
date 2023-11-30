@@ -495,3 +495,103 @@ Once we observe new information about X, such as an experimental measurement or 
 
 The key benefit of Bayesian analysis is that it allows us to incorporate our prior beliefs about a quantity into our estimation process without having to make any strong assumptions about the data generating process. This means that we can be more flexible in our approach and adapt to new evidence as it becomes available, rather than making strong assumptions about the distribution of X beforehand.
 
+
+To get the total number of indices in a NumPy array that are greater than a certain value, you can use the `numpy.count_values()` function with the `where` parameter set to a boolean mask. Here's an example:
+```python
+import numpy as np
+
+# create a sample NumPy array
+arr = np.array([1, 2, 3, 4, 5, 6, 7])
+
+# define the value to compare against
+threshold = 4
+
+# create a boolean mask where values greater than threshold are True
+mask = arr > threshold
+
+# count the number of indices in the array where the mask is True
+count = np.count_values(arr, where=mask)
+
+print(f"Number of indices in the array greater than {threshold}: {count}")
+```
+
+In this example, we create a sample NumPy array `arr` with values 1 to 7. We then define a threshold value of 4 and create a boolean mask using the comparison operator `>` to find all the indices in the array where the value is greater than the threshold. Finally, we use the `numpy.count_values()` function with the `where` parameter set to the mask to count the number of indices that are greater than the threshold.
+
+The output will be:
+```
+Number of indices in the array greater than 4: 3
+```
+This shows that there are 3 indices in the array where the value is greater than 4.
+
+## How would I get the total count of indices in a numpy array that go above a certain value
+
+You can use the `count_objects` function from NumPy to get the number of elements in an array that are greater than a certain value. Here's an example:
+```
+import numpy as np
+
+# create an example array
+arr = np.array([1, 2, 3, 4, 5])
+
+# count the number of elements in the array that are greater than 3
+count = np.count_objects(arr > 3)
+
+print(count) # output: 2
+```
+In this example, we first create a NumPy array `arr` with values from 1 to 5. Then we use the `>` operator to compare each element in `arr` to the value 3, and store the result in a new array using the `count_objects` function. The resulting array contains only two elements (4 and 5), so the total count of elements in `arr` that are greater than 3 is 2.
+
+Alternatively, you can also use the `sum` method with a lambda function to get the same result:
+```
+count = np.sum(arr > 3)
+print(count) # output: 2
+```
+This code uses the `>` operator to compare each element in `arr` to the value 3, and then applies the `sum` method to calculate the total number of elements that are greater than 3. The resulting count is also 2.
+
+## how to I get a total of indicies in a numpy array that are greater than a certain threshold
+
+You can use the `numpy.where()` function to find the indices of elements in a NumPy array that are greater than a certain threshold. Here's an example:
+```python
+import numpy as np
+
+# create a sample array
+arr = np.array([1, 2, 3, 4, 5])
+
+# find the indices of elements greater than 3
+indices = np.where(arr > 3)
+
+print(indices)  # prints (array([3, 4]),)
+```
+In this example, `np.where()` returns a tuple containing two arrays: one with the indices of elements that are greater than 3, and another with the corresponding values at those indices. The `(array([3, 4]),)` syntax is used to print a single-element tuple in a more readable way.
+
+You can also use the `numpy.nonzero()` function to find the indices of elements that meet a certain condition. Here's an example:
+```
+import numpy as np
+
+# create a sample array
+arr = np.array([1, 2, 3, 4, 5])
+
+# find the indices of elements greater than 3
+indices = np.nonzero(arr > 3)
+
+print(indices)  # prints (array([3, 4]),)
+```
+This is similar to the previous example, but it returns a tuple containing a single array with the indices of elements that are greater than 3.
+
+>>> how can I plot only the numpy indices that are returned from the np.where() function
+
+You can use the `plot()` function provided by the `matplotlib` library to plot the numpy indices returned by the `np.where()` function. Here's an example:
+```
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate some random data
+data = np.random.rand(10, 10)
+
+# Use np.where() to find the indices of non-zero elements in the array
+indices = np.where(data > 0)
+
+# Plot the indices using matplotlib
+plt.plot(indices[0], indices[1])
+plt.show()
+```
+This will create a plot that shows the x and y coordinates of the non-zero elements in the array. The `hnp.where()` function returns a tuple containing two arrays, each representing the x and y coordinates of the non-zero elements, respectively. By using the `plot()` function with these arrays as input, you can create a scatter plot that shows the location of the non-zero elements in the array.
+

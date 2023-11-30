@@ -3,6 +3,7 @@
 [normalizing_emg_signal](normalizing_emg_signal.md)
 [calculating_estimated_means](calculating_estimated_means.md)
 [other_python_snippets](other_python_snippets.md)
+[full_width_half_maximum](full_width_half_maximum.md)
 
 **These selections were made based on normalized data with spike script that had an error**
 
