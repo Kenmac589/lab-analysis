@@ -1,0 +1,33 @@
+p-value annotation legend:
+      ns: 5.00e-02 < p <= 1.00e+00
+       *: 1.00e-02 < p <= 5.00e-02
+      **: 1.00e-03 < p <= 1.00e-02
+     ***: 1.00e-04 < p <= 1.00e-03
+    ****: p <= 1.00e-04
+
+PreDTX Non Syn 1 vs. PreDTX Per Syn 1: Mann-Whitney-Wilcoxon test two-sided, P_val:8.181e-02 U_stat=1.885e+02
+PreDTX Per Syn 1 vs. PostDTX Non Syn 1: Mann-Whitney-Wilcoxon test two-sided, P_val:8.694e-01 U_stat=1.665e+02
+PreDTX Per Syn 1 vs. PostDTX Per Syn 1: Mann-Whitney-Wilcoxon test two-sided, P_val:1.000e+00 U_stat=1.730e+02
+PreDTX Non Syn 1 vs. PostDTX Non Syn 1: Mann-Whitney-Wilcoxon test two-sided, P_val:2.716e-01 U_stat=1.130e+02
+p-value annotation legend:
+      ns: 5.00e-02 < p <= 1.00e+00
+       *: 1.00e-02 < p <= 5.00e-02
+      **: 1.00e-03 < p <= 1.00e-02
+     ***: 1.00e-04 < p <= 1.00e-03
+    ****: p <= 1.00e-04
+
+PreDTX Non Syn 2 vs. PreDTX Per Syn 2: Mann-Whitney-Wilcoxon test two-sided, P_val:2.078e-06 U_stat=2.750e+02
+PreDTX Per Syn 2 vs. PostDTX Non Syn 2: Mann-Whitney-Wilcoxon test two-sided, P_val:6.218e-01 U_stat=1.895e+02
+PreDTX Per Syn 2 vs. PostDTX Per Syn 2: Mann-Whitney-Wilcoxon test two-sided, P_val:9.686e-02 U_stat=2.285e+02
+PreDTX Non Syn 2 vs. PostDTX Non Syn 2: Mann-Whitney-Wilcoxon test two-sided, P_val:3.737e-05 U_stat=1.750e+02
+p-value annotation legend:
+      ns: 5.00e-02 < p <= 1.00e+00
+       *: 1.00e-02 < p <= 5.00e-02
+      **: 1.00e-03 < p <= 1.00e-02
+     ***: 1.00e-04 < p <= 1.00e-03
+    ****: p <= 1.00e-04
+
+PreDTX Per Syn 3 vs. PostDTX Non Syn 3: Mann-Whitney-Wilcoxon test two-sided, P_val:2.169e-02 U_stat=4.250e+01
+PreDTX Per Syn 3 vs. PostDTX Non Syn 3: Mann-Whitney-Wilcoxon test two-sided, P_val:2.169e-02 U_stat=4.250e+01
+PreDTX Per Syn 3 vs. PostDTX Per Syn 3: Mann-Whitney-Wilcoxon test two-sided, P_val:8.213e-04 U_stat=2.100e+01
+PreDTX Non Syn 3 vs. PostDTX Non Syn 3: Mann-Whitney-Wilcoxon test two-sided, P_val:7.092e-02 U_stat=5.250e+01

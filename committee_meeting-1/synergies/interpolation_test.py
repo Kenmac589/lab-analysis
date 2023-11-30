@@ -44,8 +44,25 @@ def synergy_extraction(data_input, synergy_selection):
     return motor_primitives, motor_modules
 
 def primitive_interpolate(motor_primitives, synergy_selection):
-    motor_p_x = len(motor_primitives)
-    motor_p_interp = np.interp(motor_primitives[:, 0], motor_primitives[:, 1], )
+    samples = len(motor_primitives)
+    # Showing Before
+    plt.plot(motor_primitives[:, synergy_selection - 1], label='Orginal trace')
+    current_primitive = motor_primitives[:, synergy_selection - 1]
+    # plt.show()
+    interp_func = interpolate.CubicSpline(samples, current_primitive, bc_type='natural')
+    # interp_func_smooth = interpolate.make_smoothing_spline(samples, motor_primitives[:, synergy_selection - 1])
+    # uniform_smooth = ndimage.uniform_filter1d(motor_primitives, size=2600)
+    # motor_p_med = ndimage.median_filter(motor_primitives, size=10)
+    x_new = np.linspace(0, len(motor_primitives[:, synergy_selection - 1]), 100)
+    motor_p_interp = interp_func(x_new)
+    # y_new = interp_func(x_new)
+    plt.plot(x_new, motor_p_interp, label='Spline')
+    # plt.plot(x_new[0:400], interp_func_smooth(motor_primitives[0:400, synergy_selection - 1]), label='Spline Smooth')
+    # ax2.plot(x_new, uniform_smooth[:, synergy_selection - 1], label='Uniform Smooth')
+    # ax3.plot(x_new, motor_p_med[:, synergy_selection - 1], label='Median Filtered')
+    plt.legend(loc='best')
+    plt.show()
+
 
 
 
@@ -148,142 +165,9 @@ def sel_primitive_trace(motor_primitives, synergy_selection, selected_primitive_
 
 # Main Function
 def main():
-    # For preDTX primitives
-    synergy_selection = 1
-    motor_p_data_non = pd.read_csv('./predtx-non-primitives.txt', header=None)
-    motor_p_preDTX_non = motor_p_data_non.to_numpy()
-
-    motor_p_data_per = pd.read_csv('./predtx-per-primitives.txt', header=None)
-    motor_p_preDTX_per = motor_p_data_per.to_numpy()
-
-    fwhl_non_syn1 = sel_primitive_trace(motor_p_preDTX_non, synergy_selection, "M5 PreDTX without Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
-
-    fwhl_per_syn1 = sel_primitive_trace(motor_p_preDTX_per, synergy_selection, "M5 PreDTX with Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
-
-    synergy_selection = 2
-    motor_p_data_non = pd.read_csv('./predtx-non-primitives.txt', header=None)
-    motor_p_preDTX_non = motor_p_data_non.to_numpy()
-
-    motor_p_data_per = pd.read_csv('./predtx-per-primitives.txt', header=None)
-    motor_p_preDTX_per = motor_p_data_per.to_numpy()
-
-    fwhl_non_syn2 = sel_primitive_trace(motor_p_preDTX_non, synergy_selection, "M5 PreDTX without Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
-
-    fwhl_per_syn2 = sel_primitive_trace(motor_p_preDTX_per, synergy_selection, "M5 PreDTX with Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
-
-    synergy_selection = 3
-    motor_p_data_non = pd.read_csv('./predtx-non-primitives.txt', header=None)
-    motor_p_preDTX_non = motor_p_data_non.to_numpy()
-
-    motor_p_data_per = pd.read_csv('./predtx-per-primitives.txt', header=None)
-    motor_p_preDTX_per = motor_p_data_per.to_numpy()
-
-    fwhl_non_syn3 = sel_primitive_trace(motor_p_preDTX_non, synergy_selection, "M5 PreDTX without Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
-
-    fwhl_per_syn3 = sel_primitive_trace(motor_p_preDTX_per, synergy_selection, "M5 PreDTX with Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
-
-    # For PostDTX Conditions
-    synergy_selection = 1
-    motor_p_data_non_post = pd.read_csv('./postdtx-non-primitives.txt', header=None)
-    motor_p_preDTX_non_post = motor_p_data_non_post.to_numpy()
-
-    motor_p_data_per_post = pd.read_csv('./postdtx-per-primitives.txt', header=None)
-    motor_p_preDTX_per_post = motor_p_data_per_post.to_numpy()
-
-    # fwhl_non_post, fwhl_non_post_start_stop, fwhl_height_non_post = full_width_half_abs_min(motor_p_preDTX_non_post, synergy_selection)
-    fwhl_post_non_syn1 = sel_primitive_trace(motor_p_preDTX_non_post, synergy_selection, "M5 PostDTX without Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
-
-    # fwhl_per_post, fwhl_per_post_start_stop, fwhl_height_per_post = full_width_half_abs_min(motor_p_preDTX_per_post, synergy_selection)
-    fwhl_post_per_syn1 = sel_primitive_trace(motor_p_preDTX_per_post, synergy_selection, "M5 PostDTX with Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
-
-    synergy_selection = 2
-    motor_p_data_non_post = pd.read_csv('./postdtx-non-primitives.txt', header=None)
-    motor_p_preDTX_non_post = motor_p_data_non_post.to_numpy()
-
-    motor_p_data_per_post = pd.read_csv('./postdtx-per-primitives.txt', header=None)
-    motor_p_preDTX_per_post = motor_p_data_per_post.to_numpy()
-
-    # fwhl_non_post, fwhl_non_post_start_stop, fwhl_height_non_post = full_width_half_abs_min(motor_p_preDTX_non_post, synergy_selection)
-    fwhl_post_non_syn2 = sel_primitive_trace(motor_p_preDTX_non_post, synergy_selection, "M5 PostDTX without Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
-
-    # fwhl_per_post, fwhl_per_post_start_stop, fwhl_height_per_post = full_width_half_abs_min(motor_p_preDTX_per_post, synergy_selection)
-    fwhl_post_per_syn2 = sel_primitive_trace(motor_p_preDTX_per_post, synergy_selection, "M5 PostDTX with Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
-
-    synergy_selection = 3
-    motor_p_data_non_post = pd.read_csv('./postdtx-non-primitives.txt', header=None)
-    motor_p_preDTX_non_post = motor_p_data_non_post.to_numpy()
-
-    motor_p_data_per_post = pd.read_csv('./postdtx-per-primitives.txt', header=None)
-    motor_p_preDTX_per_post = motor_p_data_per_post.to_numpy()
-
-    # fwhl_non_post, fwhl_non_post_start_stop, fwhl_height_non_post = full_width_half_abs_min(motor_p_preDTX_non_post, synergy_selection)
-    fwhl_post_non_syn3 = sel_primitive_trace(motor_p_preDTX_non_post, synergy_selection, "M5 PostDTX without Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
-
-    # fwhl_per_post, fwhl_per_post_start_stop, fwhl_height_per_post = full_width_half_abs_min(motor_p_preDTX_per_post, synergy_selection)
-    fwhl_post_per_syn3 = sel_primitive_trace(motor_p_preDTX_per_post, synergy_selection, "M5 PostDTX with Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
-
-    # Analysis of fwhl_lenghts
-
-    # PreDTX Results
-    predtx_results = dict()
-    predtx_results.update({'PreDTX Non Syn 1': [np.mean(fwhl_non_syn1), np.std(fwhl_non_syn1)]})
-    predtx_results.update({'PreDTX Non Syn 2': [np.mean(fwhl_non_syn2), np.std(fwhl_non_syn2)]})
-    predtx_results.update({'PreDTX Non Syn 3': [np.mean(fwhl_non_syn3), np.std(fwhl_non_syn3)]})
-    predtx_results.update({'PreDTX Per Syn 1': [np.mean(fwhl_per_syn1), np.std(fwhl_per_syn1)]})
-    predtx_results.update({'PreDTX Per Syn 2': [np.mean(fwhl_per_syn2), np.std(fwhl_per_syn2)]})
-    predtx_results.update({'PreDTX Per Syn 3': [np.mean(fwhl_per_syn3), np.std(fwhl_per_syn3)]})
-
-    # sns.set()
-    mean_fwhl_predtx = [value[0] for value in predtx_results.values()]
-    std_fwhl_predtx = [value[1] for value in predtx_results.values()]
-
-    # PostDTX Results
-    postdtx_results = dict()
-    postdtx_results.update({'PostDTX Non Syn 1': [np.mean(fwhl_post_non_syn1), np.std(fwhl_post_non_syn1)]})
-    postdtx_results.update({'PostDTX Non Syn 2': [np.mean(fwhl_post_non_syn2), np.std(fwhl_post_non_syn2)]})
-    postdtx_results.update({'PostDTX Non Syn 3': [np.mean(fwhl_post_non_syn3), np.std(fwhl_post_non_syn3)]})
-    postdtx_results.update({'PostDTX Per Syn 1': [np.mean(fwhl_post_per_syn1), np.std(fwhl_post_per_syn1)]})
-    postdtx_results.update({'PostDTX Per Syn 2': [np.mean(fwhl_post_per_syn2), np.std(fwhl_post_per_syn2)]})
-    postdtx_results.update({'PostDTX Per Syn 3': [np.mean(fwhl_post_per_syn3), np.std(fwhl_post_per_syn3)]})
-
-    mean_fwhl_postdtx = [value[0] for value in postdtx_results.values()]
-    std_fwhl_postdtx = [value[1] for value in postdtx_results.values()]
-
-    # Synergy 3 Cross comparison
-    results = dict()
-    results.update({'PreDTX Non Syn 3': [np.mean(fwhl_non_syn3), np.std(fwhl_non_syn3)]})
-    results.update({'PreDTX Per Syn 3': [np.mean(fwhl_per_syn3), np.std(fwhl_per_syn3)]})
-    results.update({'PostDTX Non Syn 3': [np.mean(fwhl_post_non_syn3), np.std(fwhl_post_non_syn3)]})
-    results.update({'PostDTX Per Syn 3': [np.mean(fwhl_post_per_syn3), np.std(fwhl_post_per_syn3)]})
-
-    mean_fwhl = [value[0] for value in results.values()]
-    std_fwhl = [value[1] for value in results.values()]
-
-    # Plotting
-    sns.set()
-    predtx_trials = list(predtx_results.keys())
-    postdtx_trials = list(postdtx_results.keys())
-    trials = list(results.keys())
-    fig, ax = plt.subplots(1, 1)
-    plt.title("Full Width Half Length PreDTX for each Synergy")
-    plt.legend(loc='upper right', bbox_to_anchor=(1, 1))
-    ax = sns.barplot(x=predtx_trials, y=mean_fwhl_predtx)
-    ax.errorbar(x=predtx_trials, y=mean_fwhl_predtx, yerr=std_fwhl_predtx, capsize=2, fmt="none", c="k")
-    plt.tight_layout()
-    plt.show()
-    plt.title("Full Width Half Length PostDTX for each Synergy")
-    ax = sns.barplot(x=postdtx_trials, y=mean_fwhl_postdtx)
-    ax.errorbar(x=postdtx_trials, y=mean_fwhl_postdtx, yerr=std_fwhl_postdtx, capsize=2, fmt="none", c="k")
-    plt.tight_layout()
-    # plt.bar(predtx_trials, mean_fwhl_predtx, yerr=std_fwhl_predtx, capsize=3)
-    plt.xticks(range(len(predtx_trials)), predtx_trials, size='small')
-    plt.show()
-    plt.title("Full Width Half Length for Synergy 3")
-    plt.legend(loc='upper right', bbox_to_anchor=(1, 1))
-    ax = sns.barplot(x=trials, y=mean_fwhl)
-    ax.errorbar(x=trials, y=mean_fwhl, yerr=std_fwhl, capsize=2, fmt="none", c="k")
-    plt.tight_layout()
-    plt.show()
+    data_input_non, synergy_selection = './norm-emg-preDTX-100.csv', 3
+    motor_p_non, motor_m_non = synergy_extraction(data_input_non, synergy_selection)
+    primitive_interpolate(motor_p_non, synergy_selection)
 
 
 if __name__ == "__main__":

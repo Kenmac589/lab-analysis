@@ -67,7 +67,7 @@ def read_all_csv(directory_path):
 
 
 def full_width_half_first_min(motor_p_full, synergy_selection):
-    """Full width half maxiumum calculation
+    """full width half maxiumum calculation
     @param: motor_p_full: full length numpy array of selected motor
     primitives
 
@@ -143,7 +143,7 @@ def full_width_half_first_min(motor_p_full, synergy_selection):
     return fwhl, fwhl_start_stop, half_width_height_array
 
 def full_width_half_abs_min(motor_p_full, synergy_selection):
-    """Full width half maxiumum calculation
+    """full width half maxiumum calculation
     @param: motor_p_full_full: full length numpy array of selected motor
     primitives
 
@@ -226,7 +226,7 @@ def full_width_half_abs_min(motor_p_full, synergy_selection):
     return fwhl, fwhl_start_stop, half_width_height_array
 
 def full_width_half_abs_min_scipy(motor_p_full, synergy_selection):
-    """Full width half maxiumum calculation
+    """full width half maxiumum calculation
     @param: motor_p_full_full: full length numpy array of selected motor
     primitives
 
@@ -241,29 +241,27 @@ def full_width_half_abs_min_scipy(motor_p_full, synergy_selection):
     fwhl_start_stop = np.empty((number_cycles, 0))
 
     for i in range(number_cycles):
-        current_primitive = motor_p_full[i * 200: (i + 1) * 200, synergy_selection - 2]
+        current_primitive = motor_p_full[i * 200: (i + 1) * 200, synergy_selection - 1]
 
-        primitive_mask = current_primitive > 0.0
-
-        # applying mask to exclude values which were subject to rounding errors
-        mcurrent_primitive = np.asarray(current_primitive[primitive_mask])
-
-        min_ind = np.argmin(mcurrent_primitive)
 
         # Find peaks
-        peaks, properties = signal.find_peaks(mcurrent_primitive, distance=40, width=2)
+        peaks, properties = signal.find_peaks(current_primitive, distance=40, width=3)
         max_ind = np.argmax(peaks)
         # min_ind = np.argmin(mcurrent_primitive[0:max_ind])
 
-        # half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[min_ind]) / 2
+        fwhl = properties["widths"][max_ind]
+        fwhl_start = properties["left_ips"][max_ind]
+        fwhl_stop = properties["right_ips"][max_ind]
+        half_width_height = properties["width_heights"][max_ind]
 
-        # print("Manually Calculated", half_width_height)
+        fwhl_start_stop = np.append(fwhl_start_stop, [[fwhl_start, fwhl_stop]])
+        half_width_height_array = np.append(half_width_height_array, [half_width_height])
 
         print("Scipy calculated", properties['widths'][max_ind])
         # print(peaks[max_ind])
 
-
     return fwhl, fwhl_start_stop, half_width_height_array
+
 # Plotting Section
 def sel_primitive_trace(data_input, synergy_selection, selected_primitive_title="Output"):
     """This will plot the selected motor primitives

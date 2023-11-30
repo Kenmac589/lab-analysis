@@ -36,13 +36,13 @@ def nnmf_factorize(A, k):
 #     return emg_norm
 
 # Load Data
-data = pd.read_csv("./test_output.csv", header=None)
+data = pd.read_csv("./norm-emg-preDTX-per.csv", header=None)
 A = data.to_numpy()
 
 # Setting various paramaters through the script I often change
-selected_primitive_filename = './test_output.png'
+selected_primitive_filename = './../figures/predtx_per_prim.png'
 selected_primitive_title = 'Motor Primitive for DTR-M5 preDTX with pertubration at 0.100'
-modules_and_primitives_filename = './test_output.png'
+modules_and_primitives_filename = './../figures/predtx_per_mod.png'
 modules_and_primitives_title = 'Muscle Synergies for DTR-M5 preDTX with perturbation 0.100 m/s'
 chosen_synergies = 3
 
@@ -91,7 +91,7 @@ primitive_trace = np.zeros(200)
 # Iterate over the bins
 for i in range(number_cycles):
     # Get the data for the current bin
-    time_point_average = motor_primitives[i * 200: (i + 1) * 200, chosen_synergies - 2]
+    time_point_average = motor_primitives[i * 200: (i + 1) * 200, chosen_synergies - 1]
 
     # Accumulate the trace values
     primitive_trace += time_point_average
@@ -107,7 +107,7 @@ plt.plot(samples[samples_binned], primitive_trace, color='blue')
 
 # Plotting individual traces in the background
 for i in range(0, len(motor_primitives), 200):
-    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 2], color='black', alpha=0.2)
+    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 1], color='black', alpha=0.2)
     # plt.title("Motor Primitives-010-{:04}".format(i))
     # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
 

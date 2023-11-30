@@ -106,6 +106,7 @@ t_stat, p_value_dtx = ttest_ind(fwhl_non, fwhl_non_post)
 print("T-test between pre and post diptheria injection", t_stat, p_value_dtx)
 
 
+
 # Plotting
 sns.set()
 trials = list(results.keys())

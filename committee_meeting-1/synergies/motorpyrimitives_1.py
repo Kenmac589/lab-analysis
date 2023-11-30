@@ -7,6 +7,7 @@ Some functions could be more recursive however, they have been used in
 applications such as synergy selection.
 """
 import os
+import csv
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -68,6 +69,49 @@ def read_all_csv(directory_path):
     return data_dict
 
 
+def fwhm(motor_p_full, synergy_selection):
+    """full width half maxiumum calculation
+    @param: motor_p_full: full length numpy array of selected motor
+    primitives
+
+    @return: mean_fwhm: Mean value for the width of the primitives
+    """
+
+    number_cycles = len(motor_p_full) // 200
+
+    # Save
+    fwhm = np.array([])
+    fwhm_index = [[]]
+    half_width_values = []
+
+    for i in range(number_cycles):
+        current_primitive = motor_p_full[i * 200: (i + 1) * 200, synergy_selection - 1]
+
+        primitive_mask = current_primitive > 0.0
+
+        # applying mask to exclude values which were subject to rounding errors
+        mcurrent_primitive = np.asarray(current_primitive[primitive_mask])
+
+        # Dealing with local maxima issues at ends of primitives
+        # diff_mcurrent = np.diff(mcurrent_primitive_full, axis=0)
+        # mcurrent_primitive = mcurrent_primitive_full[np.arange(mcurrent_primitive_full.shape[0]), diff_mcurrent]
+
+        abs_min_ind = np.argmin(mcurrent_primitive)
+
+        # getting maximum
+        max_ind = np.argmax(mcurrent_primitive)
+
+
+        half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[abs_min_ind]) / 2
+        half_width_values.append(half_width_height)
+
+        count_above = np.nonzero(mcurrent_primitive > half_width_height)
+
+        fwhm_index.append(count_above)
+        fwhm = np.append(fwhm, [len(count_above[0])])
+    fwhm = np.asarray(fwhm)
+
+    return fwhm, half_width_values
 
 def full_width_half_first_min(motor_p_full, synergy_selection):
     """Full width half maxiumum calculation
@@ -236,41 +280,42 @@ def full_width_half_abs_min_scipy(motor_p_full, synergy_selection):
     @return: mean_fwhm: Mean value for the width of the primitives
     """
 
-    number_cycles = len(motor_p_full) // 200
-
     # Save
-    fwhl = np.array([])
-    half_width_height_array = np.array([])
-    fwhl_start_stop = np.empty((number_cycles, 0))
+    fwhl = []
+    samples = np.arange(0, len(motor_p_full))
+    samples_binned = np.arange(200)
+    number_cycles = len(motor_p_full) // 200
+    # half_width_height_array = np.array([])
+    # fwhl_start_stop = np.empty((number_cycles, 0))
 
     for i in range(number_cycles):
         current_primitive = motor_p_full[i * 200: (i + 1) * 200, synergy_selection - 1]
 
-        # primitive_mask = current_primitive > 0.0
+        primitive_mask = current_primitive > 0.0
 
         # # applying mask to exclude values which were subject to rounding errors
-        # mcurrent_primitive = np.asarray(current_primitive[primitive_mask])
+        mcurrent_primitive = np.asarray(current_primitive[primitive_mask])
 
         # Find peaks
-        peaks, properties = signal.find_peaks(current_primitive, distance=40, width=3)
+        peaks, properties = signal.find_peaks(current_primitive, distance=40, width=2)
         max_ind = np.argmax(peaks)
         # min_ind = np.argmin(mcurrent_primitive[0:max_ind])
 
         # half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[min_ind]) / 2
 
         # print("Manually Calculated", half_width_height)
-        fwhl = properties["widths"][max_ind]
-        fwhl_start = properties["left_ips"][max_ind]
-        fwhl_stop = properties["right_ips"][max_ind]
-        half_width_height = properties["width_heights"][max_ind]
-
-        fwhl_start_stop = np.append(fwhl_start_stop, [[fwhl_start, fwhl_stop]])
-        half_width_height_array = np.append(half_width_height_array, [half_width_height])
+        max_width = properties['widths'][max_ind]
+        fwhl.append(max_width)
+        # fwhl_start = properties["left_ips"][max_ind]
+        # fwhl_stop = properties["right_ips"][max_ind]
+        # half_width_height = properties["width_heights"][max_ind]
 
         print("Scipy calculated", properties['widths'][max_ind])
         # print(peaks[max_ind])
+    fwhl = np.asarray(fwhl)
 
-    return fwhl, fwhl_start_stop, half_width_height_array
+    return fwhl
+
 # Plotting Section
 def sel_primitive_trace(motor_primitives, synergy_selection, selected_primitive_title="Output"):
     """This will plot the selected motor primitives
@@ -286,6 +331,11 @@ def sel_primitive_trace(motor_primitives, synergy_selection, selected_primitive_
 
     # fwhl, fwhl_start_stop, fwhl_height = full_width_half_abs_min_scipy(motor_primitives, synergy_selection)
     fwhl = []
+
+    fwhm, half_values = fwhm(motor_primitives, synergy_selection)
+
+    # applying mask to exclude values which were subject to rounding errors
+    mcurrent_primitive = np.asarray(current_primitive[primitive_mask])
 
     samples = np.arange(0, len(motor_primitives))
     samples_binned = np.arange(200)
@@ -307,6 +357,10 @@ def sel_primitive_trace(motor_primitives, synergy_selection, selected_primitive_
         # plt.hlines(fwhl_height[i], fwhl_line_start, fwhl_line_stop, color='black', alpha=0.2)
         # Accumulate the trace values
         current_primitive = motor_primitives[i * 200: (i + 1) * 200, synergy_selection - 1]
+
+        # applying mask to exclude values which were subject to rounding errors
+        mcurrent_primitive = np.asarray(current_primitive[primitive_mask])
+
         plt.plot(samples[samples_binned], current_primitive, color='black', alpha=0.2)
         peaks, properties = signal.find_peaks(current_primitive, distance=40, width=10)
         max_ind = np.argmax(peaks)
@@ -371,6 +425,29 @@ def sel_primitive_trace(motor_primitives, synergy_selection, selected_primitive_
 
 
 def main():
+    # For Turgay comparison
+    synergy_selection = 1
+    motor_p_data_non = pd.read_csv('./turgay_test_primitives.csv', header=None)
+    motor_p_preDTX_non = motor_p_data_non.to_numpy()
+
+    fwhl_non_syn1 = full_width_half_abs_min_scipy(motor_p_preDTX_non, synergy_selection)
+    np.savetxt('./turgay_prenon1_widths.csv', fwhl_non_syn1, delimiter=',')
+
+    synergy_selection = 2
+    motor_p_data_non = pd.read_csv('./turgay_test_primitives.csv', header=None)
+    motor_p_preDTX_non = motor_p_data_non.to_numpy()
+
+    fwhl_non_syn2 = full_width_half_abs_min_scipy(motor_p_preDTX_non, synergy_selection)
+    np.savetxt('./turgay_prenon2_widths.csv', fwhl_non_syn2, delimiter=',')
+
+    synergy_selection = 3
+    motor_p_data_non = pd.read_csv('./turgay_test_primitives.csv', header=None)
+    motor_p_preDTX_non = motor_p_data_non.to_numpy()
+
+    fwhl_non_syn3 = full_width_half_abs_min_scipy(motor_p_preDTX_non, synergy_selection)
+    np.savetxt('./turgay_prenon3_widths.csv', fwhl_non_syn3, delimiter=',')
+
+
     # For preDTX primitives
     synergy_selection = 1
     motor_p_data_non = pd.read_csv('./predtx-non-primitives.txt', header=None)
@@ -380,8 +457,10 @@ def main():
     motor_p_preDTX_per = motor_p_data_per.to_numpy()
 
     fwhl_non_syn1 = sel_primitive_trace(motor_p_preDTX_non, synergy_selection, "M5 PreDTX without Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
+    np.savetxt('./prenon1_widths.csv', fwhl_non_syn1, delimiter=',')
 
     fwhl_per_syn1 = sel_primitive_trace(motor_p_preDTX_per, synergy_selection, "M5 PreDTX with Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
+    np.savetxt('./preper1_widths.csv', fwhl_per_syn1, delimiter=',')
 
     synergy_selection = 2
     motor_p_data_non = pd.read_csv('./predtx-non-primitives.txt', header=None)
@@ -391,8 +470,10 @@ def main():
     motor_p_preDTX_per = motor_p_data_per.to_numpy()
 
     fwhl_non_syn2 = sel_primitive_trace(motor_p_preDTX_non, synergy_selection, "M5 PreDTX without Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
+    np.savetxt('./prenon2_widths.csv', fwhl_non_syn2, delimiter=',')
 
     fwhl_per_syn2 = sel_primitive_trace(motor_p_preDTX_per, synergy_selection, "M5 PreDTX with Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
+    np.savetxt('./preper2_widths.csv', fwhl_per_syn2, delimiter=',')
 
     synergy_selection = 3
     motor_p_data_non = pd.read_csv('./predtx-non-primitives.txt', header=None)
@@ -402,8 +483,10 @@ def main():
     motor_p_preDTX_per = motor_p_data_per.to_numpy()
 
     fwhl_non_syn3 = sel_primitive_trace(motor_p_preDTX_non, synergy_selection, "M5 PreDTX without Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
+    np.savetxt('./prenon3_widths.csv', fwhl_non_syn3, delimiter=',')
 
     fwhl_per_syn3 = sel_primitive_trace(motor_p_preDTX_per, synergy_selection, "M5 PreDTX with Perturbation 0.100 m/s Synergy {}".format(synergy_selection))
+    np.savetxt('./preper3_widths.csv', fwhl_per_syn3, delimiter=',')
 
     # For PostDTX Conditions
     synergy_selection = 1
@@ -482,6 +565,20 @@ def main():
     mean_fwhl = [value[0] for value in results.values()]
     std_fwhl = [value[1] for value in results.values()]
 
+    # Saving results to csv
+    cycle_results_csv = 'predtx_widths.csv'
+
+    with open(cycle_results_csv, 'w', newline='') as file:
+        writer = csv.writer(file)
+
+        # Write the header row (optional)
+        writer.writerow(['Data Point', 'Width Values'])
+
+        # Write data from the dictionary
+        for key, (mean, std_dev) in results.items():
+            writer.writerow([key, mean, std_dev])
+
+    print(f'Data has been saved to {cycle_results_csv}')
     # Plotting
     sns.set()
     predtx_trials = list(predtx_results.keys())
