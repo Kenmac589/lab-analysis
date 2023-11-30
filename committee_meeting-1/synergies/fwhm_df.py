@@ -50,11 +50,12 @@ def fwhm(motor_p_full, synergy_selection):
 
     return fwhm
 
-
 def main():
     # Capturing output
     file = open('./output.txt', 'w')
     sys.stdout = file
+
+    # Import
 
     # For preDTX primitives
     synergy_selection = 1
@@ -137,6 +138,8 @@ def main():
     fwhl_post_per_syn3 = fwhm(motor_p_preDTX_per_post, synergy_selection)
 
     # Analysis of fwhl_lenghts
+    trial_list ['PreDTX Non Syn 1', 'PreDTX Non Syn 2', 'PreDTX Non Syn 3', 'PreDTX Per Syn 1', 'PreDTX Per Syn 2', 'PreDTX Per Syn 3', 'PostDTX Non Syn 1', 'PostDTX Non Syn 2', 'PostDTX Non Syn 3', 'PostDTX Per Syn 1', 'PostDTX Per Syn 2', 'PostDTX Per Syn 3']
+
 
     # Results dataframe
     fwhm_df = df()
@@ -144,8 +147,8 @@ def main():
     fwhm_df = pd.concat([fwhm_df, df({('PreDTX Non Syn 2'): fwhl_non_syn2})], axis=1)
     fwhm_df = pd.concat([fwhm_df, df({('PreDTX Non Syn 3'): fwhl_non_syn3})], axis=1)
     fwhm_df = pd.concat([fwhm_df, df({('PreDTX Per Syn 1'): fwhl_per_syn1})], axis=1)
-    fwhm_df = pd.concat([fwhm_df, df({('PreDTX Per Syn 2'): fwhl_per_syn1})], axis=1)
-    fwhm_df = pd.concat([fwhm_df, df({('PreDTX Per Syn 3'): fwhl_non_syn1})], axis=1)
+    fwhm_df = pd.concat([fwhm_df, df({('PreDTX Per Syn 2'): fwhl_per_syn2})], axis=1)
+    fwhm_df = pd.concat([fwhm_df, df({('PreDTX Per Syn 3'): fwhl_per_syn3})], axis=1)
     fwhm_df = pd.concat([fwhm_df, df({('PostDTX Non Syn 1'): fwhl_post_non_syn1})], axis=1)
     fwhm_df = pd.concat([fwhm_df, df({('PostDTX Non Syn 2'): fwhl_post_non_syn2})], axis=1)
     fwhm_df = pd.concat([fwhm_df, df({('PostDTX Non Syn 3'): fwhl_post_non_syn3})], axis=1)
@@ -207,6 +210,34 @@ def main():
     annotator.configure(test='Mann-Whitney', text_format='star')
     annotator.apply_and_annotate()
     plt.show()
+
+    # Statistics
+    print("Stats for Synergy 1")
+    print("-------------------")
+    print()
+    print("For Non-Perturbation")
+    print(st.ttest_ind(fwhm_syn1['PreDTX Non Syn 1'], fwhm_syn1['PostDTX Non Syn 1']))
+    print()
+    print("For Perturbation")
+    print(st.ttest_ind(fwhm_syn1['PreDTX Per Syn 1'], fwhm_syn1['PostDTX Per Syn 1']))
+    print()
+    print("Stats for Synergy 2")
+    print("-------------------")
+    print()
+    print("For Non-Perturbation")
+    print(st.ttest_ind(fwhm_syn2['PreDTX Non Syn 2'], fwhm_syn2['PostDTX Non Syn 2']))
+    print()
+    print("For Perturbation")
+    print(st.ttest_ind(fwhm_syn2['PreDTX Per Syn 2'], fwhm_syn2['PostDTX Per Syn 2']))
+    print()
+    print("Stats for Synergy 3")
+    print("-------------------")
+    print()
+    print("For Non-Perturbation")
+    print(st.ttest_ind(fwhm_syn3['PreDTX Non Syn 3'], fwhm_syn3['PostDTX Non Syn 3']))
+    print()
+    print("For Perturbation")
+    print(st.ttest_ind(fwhm_syn3['PreDTX Per Syn 3'], fwhm_syn3['PostDTX Per Syn 3']))
 
     # Save output to txt file
     file.close()
