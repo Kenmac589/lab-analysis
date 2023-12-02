@@ -26,7 +26,7 @@ def nnmf_factorize(A, k):
     return W, H, C
 
 # Load Data
-data = pd.read_csv("./norm-emg-postDTX-100-per.csv", header=None)
+data = pd.read_csv("./norm-emg-com-per.csv", header=0)
 A = data.to_numpy()
 
 # Defining set of components to use
@@ -47,13 +47,13 @@ for i in range(len(R2All)):
 
 # Plotting Both Methods for determining number of components
 plt.figure()
-plt.subplot(1,2,1)
+plt.subplot(1, 2, 1)
 plt.plot(num_components, R2All)
 plt.axhline(y=0.95, color='r', linestyle='-')
 plt.xlabel("Number of Components")
 plt.ylabel("$R^2$ of $C^x$ fit to original matrix")
 plt.title("Muscle Synergy Determinance by Percentage")
-plt.subplot(1,2,2)
+plt.subplot(1, 2, 2)
 plt.scatter(num_components, corrcoef)
 plt.xlabel("Number of Components")
 plt.ylabel("Correlation Coefficient")

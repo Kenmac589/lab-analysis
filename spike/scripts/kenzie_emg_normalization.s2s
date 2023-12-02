@@ -1,9 +1,14 @@
-var chswon%:=45, chswoff%:=46, chGM%:=4, chIP%:=5, chBF%:=6, chVL%:=7, chSt%:=8, chTA%:=9, chGs%:=10, chGr%:=11; 
-var sw, stt, ston, swon, swon2, swoff, cp, swdur, stdur, nswdur, nstdur, ncp, I%, II%, n%, swstep, ststep, GM, IP, BF, St, VL, TA, Gs, Gr;
+' PLEASE REVIEW whether assigned variables match configuration of recorded data
+var chswon%:=44, chswoff%:=45, chGM%:=4, chIP%:=5, chBF%:=6, chVL%:=7, chSt%:=8, chTA%:=9, chGs%:=10, chGr%:=11; 
+var sw, stt, ston, swon, swon2, swoff, cp, swdur, stdur, nswdur, nstdur, ncp, I%, II%, n%, swstep, ststep, GM, IP, BF, VL, St, TA, Gs, Gr;
 
 n%:=count(chswon%, cursor(1), cursor(2))-1;                      ' gets the number of cycles
 swon:=Nexttime(chswon%, cursor(1));
 
+' Show in log  order of muscles
+PrintLog("Muscle Calculation Order\n");
+PrintLog("GM  Ip  BF  VL  St  TA  Gs  Gr\n");
+PrintLog("\n");
 
 For I% := 1 to n% do
     swon:=Nexttime(chswon%, swon);
@@ -22,12 +27,12 @@ For I% := 1 to n% do
         GM:=ChanValue(chGM%, sw);
         Ip:=ChanValue(chIp%, sw);
         BF:=ChanValue(chBF%, sw);
-        St:=ChanValue(chSt%, sw);
         VL:=ChanValue(chVL%, sw);
+        St:=ChanValue(chSt%, sw);
         TA:=ChanValue(chTA%, sw);
         Gs:=ChanValue(chGs%, sw);
         Gr:=ChanValue(chGr%, sw);
-        Printlog(GM,"	", Ip, "	", BF, "	", St, "	", VL, "	", TA, "	", Gs,"	", Gr);
+        Printlog(GM,"	", Ip, "	", BF, "	", VL, "	", St, "	", TA, "	", Gs,"	", Gr);
     next;
     
     For II%:=0 to 99 do
@@ -35,12 +40,12 @@ For I% := 1 to n% do
         GM:=ChanValue(chGM%, stt);
         Ip:=ChanValue(chIp%, stt);
         BF:=ChanValue(chBF%, stt);
-        St:=ChanValue(chSt%, stt);
         VL:=ChanValue(chVL%, stt);
+        St:=ChanValue(chSt%, stt);
         TA:=ChanValue(chTA%, stt);
         Gs:=ChanValue(chGs%, stt);
         Gr:=ChanValue(chGr%, stt);
-        Printlog(GM,"	", Ip, "	", BF, "	", St, "	", VL, "	", TA, "	", Gs,"	", Gr);
+        Printlog(GM,"	", Ip, "	", BF, "	", VL, "	", St, "	", TA, "	", Gs,"	", Gr);
     next;
     
 next;

@@ -26,14 +26,14 @@ def nnmf_factorize(A, k):
     return W, H, C
 
 # Load Data
-data = pd.read_csv("./norm-emg-postDTX-100-per.csv", header=None)
+data = pd.read_csv("./norm-emg-com-per.csv", header=0)
 A = data.to_numpy()
 
 # Setting various paramaters through the script I often change
-selected_primitive_filename = './full_width_test/postDTX-100-per.png'
-selected_primitive_title = 'Motor Primitive for DTR-M5 postDTX with pertubration at 0.100 m/s '
-modules_and_primitives_filename = './full_width_test/postDTX-100-per-prim.png'
-modules_and_primitives_title = 'Muscle Synergies for DTR-M5 postDTX with perturbation 0.100 m/s cleaned'
+selected_primitive_filename = './full_width_test/wt-com-per.png'
+selected_primitive_title = 'Motor Primitive for CoM-M1 with pertubration at 0.100 m/s '
+modules_and_primitives_filename = './full_width_test/wt-com-per-prim.png'
+modules_and_primitives_title = 'Muscle Synergies for CoM-M1 with perturbation 0.100 m/s cleaned'
 chosen_synergies = 4
 
 # Define some variables about the data
@@ -42,9 +42,9 @@ number_cycles = len(A) // 200
 # Choosing best number of components
 W, H, C = nnmf_factorize(A, chosen_synergies)
 
-np.savetxt('./DTR-M5/primitives-postDTX-per-100.csv', W, delimiter=',')
-np.savetxt('./DTR-M5/modules-postDTX-per-100-cleaned.csv', H, delimiter=',')
-np.savetxt('./DTR-M5/C3-postDTX-per-100-cleaned.csv', C, delimiter=',')
+np.savetxt('./CoM-M1/primitives-com-m1-per.csv', W, delimiter=',')
+np.savetxt('./CoM-M1/modules-com-m1-per.csv', H, delimiter=',')
+np.savetxt('./CoM-M1/C3-com-m1-per.csv', C, delimiter=',')
 
 samples = np.arange(0, len(C))
 samples_binned = np.arange(200)
@@ -71,14 +71,14 @@ primitive_trace = np.zeros(200)
 # Iterate over the bins
 for i in range(number_cycles):
     # Get the data for the current bin
-    time_point_average = motor_primitives[i * 200: (i + 1) * 200, chosen_synergies - 1]
+    time_point_average = motor_primitives[i * 200: (i + 1) * 200, chosen_synergies - 2]
 
     # Accumulate the trace values
     primitive_trace += time_point_average
 
 # Showing individual primitives
 for i in range(0, len(motor_primitives), 200):
-    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 1], color='black')
+    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 2], color='black')
     plt.title("Motor Primitives-010-per{:04}".format(i))
     plt.show()
     # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
@@ -94,13 +94,13 @@ plt.plot(samples[samples_binned], primitive_trace, color='blue')
 
 # Showing individual primitives
 for i in range(0, len(motor_primitives), 200):
-    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 1], color='black', alpha=0.2)
+    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 2], color='black', alpha=0.2)
     plt.title("Motor Primitives-010-per{:04}".format(i))
     # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
 
 # Plotting individual traces in the background
 for i in range(0, len(motor_primitives), 200):
-    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 1], color='black', alpha=0.2)
+    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 2], color='black', alpha=0.2)
     # plt.title("Motor Primitives-010-{:04}".format(i))
     # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
 
@@ -148,7 +148,7 @@ for col in range(chosen_synergies):
 
     # Plot the average trace in the corresponding subplot
     axs[0, col].plot(samples[samples_binned], primitive_trace, color='red', label='Average Trace')
-    axs[0, col].set_title('Synergy {}'.format(col+1))
+    axs[0, col].set_title('Synergy {}'.format(col + 1))
 
     # Iterate over the bins again to plot the individual bin data
     for i in range(number_cycles):
@@ -156,7 +156,7 @@ for col in range(chosen_synergies):
         time_point_average = motor_primitives[i * 200: (i + 1) * 200, col]
 
         # Plot the bin data
-        axs[0, col].plot(samples[samples_binned], time_point_average, label='Bin {}'.format(i+1), color='black', alpha=0.1)
+        axs[0, col].plot(samples[samples_binned], time_point_average, label='Bin {}'.format(i + 1), color='black', alpha=0.1)
 
     # Add vertical lines at the halfway point in each subplot
     axs[0, col].axvline(x=100, color='black')
@@ -181,7 +181,7 @@ for col in range(chosen_synergies):
     # Remove labels on x and y axes
     axs[1, col].set_xticklabels([])
     axs[0, col].set_yticklabels([])
- 
+
     # Remove x and y axis labels and ticks from the avg_trace subplot
     axs[0, col].set_xticks([])
     axs[0, col].set_yticks([])

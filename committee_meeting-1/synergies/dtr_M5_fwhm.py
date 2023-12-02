@@ -55,7 +55,8 @@ def main():
     file = open('./output.txt', 'w')
     sys.stdout = file
 
-    trial_list = ['PreDTX Non Syn 1', 'PreDTX Non Syn 2', 'PreDTX Non Syn 3',
+    trial_list = [
+        'PreDTX Non Syn 1', 'PreDTX Non Syn 2', 'PreDTX Non Syn 3',
         'PreDTX Per Syn 1', 'PreDTX Per Syn 2', 'PreDTX Per Syn 3',
         'PostDTX Non Syn 1', 'PostDTX Non Syn 2', 'PostDTX Non Syn 3',
         'PostDTX Per Syn 1', 'PostDTX Per Syn 2', 'PostDTX Per Syn 3'
@@ -103,18 +104,6 @@ def main():
     fwhl_per_syn3 = fwhm(motor_p_preDTX_per, synergy_selection)
     # np.savetxt('./preper3_widths.csv', fwhl_per_syn3, delimiter=',')
 
-
-    motor_p_pre_non_df = pd.read_csv('./predtx-non-primitives.txt', header=None)
-    motor_p_pre_per_df = pd.read_csv('./predtx-per-primitives.txt', header=None)
-
-    fwhl_pre_non = dict()
-    fwhl_pre_per = dict()
-
-    for i in range(synergy_selection):
-
-
-
-
     # For PostDTX Conditions
     synergy_selection = 1
     motor_p_data_non_post = pd.read_csv('./postdtx-non-primitives.txt', header=None)
@@ -156,7 +145,6 @@ def main():
     fwhl_post_per_syn3 = fwhm(motor_p_preDTX_per_post, synergy_selection)
 
     # Analysis of fwhl_lenghts
-    trial_list = ['PreDTX Non Syn 1', 'PreDTX Non Syn 2', 'PreDTX Non Syn 3', 'PreDTX Per Syn 1', 'PreDTX Per Syn 2', 'PreDTX Per Syn 3', 'PostDTX Non Syn 1', 'PostDTX Non Syn 2', 'PostDTX Non Syn 3', 'PostDTX Per Syn 1', 'PostDTX Per Syn 2', 'PostDTX Per Syn 3']
 
 
     # Results dataframe
@@ -187,7 +175,7 @@ def main():
     custom_params = {"axes.spines.right": False, "axes.spines.top": False}
     sns.set(style="white", rc=custom_params)
 
-    plt.title("Full Width Half Length for Synergy 1")
+    # plt.title("Full Width Half Length for Synergy 1")
     plt.ylim(0, 200)
     syn1 = sns.barplot(
         x=fwhm_syn1.columns,
@@ -201,7 +189,7 @@ def main():
     annotator.apply_and_annotate()
     plt.show()
 
-    plt.title("Full Width Half Length for Synergy 2")
+    # plt.title("Full Width Half Length for Synergy 2")
     plt.ylim(0, 200)
     syn2 = sns.barplot(
         x=fwhm_syn2.columns,
@@ -215,7 +203,7 @@ def main():
     annotator.apply_and_annotate()
     plt.show()
 
-    plt.title("Full Width Half Length for Synergy 3")
+    # plt.title("Full Width Half Length for Synergy 3")
     plt.ylim(0, 200)
     syn3 = sns.barplot(
         x=fwhm_syn3.columns,

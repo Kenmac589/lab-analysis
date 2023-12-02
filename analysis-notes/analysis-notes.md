@@ -5,3 +5,4 @@
 [com_project](com_project.md)
 [committee_meeting 1](committee_meeting-1.md)
 [main_project dtr](main_project-dtr.md)
+[stats_applications](stats_applications.md)

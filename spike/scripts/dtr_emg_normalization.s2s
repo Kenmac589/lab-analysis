@@ -1,0 +1,51 @@
+' PLEASE REVIEW whether assigned variables match configuration of recorded data
+var chswon%:=45, chswoff%:=46, chGM%:=4, chIP%:=5, chBF%:=6, chVL%:=7, chGs%:=8, chTA%:=9, chSt%:=10, chGr%:=11; 
+var sw, stt, ston, swon, swon2, swoff, cp, swdur, stdur, nswdur, nstdur, ncp, I%, II%, n%, swstep, ststep, GM, IP, BF, Gs, VL, TA, St, Gr;
+
+n%:=count(chswon%, cursor(1), cursor(2))-1;                      ' gets the number of cycles
+swon:=Nexttime(chswon%, cursor(1));
+
+' Show in log  order of muscles
+PrintLog("Muscle Calculation Order\n");
+PrintLog("GM    Ip    BF    VL    Gs    TA    St    Gr\n");
+PrintLog("\n");
+
+For I% := 1 to n% do
+    swon:=Nexttime(chswon%, swon);
+    swoff:=Nexttime(chswoff%, swon);
+    swon2:=Nexttime(chswon%, swon);
+    
+    swdur:= swoff-swon;
+    stdur:= swon2-swoff;
+    cp:=swon2-swon;
+    
+    swstep:=swdur/100;
+    ststep:=stdur/100;
+    
+    For II%:=0 to 99 do
+    sw:=swon+(II%*swstep);
+        GM:=ChanValue(chGM%, sw);
+        Ip:=ChanValue(chIp%, sw);
+        BF:=ChanValue(chBF%, sw);
+        VL:=ChanValue(chVL%, sw);
+        Gs:=ChanValue(chGs%, sw);
+        TA:=ChanValue(chTA%, sw);
+        St:=ChanValue(chSt%, sw);
+        Gr:=ChanValue(chGr%, sw);
+        Printlog(GM,"	", Ip, "	", BF, "	", VL, "	", Gs, "	", TA, "	", St,"	", Gr);
+    next;
+    
+    For II%:=0 to 99 do
+    stt:=swoff+(II%*ststep);
+        GM:=ChanValue(chGM%, stt);
+        Ip:=ChanValue(chIp%, stt);
+        BF:=ChanValue(chBF%, stt);
+        VL:=ChanValue(chVL%, stt);
+        Gs:=ChanValue(chGs%, stt);
+        TA:=ChanValue(chTA%, stt);
+        St:=ChanValue(chSt%, stt);
+        Gr:=ChanValue(chGr%, stt);
+        Printlog(GM,"	", Ip, "	", BF, "	", VL, "	", Gs, "	", TA, "	", St,"	", Gr);
+    next;
+    
+next;

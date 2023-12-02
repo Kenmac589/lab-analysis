@@ -52,16 +52,32 @@ def fwhm(motor_p_full, synergy_selection):
 
 def main():
     # Capturing output
-    file = open('./output.txt', 'w')
-    sys.stdout = file
+    # file = open('./output.txt', 'w')
+    # sys.stdout = file
 
-    trial_list = ['PreDTX Non Syn 1', 'PreDTX Non Syn 2', 'PreDTX Non Syn 3',
+    trial_list = [
+        'PreDTX Non Syn 1', 'PreDTX Non Syn 2', 'PreDTX Non Syn 3',
         'PreDTX Per Syn 1', 'PreDTX Per Syn 2', 'PreDTX Per Syn 3',
         'PostDTX Non Syn 1', 'PostDTX Non Syn 2', 'PostDTX Non Syn 3',
         'PostDTX Per Syn 1', 'PostDTX Per Syn 2', 'PostDTX Per Syn 3'
     ]
 
     # Import
+    synergy_selection = 3
+
+    motor_p_pre_non_df = pd.read_csv('./predtx-non-primitives.txt', header=None)
+    motor_p_pre_per_df = pd.read_csv('./predtx-per-primitives.txt', header=None)
+    motor_p_post_non_df = pd.read_csv('./postdtx-non-primitives.txt', header=None)
+    motor_p_post_per_df = pd.read_csv('./postdtx-per-primitives.txt', header=None)
+
+    fwhl_pre_non = dict()
+    fwhl_pre_per = dict()
+    fwhl_post_non = dict()
+    fwhl_post_per = dict()
+
+    for i in range(synergy_selection):
+
+        print(i)
 
     # For preDTX primitives
     synergy_selection = 1
@@ -103,18 +119,6 @@ def main():
     fwhl_per_syn3 = fwhm(motor_p_preDTX_per, synergy_selection)
     # np.savetxt('./preper3_widths.csv', fwhl_per_syn3, delimiter=',')
 
-
-    motor_p_pre_non_df = pd.read_csv('./predtx-non-primitives.txt', header=None)
-    motor_p_pre_per_df = pd.read_csv('./predtx-per-primitives.txt', header=None)
-
-    fwhl_pre_non = dict()
-    fwhl_pre_per = dict()
-
-    for i in range(synergy_selection):
-
-
-
-
     # For PostDTX Conditions
     synergy_selection = 1
     motor_p_data_non_post = pd.read_csv('./postdtx-non-primitives.txt', header=None)
@@ -154,10 +158,6 @@ def main():
 
     # fwhl_per_post, fwhl_per_post_start_stop, fwhl_height_per_post = full_width_half_abs_min(motor_p_preDTX_per_post, synergy_selection)
     fwhl_post_per_syn3 = fwhm(motor_p_preDTX_per_post, synergy_selection)
-
-    # Analysis of fwhl_lenghts
-    trial_list = ['PreDTX Non Syn 1', 'PreDTX Non Syn 2', 'PreDTX Non Syn 3', 'PreDTX Per Syn 1', 'PreDTX Per Syn 2', 'PreDTX Per Syn 3', 'PostDTX Non Syn 1', 'PostDTX Non Syn 2', 'PostDTX Non Syn 3', 'PostDTX Per Syn 1', 'PostDTX Per Syn 2', 'PostDTX Per Syn 3']
-
 
     # Results dataframe
     fwhm_df = df()
@@ -199,7 +199,7 @@ def main():
     annotator = Annotator(syn1, pairs_syn1_mann, data=fwhm_syn1)
     annotator.configure(test='Mann-Whitney', text_format='star')
     annotator.apply_and_annotate()
-    plt.show()
+    # plt.show()
 
     plt.title("Full Width Half Length for Synergy 2")
     plt.ylim(0, 200)
@@ -213,7 +213,7 @@ def main():
     annotator = Annotator(syn2, pairs_syn2_mann, data=fwhm_syn2)
     annotator.configure(test='Mann-Whitney', text_format='star')
     annotator.apply_and_annotate()
-    plt.show()
+    # plt.show()
 
     plt.title("Full Width Half Length for Synergy 3")
     plt.ylim(0, 200)
@@ -227,7 +227,7 @@ def main():
     annotator = Annotator(syn3, pairs_syn3_mann, data=fwhm_syn3)
     annotator.configure(test='Mann-Whitney', text_format='star')
     annotator.apply_and_annotate()
-    plt.show()
+    # plt.show()
 
     # Statistics
     print("Stats for Synergy 1")
@@ -258,7 +258,7 @@ def main():
     print(st.ttest_ind(fwhm_syn3['PreDTX Per Syn 3'], fwhm_syn3['PostDTX Per Syn 3']))
 
     # Save output to txt file
-    file.close()
+    # file.close()
 
 if __name__ == "__main__":
     main()

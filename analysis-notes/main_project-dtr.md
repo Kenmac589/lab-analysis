@@ -2,11 +2,14 @@
 
 **The 6 month DTR mice have some channels that are mixed around from the order of implantation in the 1 yr mice which is based on the spike configuration currently being used**
 - For Gastrocnemius (Gs)
+    - CoM: muscle 7, channel 10 in spike
     - 6 month: muscle 5, channel 8 in spike
     - 1 year: muscle 7, channel 10 in spike
 - For Semitendinosus (St)
+    - CoM: muscle 5, channel 8 in spike
     - 6 month: muscle 7, channel 10 in spike
     - 1 year: muscle 5, channel 8 in spike
+
 
 Here are the values in cm (first thigh and then shank):
 
