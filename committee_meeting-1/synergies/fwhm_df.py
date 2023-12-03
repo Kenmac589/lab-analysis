@@ -110,10 +110,6 @@ def main():
     fwhl_pre_non = dict()
     fwhl_pre_per = dict()
 
-    for i in range(synergy_selection):
-
-
-
 
     # For PostDTX Conditions
     synergy_selection = 1
@@ -179,16 +175,16 @@ def main():
     fwhm_syn2 = fwhm_df.loc[:, [col for col in fwhm_df.columns if 'Syn 2' in col]]
     fwhm_syn3 = fwhm_df.loc[:, [col for col in fwhm_df.columns if 'Syn 3' in col]]
 
-    pairs_syn1_mann = [("PreDTX Per Syn 1", "PreDTX Non Syn 1"), ("PreDTX Per Syn 1", "PostDTX Non Syn 1"), ("PreDTX Per Syn 1", "PostDTX Per Syn 1"), ("PostDTX Non Syn 1", "PreDTX Non Syn 1")]
-    pairs_syn2_mann = [("PreDTX Per Syn 2", "PreDTX Non Syn 2"), ("PreDTX Per Syn 2", "PostDTX Non Syn 2"), ("PreDTX Per Syn 2", "PostDTX Per Syn 2"), ("PostDTX Non Syn 2", "PreDTX Non Syn 2")]
-    pairs_syn3_mann = [("PreDTX Per Syn 3", "PostDTX Non Syn 3"), ("PreDTX Per Syn 3", "PostDTX Non Syn 3"), ("PreDTX Per Syn 3", "PostDTX Per Syn 3"), ("PostDTX Non Syn 3", "PreDTX Non Syn 3")]
+    pairs_syn1_ttest = [("PreDTX Per Syn 1", "PreDTX Non Syn 1"), ("PreDTX Per Syn 1", "PostDTX Non Syn 1"), ("PreDTX Per Syn 1", "PostDTX Per Syn 1"), ("PostDTX Non Syn 1", "PreDTX Non Syn 1")]
+    pairs_syn2_ttest = [("PreDTX Per Syn 2", "PreDTX Non Syn 2"), ("PreDTX Per Syn 2", "PostDTX Non Syn 2"), ("PreDTX Per Syn 2", "PostDTX Per Syn 2"), ("PostDTX Non Syn 2", "PreDTX Non Syn 2")]
+    pairs_syn3_ttest = [("PreDTX Per Syn 3", "PostDTX Non Syn 3"), ("PreDTX Per Syn 3", "PostDTX Non Syn 3"), ("PreDTX Per Syn 3", "PostDTX Per Syn 3"), ("PostDTX Non Syn 3", "PreDTX Non Syn 3")]
 
     # Plotting
     custom_params = {"axes.spines.right": False, "axes.spines.top": False}
     sns.set(style="white", rc=custom_params)
 
-    plt.title("Full Width Half Length for Synergy 1")
-    plt.ylim(0, 200)
+    # plt.title("Full Width Half Length for Synergy 1")
+    plt.ylim(0, 250)
     syn1 = sns.barplot(
         x=fwhm_syn1.columns,
         y=fwhm_syn1.mean(),
@@ -196,13 +192,14 @@ def main():
         zorder=2
     )
     syn1.errorbar(x=fwhm_syn1.columns, y=fwhm_syn1.mean(), yerr=fwhm_syn1.std(), capsize=3, fmt="none", c="k", zorder=1)
-    annotator = Annotator(syn1, pairs_syn1_mann, data=fwhm_syn1)
-    annotator.configure(test='Mann-Whitney', text_format='star')
-    annotator.apply_and_annotate()
+    annotator = Annotator(syn1, pairs_syn1_ttest, data=fwhm_syn1)
+    annotator.configure(hide_non_significant=True, test='t-test_ind', text_format='simple', loc="outside")
+    # annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1) # When keeping inside
+    annotator.apply_test().annotate()
     plt.show()
 
-    plt.title("Full Width Half Length for Synergy 2")
-    plt.ylim(0, 200)
+    # plt.title("Full Width Half Length for Synergy 2")
+    plt.ylim(0, 250)
     syn2 = sns.barplot(
         x=fwhm_syn2.columns,
         y=fwhm_syn2.mean(),
@@ -210,13 +207,14 @@ def main():
         zorder=2
     )
     syn2.errorbar(x=fwhm_syn2.columns, y=fwhm_syn2.mean(), yerr=fwhm_syn2.std(), capsize=3, fmt="none", c="k", zorder=1)
-    annotator = Annotator(syn2, pairs_syn2_mann, data=fwhm_syn2)
-    annotator.configure(test='Mann-Whitney', text_format='star')
-    annotator.apply_and_annotate()
+    annotator = Annotator(syn2, pairs_syn2_ttest, data=fwhm_syn2)
+    annotator.configure(hide_non_significant=True, test='t-test_welch', text_format='simple', loc="inside")
+    # annotator.apply_test().annotate(line_offset_to_group=0.3, line_offset=0.1) # when inside
+    annotator.apply_test().annotate()
     plt.show()
 
-    plt.title("Full Width Half Length for Synergy 3")
-    plt.ylim(0, 200)
+    # plt.title("Full Width Half Length for Synergy 3")
+    plt.ylim(0, 250)
     syn3 = sns.barplot(
         x=fwhm_syn3.columns,
         y=fwhm_syn3.mean(),
@@ -224,9 +222,9 @@ def main():
         zorder=2
     )
     syn3.errorbar(x=fwhm_syn3.columns, y=fwhm_syn3.mean(), yerr=fwhm_syn3.std(), capsize=3, fmt="none", c="k", zorder=1)
-    annotator = Annotator(syn3, pairs_syn3_mann, data=fwhm_syn3)
-    annotator.configure(test='Mann-Whitney', text_format='star')
-    annotator.apply_and_annotate()
+    annotator = Annotator(syn3, pairs_syn3_ttest, data=fwhm_syn3)
+    annotator.configure(hide_non_significant=True, test='t-test_welch', text_format='simple', loc="inside")
+    annotator.apply_test().annotate(line_offset_to_group=0.3, line_offset=0.1)
     plt.show()
 
     # Statistics

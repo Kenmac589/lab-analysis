@@ -1,6 +1,6 @@
 """Average length of gait cycle per condition
 
-This program is supposed to find the average 
+This program is supposed to find the average
 
 """
 
@@ -9,6 +9,8 @@ import csv
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
+from statannotations.Annotator import Annotator
 from scipy.stats import ttest_ind
 from scipy.stats import f_oneway
 
@@ -36,7 +38,7 @@ def step_duration(input_dataframe):
     column_for_time = "Time"
     column_for_treadmill = "2 Trdml"
 
-    # Store time values and treadmill speed when the specified value is found 
+    # Store time values and treadmill speed when the specified value is found
     time_values = []
     treadmill_speed = []
 
@@ -51,7 +53,7 @@ def step_duration(input_dataframe):
     # Calculate the differences between consecutive time values
     time_differences = []
     for i in range(len(time_values)):
-        time_diff = time_values[i] - time_values[i-1]
+        time_diff = time_values[i] - time_values[i - 1]
         time_differences.append(time_diff)
 
     # Finding the average value for the list
@@ -75,56 +77,141 @@ def step_duration(input_dataframe):
 
     return adjusted_time_differences, adjusted_treadmill_speeds
 
+def cycle_periods(input_dataframe):
+
+    # Define the value and column to search for
+    value_to_find = 1
+    column_to_search = "45 sw onset"
+    column_for_time = "Time"
+    column_for_treadmill = "2 Trdml"
+
+    # Store time values and treadmill speed when the specified value is found
+    time_values = []
+    treadmill_speed = []
+
+    # Iterate through the DataFrame and process matches
+    for index, row in input_dataframe.iterrows():
+        if row[column_to_search] == value_to_find:
+            time_value = row[column_for_time]
+            time_values.append(time_value)
+            treadmill_value = row[column_for_treadmill]
+            treadmill_speed.append(treadmill_value)
+
+    # Calculate the differences between consecutive time values
+    time_differences = []
+    for i in range(len(time_values)):
+        time_diff = time_values[i] - time_values[i - 1]
+        time_differences.append(time_diff)
+
+    # Finding the average value for the list
+    time_differences_array = np.array(time_differences)
+    treadmill_speed_array = np.array(treadmill_speed)
+
+    # Creating masks to filter any values above 1 as this would be between distinct recordings
+    recording_cutoff_high = 0.6
+    recording_cutoff_low = 0.000
+    cutoff_high = time_differences_array <= recording_cutoff_high
+    cutoff_low = time_differences_array >= recording_cutoff_low
+    combined_filter = np.logical_and(cutoff_low, cutoff_high)
+
+    # Applying the filter to the arrays
+    adjusted_time_differences = time_differences_array[combined_filter]
+    adjusted_treadmill_speeds = treadmill_speed_array[combined_filter]
+    adj_time_xaxis = np.arange(0, len(adjusted_time_differences))
+
+    # Finding average step cylce for this length
+    average_step_difference = np.mean(adjusted_time_differences)
+
+    return adjusted_time_differences
+
+def cycle_period_summary(directory_path):
+
+    trial_list = read_all_csv(directory_path)
+
+    cycle_results = {}
+    for key in trial_list:
+        cycle_results[key] = None
+
+    # Now, you can access the data from each file like this:
+    for filename, data in trial_list.items():
+        step_duration_array, treadmill_speed = step_duration(data)
+        cycle_results[filename] = np.mean(step_duration_array), np.mean(treadmill_speed)
+
+    # Saving results to csv
+    cycle_results_csv = 'cycle_analysis.csv'
+
+    with open(cycle_results_csv, 'w', newline='') as file:
+        writer = csv.writer(file)
+
+        # Write the header row (optional)
+        writer.writerow(['Data Point', 'Mean', 'Standard Deviation'])
+
+        # Write data from the dictionary
+        for key, (mean, std_dev) in cycle_results.items():
+            writer.writerow([key, mean, std_dev])
+
+    print(f'Data has been saved to {cycle_results_csv}')
+
 # Main Code Body
+def main():
 
-# Read in all csv's with cycle timing
-# This is all that really has to change
-directory_path = "./M5"
-trial_list = read_all_csv(directory_path)
+    data_dict = {}  # Initialize an empty dictionary to store the data
+    data_dict['PreDTX Without Perturbation'] = pd.read_csv('./M5/PreDTX Without Perturbation.csv')
+    data_dict['PreDTX With Perturbation'] = pd.read_csv('./M5/PreDTX With Perturbation.csv')
+    data_dict['PostDTX Without Perturbation'] = pd.read_csv('./M5/PostDTX Without Perturbation.csv')
+    data_dict['PostDTX With Perturbation'] = pd.read_csv('./M5/PostDTX With Perturbation.csv')
 
-# Initialize Dictionary for storing results for each trial
-cycle_results = {}
-for key in trial_list:
-    cycle_results[key] = None
+    # Read in all csv's with cycle timing
+    # This is all that really has to change
+    # directory_path = "./M5"
+    trial_list = data_dict
 
-# Now, you can access the data from each file like this:
-for filename, data in trial_list.items():
-    step_duration_array, treadmill_speed = step_duration(data)
-    cycle_results[filename] = np.mean(step_duration_array), np.mean(treadmill_speed)
-    print(cycle_results[filename])
-    print(f"Average step durations for {filename}:", np.mean(step_duration_array))
-    print(f"Treadmill speed for {filename}:", np.mean(treadmill_speed))
-    # print(f"Data from {filename}:")
-    # print(data.head)
+    # cycle_period_summary(directory_path)
+    cycle_results_df = pd.DataFrame()
 
-# Saving results to csv
-cycle_results_csv = 'cycle_analysis.csv'
+    # Initialize Dictionary for storing results for each trial
+    cycle_results = {}
+    for key in trial_list:
+        cycle_results[key] = None
+        cycle_results_df[key] = None
 
-with open(cycle_results_csv, 'w', newline='') as file:
-    writer = csv.writer(file)
+    # Keeping the keys as a list of strings for iteration purposes
+    trials = list(cycle_results.keys())
 
-    # Write the header row (optional)
-    writer.writerow(['Data Point', 'Mean', 'Standard Deviation'])
+    # Now, you can access the data from each file like this:
+    for filename, data in trial_list.items():
+        step_duration_array = cycle_periods(data)
+        cycle_results[filename] = step_duration_array
 
-    # Write data from the dictionary
-    for key, (mean, std_dev) in cycle_results.items():
-        writer.writerow([key, mean, std_dev])
+    # Convert Dictionary of Results to Dataframe
+    cycle_results_df = pd.DataFrame(dict([(key, pd.Series(value)) for key, value in cycle_results.items()]))
 
-print(f'Data has been saved to {cycle_results_csv}')
+    pairs = [
+        ('PreDTX Without Perturbation', 'PreDTX With Perturbation'),
+        ('PreDTX Without Perturbation', 'PostDTX Without Perturbation'),
+        ('PreDTX Without Perturbation', 'PostDTX With Perturbation'),
+        ('PreDTX With Perturbation', 'PostDTX Without Perturbation'),
+        ('PreDTX With Perturbation', 'PostDTX With Perturbation'),
+        ('PostDTX Without Perturbation', 'PostDTX With Perturbation'),
+    ]
 
-# Plotting values
-trials = list(cycle_results.keys())
-print(trials)
-mean_step_cycle = [value[0] for value in cycle_results.values()]
-sd_step_cycle = [value[1] for value in cycle_results.values()]
+    # Plotting
+    custom_params = {"axes.spines.right": False, "axes.spines.top": False}
+    sns.set(style="white", rc=custom_params)
 
-# Create a bar plot with error bars
-plt.figure(figsize=(8, 6))
-plt.bar(trials, mean_step_cycle, yerr=sd_step_cycle, capsize=5, align='center', alpha=0.6)
-plt.xlabel('Data Points')
-plt.ylabel('Mean Value')
-plt.title('Mean Values with Standard Deviations')
-plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.title("Step Cycle Durations DTR M5")
+    plt_cyc = sns.barplot(
+        x=cycle_results_df.columns,
+        y=cycle_results_df.mean(),
+        order=cycle_results_df.columns,
+        zorder=2
+    )
+    plt_cyc.errorbar(x=cycle_results_df.columns, y=cycle_results_df.mean(), yerr=cycle_results_df.std(), capsize=3, fmt="none", c="k", zorder=1)
+    annotator = Annotator(plt_cyc, pairs, data=cycle_results_df)
+    annotator.configure(hide_non_significant=True, test='t-test_welch', text_format='simple')
+    annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
+    # annotator.apply_and_annotate()
+    plt.show()
 
-# Show the plot
-plt.show()
+if __name__ == "__main__":
+    main()

@@ -36,19 +36,20 @@ def nnmf_factorize(A, k):
 #     return emg_norm
 
 # Load Data
-data = pd.read_csv("./norm-emg-preDTX-per.csv", header=None)
+data = pd.read_csv("./norm-emg-preDTX-100.csv", header=None)
 A = data.to_numpy()
 
-# Setting various paramaters through the script I often change
-selected_primitive_filename = './../figures/predtx_per_prim.png'
-selected_primitive_title = 'Motor Primitive for DTR-M5 preDTX with pertubration at 0.100'
-modules_and_primitives_filename = './../figures/predtx_per_mod.png'
-modules_and_primitives_title = 'Muscle Synergies for DTR-M5 preDTX with perturbation 0.100 m/s'
+# Setting various paramaters
+selected_primitive_filename = './../figures/predtx_non_prim.png'
+selected_primitive_title = 'Motor Primitive for DTR-M5 preDTX without pertubration at 0.100'
+modules_and_primitives_filename = './../figures/predtx_non_mod.png'
+modules_and_primitives_title = 'Muscle Synergies for DTR-M5 preDTX without perturbation 0.100 m/s'
+trace_length = 200
+channel_order = ['GM', 'Ip', 'BF', 'VL', 'Gs', 'TA', 'St', 'Gr']
 chosen_synergies = 3
 
-
 # Define some variables about the data
-number_cycles = len(A) // 200
+number_cycles = len(A) // trace_length
 
 # Defining set of components to use
 num_components = np.array([2, 3, 4, 5, 6, 7])
@@ -70,10 +71,11 @@ for i in range(len(R2All)):
 W, H, C = nnmf_factorize(A, chosen_synergies)
 
 samples = np.arange(0, len(C))
-samples_binned = np.arange(200)
+samples_binned = np.arange(trace_length)
 
 # Plot
 motor_modules = H
+motor_p_input = pd.read_csv("./DTR-M5/primitives-preDTX-non-100.csv")
 motor_primitives = W
 print("--------------------------------")
 print("motor_modules", motor_modules[:, 0])
@@ -81,17 +83,14 @@ print("--------------------------------")
 print(motor_primitives[:, 0])
 print("--------------------------------")
 
-primitive_trace = np.zeros(200)
-
-# Labels for Modules for M5 of the 6 month group ***** ALWAYS check this
-# plt.xticks(x, ['GM', 'Ip', 'BF', 'VL', 'Gs', 'TA', 'St', 'Gr'])
+primitive_trace = np.zeros(trace_length)
 
 # Plotting Primitive Selected Synergy Count
 
 # Iterate over the bins
 for i in range(number_cycles):
     # Get the data for the current bin
-    time_point_average = motor_primitives[i * 200: (i + 1) * 200, chosen_synergies - 1]
+    time_point_average = motor_primitives[i * trace_length: (i + 1) * trace_length, chosen_synergies - 1]
 
     # Accumulate the trace values
     primitive_trace += time_point_average
@@ -106,8 +105,8 @@ print("--------------------------------")
 plt.plot(samples[samples_binned], primitive_trace, color='blue')
 
 # Plotting individual traces in the background
-for i in range(0, len(motor_primitives), 200):
-    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 1], color='black', alpha=0.2)
+for i in range(0, len(motor_primitives), trace_length):
+    plt.plot(samples[samples_binned], motor_primitives[i:i + trace_length, chosen_synergies - 1], color='black', alpha=0.2)
     # plt.title("Motor Primitives-010-{:04}".format(i))
     # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
 
@@ -137,15 +136,15 @@ plt.savefig(selected_primitive_filename, dpi=300)
 fig, axs = plt.subplots(2, chosen_synergies, figsize=(12, 8))
 
 # Calculate the average trace for each column
-number_cycles = len(motor_primitives) // 200  # Calculate the number of 200-value bins
+number_cycles = len(motor_primitives) // trace_length  # Calculate the number of 200-value bins
 
 for col in range(chosen_synergies):
-    primitive_trace = np.zeros(200)  # Initialize an array for accumulating the trace values
+    primitive_trace = np.zeros(trace_length)  # Initialize an array for accumulating the trace values
 
     # Iterate over the binned data by the number of cycles
     for i in range(number_cycles):
         # Get the data for the current bin in the current column
-        time_point_average = motor_primitives[i * 200: (i + 1) * 200, col]
+        time_point_average = motor_primitives[i * trace_length: (i + 1) * trace_length, col]
 
         # Accumulate the trace values
         primitive_trace += time_point_average
@@ -160,7 +159,7 @@ for col in range(chosen_synergies):
     # Iterate over the bins again to plot the individual bin data
     for i in range(number_cycles):
         # Get the data for the current bin in the current 0, column
-        time_point_average = motor_primitives[i * 200: (i + 1) * 200, col]
+        time_point_average = motor_primitives[i * trace_length: (i + 1) * trace_length, col]
 
         # Plot the bin data
         axs[0, col].plot(samples[samples_binned], time_point_average, label='Bin {}'.format(i + 1), color='black', alpha=0.1)
@@ -196,7 +195,7 @@ for col in range(chosen_synergies):
     axs[0, col].set_ylabel('')
 
     # Remove x and y axis labels and ticks from the motor module subplot
-    axs[1, col].set_xticks(x_values, ['GM', 'Ip', 'BF', 'VL', 'St', 'TA', 'Gs', 'Gr'])
+    axs[1, col].set_xticks(x_values, channel_order)
     # axs[1, col].set_xticks([])
     axs[1, col].set_yticks([])
     # axs[1, col].set_xlabel('')
