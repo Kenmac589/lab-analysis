@@ -1,26 +1,21 @@
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-# Example DataFrame
-data = {
-    'start_column': [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
-    'end_column': [0, 0, 0, 0, 0, 1, 0, 0, 1, 0]
-}
+# Load the data into two separate dataframes
+df1 = pd.read_csv("dataframe1.csv")
+df2 = pd.read_csv("dataframe2.csv")
 
-df = pd.DataFrame(data)
+# Align the indices of both data frames
+df1 = df1.set_index(["column1", "column2"])
+df2 = df2.set_index(["column1", "column2"])
 
-# Marking the beginning and end of regions
-start_indices = df.index[df['start_column'] == 1].tolist()
-end_indices = df.index[df['end_column'] == 1].tolist()
+# Create a paired barplot using seaborn's `barplot` function
+sns.barplot(x="column3", y="column4", data=df1, color="blue")
+sns.barplot(x="column5", y="column6", data=df2, color="red")
 
-for start_idx in start_indices:
-    for end_idx in end_indices:
-        if end_idx > start_idx:
-            df.loc[start_idx, 'Start_of_Region'] = 1
-            df.loc[end_idx, 'End_of_Region'] = 1
+# Add a legend to the plot
+plt.legend()
 
-# Forward fill to propagate the labels within the regions
-df['Start_of_Region'].fillna(method='ffill', inplace=True)
-df['End_of_Region'].fillna(method='bfill', inplace=True)
-
-# Display the modified DataFrame
-print(df)
+# Show the plot
+plt.show()

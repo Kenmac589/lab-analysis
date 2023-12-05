@@ -1,6 +1,6 @@
+WT Non Syn 1 vs. WT Per Syn 1: t-test independent samples, P_val:3.366e-02 t=2.217e+00
 PreDTX Non Syn 1 vs. PreDTX Per Syn 1: t-test independent samples, P_val:3.366e-02 t=2.217e+00
 PreDTX Per Syn 1 vs. PostDTX Non Syn 1: t-test independent samples, P_val:4.243e-02 t=-2.106e+00
-WT Non Syn 1 vs. WT Per Syn 1: t-test independent samples, P_val:3.366e-02 t=2.217e+00
 PreDTX Per Syn 1 vs. PostDTX Per Syn 1: t-test independent samples, P_val:1.905e-03 t=3.374e+00
 WT Non Syn 2 vs. WT Per Syn 2: Welch's t-test independent samples, P_val:4.040e-02 t=2.194e+00
 PreDTX Non Syn 2 vs. PreDTX Per Syn 2: Welch's t-test independent samples, P_val:4.040e-02 t=2.194e+00

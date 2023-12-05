@@ -56,12 +56,12 @@ def main():
     sys.stdout = file
 
     trial_list = [
+        'WT Non Syn 1', 'WT Non Syn 2', 'WT Non Syn 3'
+        'WT Per Syn 1', 'WT Per Syn 2', 'WT Per Syn 3'
         'PreDTX Non Syn 1', 'PreDTX Non Syn 2', 'PreDTX Non Syn 3',
         'PreDTX Per Syn 1', 'PreDTX Per Syn 2', 'PreDTX Per Syn 3',
         'PostDTX Non Syn 1', 'PostDTX Non Syn 2', 'PostDTX Non Syn 3',
         'PostDTX Per Syn 1', 'PostDTX Per Syn 2', 'PostDTX Per Syn 3',
-        'WT Non Syn 1', 'WT Non Syn 2', 'WT Non Syn 3'
-        'WT Per Syn 1', 'WT Per Syn 2', 'WT Per Syn 3'
     ]
 
     # Import
@@ -202,8 +202,8 @@ def main():
     fwhm_df = pd.concat([fwhm_df, df({('WT Per Syn 1'): fwhl_wt_per_syn1})], axis=1)
     fwhm_df = pd.concat([fwhm_df, df({('WT Per Syn 2'): fwhl_wt_per_syn2})], axis=1)
     fwhm_df = pd.concat([fwhm_df, df({('WT Per Syn 3'): fwhl_wt_per_syn3})], axis=1)
-    fwhm_df = pd.concat([fwhm_df, df({(trial_list[0]): fwhl_non_syn1})], axis=1)
-    fwhm_df = pd.concat([fwhm_df, df({(trial_list[1]): fwhl_non_syn2})], axis=1)
+    fwhm_df = pd.concat([fwhm_df, df({('PreDTX Non Syn 1'): fwhl_non_syn1})], axis=1)
+    fwhm_df = pd.concat([fwhm_df, df({('PreDTX Non Syn 2'): fwhl_non_syn2})], axis=1)
     fwhm_df = pd.concat([fwhm_df, df({('PreDTX Non Syn 3'): fwhl_non_syn3})], axis=1)
     fwhm_df = pd.concat([fwhm_df, df({('PreDTX Per Syn 1'): fwhl_per_syn1})], axis=1)
     fwhm_df = pd.concat([fwhm_df, df({('PreDTX Per Syn 2'): fwhl_per_syn2})], axis=1)
