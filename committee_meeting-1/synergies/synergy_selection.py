@@ -26,7 +26,7 @@ def nnmf_factorize(A, k):
     return W, H, C
 
 # Load Data
-data = pd.read_csv("./norm-emg-preDTX-100.csv", header=0)
+data = pd.read_csv("./norm-postdtx-non.csv", header=0)
 A = data.to_numpy()
 
 # Defining set of components to use

@@ -1,12 +1,10 @@
 PreDTX Non Syn 1 vs. PreDTX Per Syn 1: t-test independent samples, P_val:3.366e-02 t=2.217e+00
+PreDTX Per Syn 1 vs. PostDTX Non Syn 1: t-test independent samples, P_val:4.243e-02 t=-2.106e+00
+WT Non Syn 1 vs. WT Per Syn 1: t-test independent samples, P_val:3.366e-02 t=2.217e+00
+PreDTX Per Syn 1 vs. PostDTX Per Syn 1: t-test independent samples, P_val:1.905e-03 t=3.374e+00
+WT Non Syn 2 vs. WT Per Syn 2: Welch's t-test independent samples, P_val:4.040e-02 t=2.194e+00
 PreDTX Non Syn 2 vs. PreDTX Per Syn 2: Welch's t-test independent samples, P_val:4.040e-02 t=2.194e+00
-PreDTX Per Syn 2 vs. PostDTX Non Syn 2: Welch's t-test independent samples, P_val:5.112e-07 t=6.100e+00
-PreDTX Per Syn 2 vs. PostDTX Per Syn 2: Welch's t-test independent samples, P_val:9.221e-04 t=3.757e+00
-PreDTX Non Syn 2 vs. PostDTX Non Syn 2: Welch's t-test independent samples, P_val:4.862e-06 t=6.670e+00
-PreDTX Per Syn 3 vs. PostDTX Non Syn 3: Welch's t-test independent samples, P_val:1.957e-03 t=-3.635e+00
-PreDTX Per Syn 3 vs. PostDTX Non Syn 3: Welch's t-test independent samples, P_val:1.957e-03 t=-3.635e+00
-PreDTX Per Syn 3 vs. PostDTX Per Syn 3: Welch's t-test independent samples, P_val:1.871e-04 t=-4.765e+00
-PreDTX Non Syn 3 vs. PostDTX Non Syn 3: Welch's t-test independent samples, P_val:1.550e-02 t=-2.636e+00
+PreDTX Per Syn 3 vs. PostDTX Per Syn 3: Welch's t-test independent samples, P_val:3.661e-04 t=-4.787e+00
 Stats for Synergy 1
 -------------------
 

@@ -156,10 +156,12 @@ def cycle_period_summary(directory_path):
 def main():
 
     data_dict = {}  # Initialize an empty dictionary to store the data
-    data_dict['PreDTX Without Perturbation'] = pd.read_csv('./M5/PreDTX Without Perturbation.csv')
-    data_dict['PreDTX With Perturbation'] = pd.read_csv('./M5/PreDTX With Perturbation.csv')
-    data_dict['PostDTX Without Perturbation'] = pd.read_csv('./M5/PostDTX Without Perturbation.csv')
-    data_dict['PostDTX With Perturbation'] = pd.read_csv('./M5/PostDTX With Perturbation.csv')
+    data_dict['WT Non-Perturbation'] = pd.read_csv('./CoM-M1/WT without Perturbation.txt')
+    data_dict['WT Perturbation'] = pd.read_csv('./CoM-M1/WT with Perturbation.txt')
+    data_dict['PreDTX Non-Perturbation'] = pd.read_csv('./M5/PreDTX Without Perturbation.csv')
+    data_dict['PreDTX Perturbation'] = pd.read_csv('./M5/PreDTX With Perturbation.csv')
+    data_dict['PostDTX Non-Perturbation'] = pd.read_csv('./M5/PostDTX Without Perturbation.csv')
+    data_dict['PostDTX Perturbation'] = pd.read_csv('./M5/PostDTX With Perturbation.csv')
 
     # Read in all csv's with cycle timing
     # This is all that really has to change
@@ -187,19 +189,23 @@ def main():
     cycle_results_df = pd.DataFrame(dict([(key, pd.Series(value)) for key, value in cycle_results.items()]))
 
     pairs = [
-        ('PreDTX Without Perturbation', 'PreDTX With Perturbation'),
-        ('PreDTX Without Perturbation', 'PostDTX Without Perturbation'),
-        ('PreDTX Without Perturbation', 'PostDTX With Perturbation'),
-        ('PreDTX With Perturbation', 'PostDTX Without Perturbation'),
-        ('PreDTX With Perturbation', 'PostDTX With Perturbation'),
-        ('PostDTX Without Perturbation', 'PostDTX With Perturbation'),
+        ('WT Non-Perturbation', 'WT Perturbation'),
+        ('PreDTX Non-Perturbation', 'WT Non-Perturbation'),
+        ('WT Non-Perturbation', 'PostDTX Non-Perturbation'),
+        ('PreDTX Perturbation', 'WT Perturbation'),
+        ('PreDTX Non-Perturbation', 'PreDTX Perturbation'),
+        ('PreDTX Non-Perturbation', 'PostDTX Non-Perturbation'),
+        ('PreDTX Non-Perturbation', 'PostDTX Perturbation'),
+        ('PreDTX Perturbation', 'PostDTX Non-Perturbation'),
+        ('PreDTX Perturbation', 'PostDTX Perturbation'),
+        ('PostDTX Non-Perturbation', 'PostDTX Perturbation'),
     ]
 
     # Plotting
     custom_params = {"axes.spines.right": False, "axes.spines.top": False}
     sns.set(style="white", rc=custom_params)
 
-    plt.title("Step Cycle Durations DTR M5")
+    plt.title("Step Cycle Durations WT vs DTR M5")
     plt_cyc = sns.barplot(
         x=cycle_results_df.columns,
         y=cycle_results_df.mean(),
