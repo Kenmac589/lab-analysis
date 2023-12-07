@@ -1,21 +1,31 @@
-import pandas as pd
-import seaborn as sns
+# data from https://allisonhorst.github.io/palmerpenguins/
+
 import matplotlib.pyplot as plt
+import numpy as np
 
-# Load the data into two separate dataframes
-df1 = pd.read_csv("dataframe1.csv")
-df2 = pd.read_csv("dataframe2.csv")
+conditions = ["WT", "PreDTX", "PostDTX"]
+step_cycle_means = {
+    'Non-Perturbation': [18.35, 18.43, 14.98],
+    'Perturbation': [38.79, 48.83, 47.50],
+}
 
-# Align the indices of both data frames
-df1 = df1.set_index(["column1", "column2"])
-df2 = df2.set_index(["column1", "column2"])
+x = np.arange(len(conditions))  # the label locations
+width = 0.25  # the width of the bars
+multiplier = 0
 
-# Create a paired barplot using seaborn's `barplot` function
-sns.barplot(x="column3", y="column4", data=df1, color="blue")
-sns.barplot(x="column5", y="column6", data=df2, color="red")
+fig, ax = plt.subplots(layout='constrained')
 
-# Add a legend to the plot
-plt.legend()
+for attribute, measurement in step_cycle_means.items():
+    offset = width * multiplier
+    rects = ax.bar(x + offset, measurement, width, label=attribute)
+    ax.bar_label(rects, padding=1)
+    multiplier += 1
 
-# Show the plot
+# Add some text for labels, title and custom x-axis tick labels, etc.
+# ax.set_ylabel('Length (mm)')
+ax.set_title('')
+ax.set_xticks(x + width, conditions)
+ax.legend(loc='upper left', ncols=2)
+ax.set_ylim(0, 250)
+
 plt.show()

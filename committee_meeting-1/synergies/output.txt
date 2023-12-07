@@ -1,33 +1,11 @@
-WT Non Syn 1 vs. WT Per Syn 1: t-test independent samples, P_val:3.366e-02 t=2.217e+00
-PreDTX Non Syn 1 vs. PreDTX Per Syn 1: t-test independent samples, P_val:3.366e-02 t=2.217e+00
-PreDTX Per Syn 1 vs. PostDTX Non Syn 1: t-test independent samples, P_val:4.243e-02 t=-2.106e+00
-PreDTX Per Syn 1 vs. PostDTX Per Syn 1: t-test independent samples, P_val:1.905e-03 t=3.374e+00
-WT Non Syn 2 vs. WT Per Syn 2: Welch's t-test independent samples, P_val:4.040e-02 t=2.194e+00
-PreDTX Non Syn 2 vs. PreDTX Per Syn 2: Welch's t-test independent samples, P_val:4.040e-02 t=2.194e+00
-PreDTX Per Syn 3 vs. PostDTX Per Syn 3: Welch's t-test independent samples, P_val:3.661e-04 t=-4.787e+00
-Stats for Synergy 1
--------------------
-
-For Non-Perturbation
-TtestResult(statistic=nan, pvalue=nan, df=nan)
-
-For Perturbation
-TtestResult(statistic=nan, pvalue=nan, df=nan)
-
-Stats for Synergy 2
--------------------
-
-For Non-Perturbation
-TtestResult(statistic=nan, pvalue=nan, df=nan)
-
-For Perturbation
-TtestResult(statistic=nan, pvalue=nan, df=nan)
-
-Stats for Synergy 3
--------------------
-
-For Non-Perturbation
-TtestResult(statistic=nan, pvalue=nan, df=nan)
-
-For Perturbation
-TtestResult(statistic=nan, pvalue=nan, df=nan)
+./CoM-M1/primitives-com-m1-non.csv
+./CoM-M1/primitives-com-m1-per.csv
+./predtx-non-primitives.txt
+./predtx-per-primitives.txt
+./postdtx-non-primitives.txt
+./postdtx-per-primitives.txt
+1
+Synergy 1
+2
+Synergy 2
+[196.  66. 106. 200.  25.  37. 200.  92. 200. 100. 169. 140.]

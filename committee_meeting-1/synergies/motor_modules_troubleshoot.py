@@ -26,15 +26,15 @@ def nnmf_factorize(A, k):
     return W, H, C
 
 # Load Data
-data = pd.read_csv("./norm-postdtx-per.csv", header=0)
+data = pd.read_csv("./norm-emg-preDTX-per.csv", header=0)
 A = data.to_numpy()
 
 # Setting various paramaters through the script I often change
-selected_primitive_filename = './full_width_test/postdtx-per.png'
-selected_primitive_title = 'Motor Primitive for PostDTX with pertubration at 0.100 m/s '
-modules_and_primitives_filename = './full_width_test/postdtx-per-mod.png'
-modules_and_primitives_title = 'Muscle Synergies for PostDTX with perturbation 0.100 m/s cleaned'
-chosen_synergies = 4
+selected_primitive_filename = './full_width_test/predtx-per-prim.png'
+selected_primitive_title = 'Motor Primitive for PreDTX with pertubration at 0.100 m/s '
+modules_and_primitives_filename = './full_width_test/predtx-per-mod.png'
+modules_and_primitives_title = 'Muscle Synergies for PreDTX with perturbation 0.100 m/s cleaned'
+chosen_synergies = 7
 
 # Define some variables about the data
 number_cycles = len(A) // 200
@@ -42,9 +42,9 @@ number_cycles = len(A) // 200
 # Choosing best number of components
 W, H, C = nnmf_factorize(A, chosen_synergies)
 
-np.savetxt('./DTR-M5/primitives-postdtx-per.csv', W, delimiter=',')
-np.savetxt('./DTR-M5/modules-postdtx-per.csv', H, delimiter=',')
-np.savetxt('./DTR-M5/C3-postdtx-per.csv', C, delimiter=',')
+np.savetxt('./DTR-M5/primitives-predtx-per.csv', W, delimiter=',')
+np.savetxt('./DTR-M5/modules-predtx-per.csv', H, delimiter=',')
+np.savetxt('./DTR-M5/C3-predtx-per.csv', C, delimiter=',')
 
 samples = np.arange(0, len(C))
 samples_binned = np.arange(200)
@@ -77,11 +77,11 @@ for i in range(number_cycles):
     primitive_trace += time_point_average
 
 # Showing individual primitives
-for i in range(0, len(motor_primitives), 200):
-    plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 2], color='black')
-    plt.title("Motor Primitives-010-per{:04}".format(i))
-    plt.show()
-    # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
+# for i in range(0, len(motor_primitives), 200):
+#     plt.plot(samples[samples_binned], motor_primitives[i:i + 200, chosen_synergies - 2], color='black')
+#     plt.title("Motor Primitives-010-per{:04}".format(i))
+#     # plt.show()
+#     # plt.savefig("motor_primitives-cumulative-010-{:04}.png".format(i), dpi=300)
 
 # Calculate the average by dividing the accumulated values by the number of bins
 primitive_trace /= number_cycles

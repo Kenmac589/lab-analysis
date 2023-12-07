@@ -75,7 +75,6 @@ samples_binned = np.arange(trace_length)
 
 # Plot
 motor_modules = H
-motor_p_input = pd.read_csv("./DTR-M5/primitives-preDTX-non-100.csv")
 motor_primitives = W
 print("--------------------------------")
 print("motor_modules", motor_modules[:, 0])
