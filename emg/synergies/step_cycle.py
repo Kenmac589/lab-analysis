@@ -88,19 +88,19 @@ def conditional_cycle(file_paths, cycle_df, condition_tag):
     # Going through first half for Non-Perturbation
     for i in range(len(file_paths) // 2):
         trial_df = pd.read_csv(file_paths[i], header=0)
-        pertubation_state_tag = perturbation_state[i]
+        pertubation_state_tag = perturbation_state[0]
         step_cycles = step_duration(trial_df)
         for j in range(len(step_cycles)):
-            cycle_entry = [[condition_tag, pertubation_state_tag, step_cycles[j], np.std(step_cycles)]]
+            cycle_entry = [[condition_tag, pertubation_state_tag, step_cycles[j]]]
             cycle_df = cycle_df.append(pd.DataFrame(cycle_entry, columns=["Condition", "Perturbation State", "Step Cycle Duration"]), ignore_index=True)
 
     # Going through second half for Perturbation
     for i in range(len(file_paths) // 2, len(file_paths)):
         trial_df = pd.read_csv(conditions[i], header=0)
-        pertubation_state_tag = perturbation_state[i]
+        pertubation_state_tag = perturbation_state[1]
         step_cycles = step_duration(trial_df)
         for j in range(len(step_cycles)):
-            cycle_entry = [[condition_tag, pertubation_state_tag, step_cycles[j], np.std(step_cycles)]]
+            cycle_entry = [[condition_tag, pertubation_state_tag, step_cycles[j]]]
             cycle_df = cycle_df.append(pd.DataFrame(cycle_entry, columns=["Condition", "Perturbation State", "Step Cycle Duration"]), ignore_index=True)
 
     return cycle_df
@@ -128,14 +128,14 @@ conditions = {
 }
 
 conditions_names_order = ["WT", "PreDTX", "PostDTX"]
-trials = list(conditions.keys())
-test_df = pd.DataFrame(columns=["Condition", "Perturbation State", "Step Cycle Duration"])
-
-for i in conditions:
-    file_list = conditions[i]
-    test_df = conditional_cycle(file_list, test_df, "WT")
-
-print(test_df)
+# trials = list(conditions.keys())
+# test_df = pd.DataFrame(columns=["Condition", "Perturbation State", "Step Cycle Duration"])
+# 
+# for i in conditions:
+#     file_list = conditions[i]
+#     test_df = conditional_cycle(file_list, test_df, "WT")
+# 
+# print(test_df)
 
 conditions = [
     "../../kinematics/cycle_analysis/CoM-M1/WT-M1 without Perturbation.txt",
@@ -150,8 +150,6 @@ conditions = [
     "../../kinematics/cycle_analysis/DTR-M5/PostDTX with Perturbation.csv",
 ]
 
-for i in range(len(conditions) // 2, len(conditions)):
-    print(conditions[i])
 # Giving them nice tags
 conditions_names = ["WT", "WT", "WT", "PreDTX", "PostDTX", "WT", "WT", "WT", "PreDTX", "PostDTX"]
 perturbation_state = ["Non-Perturbation", "Non-Perturbation", "Non-Perturbation", "Non-Perturbation", "Non-Perturbation", "Perturbation", "Perturbation", "Perturbation", "Perturbation", "Perturbation"]
@@ -172,7 +170,7 @@ for i in range(len(conditions)):
 
     for j in range(len(step_cycles)):
         cycle_entry = [[condition_tag, pertubation_state_tag, step_cycles[j], np.std(step_cycles)]]
-        cycle_df = cycle_df.append(pd.DataFrame(cycle_entry, columns=["Condition", "Perturbation State", "Step Cycle Duration", "Error"]), ignore_index=True)
+        cycle_df = cycle_df._append(pd.DataFrame(cycle_entry, columns=["Condition", "Perturbation State", "Step Cycle Duration", "Error"]), ignore_index=True)
 
 
 # Plotting

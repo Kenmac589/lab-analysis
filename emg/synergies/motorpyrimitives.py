@@ -276,7 +276,7 @@ def show_modules(data_input, chosen_synergies, modules_filename="./output.png"):
 
         # Remove x and y axis labels and ticks from the avg_trace subplot
         axs[col].set_xticks([])
-       axs[col].set_yticks([])
+        axs[col].set_yticks([])
         axs[col].set_xlabel('')
         axs[col].set_ylabel('')
         axs[col].spines['top'].set_visible(False)
@@ -295,6 +295,103 @@ def show_modules(data_input, chosen_synergies, modules_filename="./output.png"):
     # plt.subplots_adjust(top=0.9)
     plt.show()
 
+def show_synergies(data_input, refined_primitives, chosen_synergies, synergies_filename="./output.png"):
+    """
+    Make sure you check the channel order!!
+
+    """
+
+    motor_p_data = pd.read_csv(refined_primitives, header=0)
+    # =======================================
+    # Presenting Data as a mutliplot figure |
+    # =======================================
+    motor_primitives, motor_modules = synergy_extraction(data_input, chosen_synergies)
+    motor_primitives = motor_p_data.to_numpy()
+
+    # fwhm_line = fwhm(motor_primitives, chosen_synergies)
+    channel_order = ['GM', 'Ip', 'BF', 'VL', 'St', 'TA', 'Gs', 'Gr']
+    trace_length = 200
+
+    samples = np.arange(0, len(motor_primitives))
+    samples_binned = np.arange(trace_length)
+
+    fig, axs = plt.subplots(chosen_synergies, 2, figsize=(12, 8))
+    # Calculate the average trace for each column
+    number_cycles = len(motor_primitives) // trace_length  # Calculate the number of 200-value bins
+
+    for col in range(chosen_synergies):
+        primitive_trace = np.zeros(trace_length)  # Initialize an array for accumulating the trace values
+
+        # Iterate over the binned data by the number of cycles
+        for i in range(number_cycles):
+            # Get the data for the current bin in the current column
+            time_point_average = motor_primitives[i * trace_length: (i + 1) * trace_length, col]
+
+            # Accumulate the trace values
+            primitive_trace += time_point_average
+
+        # Calculate the average by dividing the accumulated values by the number of bins
+        primitive_trace /= number_cycles
+
+        # Plot the average trace in the corresponding subplot
+        axs[col, 1].plot(samples[samples_binned], primitive_trace, color='red', label='Average Trace')
+        axs[col, 1].set_title('Synergy {}'.format(col + 1))
+
+        # Iterate over the bins again to plot the individual bin data
+        for i in range(number_cycles):
+            # Get the data for the current bin in the current 0, column
+            time_point_average = motor_primitives[i * trace_length: (i + 1) * trace_length, col]
+
+            # Plot the bin data
+            axs[col, 1].plot(samples[samples_binned], time_point_average, label='Bin {}'.format(i + 1), color='black', alpha=0.1)
+
+        # Add vertical lines at the halfway point in each subplot
+        axs[col, 1].axvline(x=100, color='black')
+
+        # Begin Presenting Motor Modules
+
+        # Get the data for the current column
+        motor_module_column_data = motor_modules[col, :]  # Select all rows for the current column
+
+        # Set the x-axis values for the bar graph
+        x_values = np.arange(len(motor_module_column_data))
+
+        # Plot the bar graph for the current column in the corresponding subplot
+        axs[col, 0].bar(x_values, motor_module_column_data)
+
+        # Remove top and right spines of each subplot
+        axs[col, 1].spines['top'].set_visible(False)
+        axs[col, 1].spines['right'].set_visible(False)
+        axs[col, 0].spines['top'].set_visible(False)
+        axs[col, 0].spines['right'].set_visible(False)
+
+        # Remove labels on x and y axes
+        axs[col, 0].set_xticklabels([])
+        axs[col, 1].set_yticklabels([])
+
+        # Remove x and y axis labels and ticks from the avg_trace subplot
+        axs[col, 1].set_xticks([])
+        axs[col, 1].set_yticks([])
+        axs[col, 1].set_xlabel('')
+        axs[col, 1].set_ylabel('')
+
+        # Remove x and y axis labels and ticks from the motor module subplot
+        axs[col, 0].set_xticks(x_values, channel_order)
+        # axs[1, col].set_xticks([])
+        axs[col, 0].set_yticks([])
+        # axs[1, col].set_xlabel('')
+        # axs[1, col].set_ylabel('')
+
+    # Adjust spacing between subplots
+    plt.tight_layout()
+    fig.suptitle("Output", fontsize=16, fontweight='bold')
+    plt.subplots_adjust(top=0.9)
+    plt.savefig(synergies_filename, dpi=300)
+
+
+    # Show all the plots
+    plt.show()
+
 def show_modules_dtr(data_input, chosen_synergies, modules_filename="./output.png"):
     """
     Make sure you check the channel order!!
@@ -306,6 +403,8 @@ def show_modules_dtr(data_input, chosen_synergies, modules_filename="./output.pn
     # =======================================
     motor_primitives, motor_modules = synergy_extraction(data_input, chosen_synergies)
     channel_order_dtr = ['GM', 'Ip', 'BF', 'VL', 'Gs', 'TA', 'St', 'Gr']
+    print(data_input)
+    print(motor_modules)
 
     fig, axs = plt.subplots(chosen_synergies, 1, figsize=(4, 10))
 
@@ -315,7 +414,6 @@ def show_modules_dtr(data_input, chosen_synergies, modules_filename="./output.pn
     number_cycles = len(motor_primitives) // 200
 
     for col in range(chosen_synergies):
-        primitive_trace = np.zeros(200)  # Initialize an array for accumulating the trace values
 
         # Begin Presenting Motor Modules
 
@@ -349,6 +447,103 @@ def show_modules_dtr(data_input, chosen_synergies, modules_filename="./output.pn
     # fig.suptitle(synergies_title, fontsize=16, fontweight='bold')
     plt.savefig(modules_filename, dpi=300)
     # plt.subplots_adjust(top=0.9)
+    plt.show()
+
+def show_synergies_dtr(data_input, refined_primitives, chosen_synergies, synergies_filename="./output.png"):
+    """
+    Make sure you check the channel order!!
+
+    """
+
+    motor_p_data = pd.read_csv(refined_primitives, header=None)
+    print(motor_p_data)
+    # =======================================
+    # Presenting Data as a mutliplot figure |
+    # =======================================
+    motor_primitives, motor_modules = synergy_extraction(data_input, chosen_synergies)
+    motor_primitives = motor_p_data.to_numpy()
+    channel_order_dtr = ['GM', 'Ip', 'BF', 'VL', 'Gs', 'TA', 'St', 'Gr']
+
+    trace_length = 200
+
+    samples = np.arange(0, len(motor_primitives))
+    samples_binned = np.arange(trace_length)
+
+    fig, axs = plt.subplots(chosen_synergies, 2, figsize=(12, 8))
+    # Calculate the average trace for each column
+    number_cycles = len(motor_primitives) // trace_length  # Calculate the number of 200-value bins
+
+    for col in range(chosen_synergies):
+        primitive_trace = np.zeros(trace_length)  # Initialize an array for accumulating the trace values
+
+        # Iterate over the binned data by the number of cycles
+        for i in range(number_cycles):
+            # Get the data for the current bin in the current column
+            time_point_average = motor_primitives[i * trace_length: (i + 1) * trace_length, col]
+
+            # Accumulate the trace values
+            primitive_trace += time_point_average
+
+        # Calculate the average by dividing the accumulated values by the number of bins
+        primitive_trace /= number_cycles
+
+        # Plot the average trace in the corresponding subplot
+        axs[col, 1].plot(samples[samples_binned], primitive_trace, color='red', label='Average Trace')
+        axs[col, 1].set_title('Synergy {}'.format(col + 1))
+
+        # Iterate over the bins again to plot the individual bin data
+        for i in range(number_cycles):
+            # Get the data for the current bin in the current 0, column
+            time_point_average = motor_primitives[i * trace_length: (i + 1) * trace_length, col]
+
+            # Plot the bin data
+            axs[col, 1].plot(samples[samples_binned], time_point_average, label='Bin {}'.format(i + 1), color='black', alpha=0.1)
+
+        # Add vertical lines at the halfway point in each subplot
+        axs[col, 1].axvline(x=100, color='black')
+
+        # Begin Presenting Motor Modules
+
+        # Get the data for the current column
+        motor_module_column_data = motor_modules[col, :]  # Select all rows for the current column
+
+        # Set the x-axis values for the bar graph
+        x_values = np.arange(len(motor_module_column_data))
+
+        # Plot the bar graph for the current column in the corresponding subplot
+        axs[col, 0].bar(x_values, motor_module_column_data)
+
+        # Remove top and right spines of each subplot
+        axs[col, 1].spines['top'].set_visible(False)
+        axs[col, 1].spines['right'].set_visible(False)
+        axs[col, 0].spines['top'].set_visible(False)
+        axs[col, 0].spines['right'].set_visible(False)
+
+        # Remove labels on x and y axes
+        axs[col, 0].set_xticklabels([])
+        axs[col, 1].set_yticklabels([])
+
+        # Remove x and y axis labels and ticks from the avg_trace subplot
+        axs[col, 1].set_xticks([])
+        axs[col, 1].set_yticks([])
+        axs[col, 1].set_xlabel('')
+        axs[col, 1].set_ylabel('')
+
+        # Remove x and y axis labels and ticks from the motor module subplot
+        axs[col, 0].set_xticks(x_values, channel_order_dtr)
+        # axs[1, col].set_xticks([])
+        axs[col, 0].set_yticks([])
+        # axs[1, col].set_xlabel('')
+        # axs[1, col].set_ylabel('')
+
+    # Adjust spacing between subplots
+    plt.tight_layout()
+    fig.suptitle("Output", fontsize=16, fontweight='bold')
+    plt.subplots_adjust(top=0.9)
+    plt.savefig(synergies_filename, dpi=300)
+
+
+    # Show all the plots
     plt.show()
 
 def sel_primitive_trace_with_fwhm(motor_primitives, synergy_selection, selected_primitive_title="Output"):
@@ -531,54 +726,34 @@ def sel_primitive_trace(motor_primitives, synergy_selection, selected_primitive_
 
 def main():
 
-    # For WT
-    synergy_selection = 1
-    motor_p_data_non = pd.read_csv('./com-non-primitives.txt', header=0)
-    motor_p_wt_non = motor_p_data_non.to_numpy()
-
-    motor_p_data_per = pd.read_csv('./com-per-primitives.txt', header=0)
-    motor_p_wt_per = motor_p_data_per.to_numpy()
-
-    fwhl_wt_non_syn1 = sel_primitive_trace_with_fwhm(motor_p_wt_non, synergy_selection, "WT without Perturbation Synergy {}".format(synergy_selection))
-    # # np.savetxt('./prenon1_widths.csv', fwhl_non_syn1, delimiter=',')
-
-    fwhl_wt_per_syn1 = sel_primitive_trace_with_fwhm(motor_p_wt_per, synergy_selection, "WT with Perturbation Synergy {}".format(synergy_selection))
-    # # np.savetxt('./preper1_widths.csv', fwhl_per_syn1, delimiter=',')
-
-    synergy_selection = 2
-    motor_p_data_non = pd.read_csv('./com-non-primitives.txt', header=0)
-    motor_p_wt_non = motor_p_data_non.to_numpy()
-
-    motor_p_data_per = pd.read_csv('./com-per-primitives.txt', header=0)
-    motor_p_wt_per = motor_p_data_per.to_numpy()
-
-    fwhl_wt_non_syn2 = sel_primitive_trace_with_fwhm(motor_p_wt_non, synergy_selection, "WT without Perturbation Synergy {}".format(synergy_selection))
-    # # np.savetxt('./prenon2_widths.csv', fwhl_non_syn2, delimiter=',')
-
-    fwhl_wt_per_syn2 = sel_primitive_trace_with_fwhm(motor_p_wt_per, synergy_selection, "WT with Perturbation Synergy {}".format(synergy_selection))
-    # # np.savetxt('./preper2_widths.csv', fwhl_per_syn2, delimiter=',')
-
-    synergy_selection = 3
-    motor_p_data_non = pd.read_csv('./com-non-primitives.txt', header=0)
-    motor_p_wt_non = motor_p_data_non.to_numpy()
-
-    motor_p_data_per = pd.read_csv('./com-per-primitives.txt', header=0)
-    motor_p_wt_per = motor_p_data_per.to_numpy()
-
-    fwhl_wt_non_syn3 = sel_primitive_trace_with_fwhm(motor_p_wt_non, synergy_selection, "WT without Perturbation Synergy {}".format(synergy_selection))
-
-    fwhl_wt_per_syn3 = sel_primitive_trace_with_fwhm(motor_p_wt_per, synergy_selection, "WT with Perturbation Synergy {}".format(synergy_selection))
-
     # Analysis of fwhl_lenghts
 
+    conditions_normalized = [
+        './norm-wt-m1-non.csv',
+        './norm-wt-m1-per.csv',
+        '/norm-emg-preDTX-100.csv',
+        './norm-emg-preDTX-per.csv',
+        './norm-postdtx-non.csv',
+        './norm-postdtx-per.csv',
+    ]
+    conditions_primitives = [
+        './wt-m1-non-primitives.txt',
+        './predtx-non-primitives-test.txt',
+        './postdtx-non-primitives.txt',
+        './wt-m1-non-primitives.txt',
+        './predtx-per-primitives-test.txt',
+        './postdtx-per-primitives.txt',
+    ]
 
     # Showing Modules
-    show_modules('./norm-emg-com-non.csv', 3, "../figures/CoM-M1/mod_non.png")
-    show_modules('./norm-emg-com-per.csv', 3, "../figures/CoM-M1/mod_per.png")
-    show_modules_dtr('./norm-emg-preDTX-100.csv', 3, "../figures/dtr-m5/modules/mod_prenon.png")
-    show_modules_dtr('./norm-emg-preDTX-per.csv', 3, "../figures/dtr-m5/modules/mod_preper.png")
-    show_modules_dtr('./norm-postdtx-non.csv', 3, "../figures/dtr-m5/modules/mod_postnon.png")
-    show_modules_dtr('./norm-postdtx-per.csv', 3, "../figures/dtr-m5/modules/mod_postper.png")
+    # show_modules('./norm-emg-com-non.csv', 3, "../figures/CoM-M1/mod_non.png")
+    # show_modules('./norm-emg-com-per.csv', 3, "../figures/CoM-M1/mod_per.png")
+    # show_modules_dtr('./norm-emg-preDTX-100.csv', 3, "../figures/dtr-m5/modules/mod_prenon.png")
+    # show_modules_dtr('./norm-emg-preDTX-per.csv', 3, "../figures/dtr-m5/modules/mod_preper.png")
+    # show_modules_dtr('./norm-postdtx-non.csv', 3, "../figures/dtr-m5/modules/mod_postnon.png")
+    # show_modules_dtr('./norm-postdtx-per.csv', 3, "../figures/dtr-m5/modules/mod_postper.png")
+    show_synergies('./norm-wt-m1-non.csv', './wt-m1-non-primitives.txt', 3, "/Users/kenzie_mackinnon/Downloads/synergies_non_test.jpg")
+    show_synergies('./norm-wt-m1-per.csv', './wt-m1-per-primitives.txt', 3, "/Users/kenzie_mackinnon/Downloads/synergies_per_test.jpg")
 
 
 if __name__ == "__main__":

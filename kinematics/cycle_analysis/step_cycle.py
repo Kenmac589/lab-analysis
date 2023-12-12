@@ -8,6 +8,8 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
+from statannotations.Annotator import Annotator
 from scipy.stats import ttest_ind
 from scipy.stats import f_oneway
 
@@ -31,7 +33,7 @@ def step_duration(input_dataframe):
 
     # Define the value and column to search for
     value_to_find = 1
-    column_to_search = "44 sw onset"
+    column_to_search = "45 sw onset"
     column_for_time = "Time"
     column_for_treadmill = "2 Trdml"
 
@@ -50,7 +52,7 @@ def step_duration(input_dataframe):
     # Calculate the differences between consecutive time values
     time_differences = []
     for i in range(len(time_values)):
-        time_diff = time_values[i] - time_values[i-1]
+        time_diff = time_values[i] - time_values[i - 1]
         time_differences.append(time_diff)
 
     # Finding the average value for the list
@@ -70,118 +72,133 @@ def step_duration(input_dataframe):
     adj_time_xaxis = np.arange(0, len(adjusted_time_differences))
 
     # Finding average step cylce for this length
-    average_step_difference = np.mean(adjusted_time_differences)
 
-    return adjusted_time_differences, adjusted_treadmill_speeds
+    return adjusted_time_differences
 
+def conditional_cycle(file_paths, cycle_df, condition_tag):
+    """
+    @param input_data: Pandas Dataframe
+
+    Make sure you load the input files where it is all one state first then all the next
+    """
+    # trials_per_state = len(file_paths) / 2
+    perturbation_state = ["Non-Perturbation", "Perturbation"]
+    # condition_tag = str(condition)
+
+    # Going through first half for Non-Perturbation
+    for i in range(len(file_paths) // 2):
+        trial_df = pd.read_csv(file_paths[i], header=0)
+        pertubation_state_tag = perturbation_state[0]
+        step_cycles = step_duration(trial_df)
+        for j in range(len(step_cycles)):
+            cycle_entry = [[condition_tag, pertubation_state_tag, step_cycles[j]]]
+            cycle_df = cycle_df.append(pd.DataFrame(cycle_entry, columns=["Condition", "Perturbation State", "Step Cycle Duration"]), ignore_index=True)
+
+    # Going through second half for Perturbation
+    for i in range(len(file_paths) // 2, len(file_paths)):
+        trial_df = pd.read_csv(conditions[i], header=0)
+        pertubation_state_tag = perturbation_state[1]
+        step_cycles = step_duration(trial_df)
+        for j in range(len(step_cycles)):
+            cycle_entry = [[condition_tag, pertubation_state_tag, step_cycles[j]]]
+            cycle_df = cycle_df.append(pd.DataFrame(cycle_entry, columns=["Condition", "Perturbation State", "Step Cycle Duration"]), ignore_index=True)
+
+    return cycle_df
 # Main Code Body
+# conditions = ["WT", "PreDTX", "PostDTX"]
 
-# Read in all csv's with cycle timing
-directory_path = "./M5/"
-result = read_all_csv(directory_path)
+# Dataset assignments
+conditions = {
+    "WT": [
+        "../../kinematics/cycle_analysis/CoM-M1/WT-M1 without Perturbation.txt",
+        "../../kinematics/cycle_analysis/CoM-M2/CoM-M2 without Perturbation.txt",
+        "../../kinematics/cycle_analysis/CoM-M3/WT-M3 without Peturbation.txt",
+        "../../kinematics/cycle_analysis/CoM-M1/WT-M1 with Perturbation.txt",
+        "../../kinematics/cycle_analysis/CoM-M2/CoM-M2 with Perturbation.txt",
+        "../../kinematics/cycle_analysis/CoM-M3/WT-M3 with Perturbation.txt",
+    ],
+    "PreDTX": [
+        "../../kinematics/cycle_analysis/DTR-M5/PreDTX Without Perturbation.csv",
+        "../../kinematics/cycle_analysis/DTR-M5/PreDTX with Perturbation.csv",
+    ],
+    "PostDTX": [
+        "../../kinematics/cycle_analysis/DTR-M5/PostDTX without Perturbation.csv",
+        "../../kinematics/cycle_analysis/DTR-M5/PostDTX with Perturbation.csv",
+    ]
+}
 
-# Now, you can access the data from each file like this:
-for filename, data in result.items():
-    print(f"Data from {filename}:")
-    print(data)
+conditions_names_order = ["WT", "PreDTX", "PostDTX"]
+# trials = list(conditions.keys())
+# test_df = pd.DataFrame(columns=["Condition", "Perturbation State", "Step Cycle Duration"])
+# 
+# for i in conditions:
+#     file_list = conditions[i]
+#     test_df = conditional_cycle(file_list, test_df, "WT")
+# 
+# print(test_df)
+
+conditions = [
+    "../../kinematics/cycle_analysis/CoM-M1/WT-M1 without Perturbation.txt",
+    "../../kinematics/cycle_analysis/CoM-M2/CoM-M2 without Perturbation.txt",
+    "../../kinematics/cycle_analysis/CoM-M3/WT-M3 without Peturbation.txt",
+    "../../kinematics/cycle_analysis/DTR-M5/PreDTX Without Perturbation.csv",
+    "../../kinematics/cycle_analysis/DTR-M5/PostDTX without Perturbation.csv",
+    "../../kinematics/cycle_analysis/CoM-M1/WT-M1 with Perturbation.txt",
+    "../../kinematics/cycle_analysis/CoM-M2/CoM-M2 with Perturbation.txt",
+    "../../kinematics/cycle_analysis/CoM-M3/WT-M3 with Perturbation.txt",
+    "../../kinematics/cycle_analysis/DTR-M5/PreDTX with Perturbation.csv",
+    "../../kinematics/cycle_analysis/DTR-M5/PostDTX with Perturbation.csv",
+]
+
+# Giving them nice tags
+conditions_names = ["WT", "WT", "WT", "PreDTX", "PostDTX", "WT", "WT", "WT", "PreDTX", "PostDTX"]
+perturbation_state = ["Non-Perturbation", "Non-Perturbation", "Non-Perturbation", "Non-Perturbation", "Non-Perturbation", "Perturbation", "Perturbation", "Perturbation", "Perturbation", "Perturbation"]
+
+conditions_names_order = ["WT", "PreDTX", "PostDTX"]
+perturbation_state_order = ["Non-Perturbation", "Perturbation"]
 
 
-# Read in M1 data
-M1_non_perturbation_low = pd.read_csv("./M1-non-100.csv", header=0)
-M1_non_perturbation_high = pd.read_csv("./M1-non-300.csv", header=0)
-M1_perturbation_low = pd.read_csv("./M1-per-100.csv", header=0)
-M1_perturbation_high = pd.read_csv("./M1-per-300.csv", header=0)
+cycle_means = []
 
-# Read in M2 data
-M2_non_perturbation_low = pd.read_csv("./M2-non-100.csv", header=0)
-M2_non_perturbation_high = pd.read_csv("./M2-non-200.csv", header=0)
-M2_perturbation_low = pd.read_csv("./M2-per-100.csv", header=0)
+cycle_df = pd.DataFrame(columns=["Condition", "Perturbation State", "Step Cycle Duration"])
 
-# Read in M3 data
-M3_non_perturbation_low = pd.read_csv("./M3-non-100.csv", header=0)
-M3_non_perturbation_high = pd.read_csv("./M3-non-200.csv", header=0)
-M3_perturbation_low = pd.read_csv("./M3-per-100.csv", header=0)
-M3_perturbation_high = pd.read_csv("./M3-per-200.csv", header=0)
+for i in range(len(conditions)):
+    condition_tag = conditions_names[i]
+    pertubation_state_tag = perturbation_state[i]
+    trial_df = pd.read_csv(conditions[i], header=0)
+    step_cycles = step_duration(trial_df)
 
-# Apply the step_duration function
-M1_non_low_step_duration, M1_non_low_treadmill = step_duration(M1_non_perturbation_low)
-M1_non_high_step_duration, M1_non_high_treadmill = step_duration(M1_non_perturbation_high)
-M1_per_low_step_duration, M1_per_low_treadmill = step_duration(M1_perturbation_low)
-M1_per_high_step_duration, M1_per_high_treadmill = step_duration(M1_perturbation_high)
+    for j in range(len(step_cycles)):
+        cycle_entry = [[condition_tag, pertubation_state_tag, step_cycles[j], np.std(step_cycles)]]
+        cycle_df = cycle_df._append(pd.DataFrame(cycle_entry, columns=["Condition", "Perturbation State", "Step Cycle Duration", "Error"]), ignore_index=True)
 
-M2_non_low_step_duration, M2_non_low_treadmill = step_duration(M2_non_perturbation_low)
-M2_non_high_step_duration, M2_non_high_treadmill = step_duration(M2_non_perturbation_high)
-M2_per_low_step_duration, M2_per_low_treadmill = step_duration(M2_perturbation_low)
 
-M3_non_low_step_duration, M3_non_low_treadmill = step_duration(M3_non_perturbation_low)
-M3_non_high_step_duration, M3_non_high_treadmill = step_duration(M3_non_perturbation_high)
-M3_per_low_step_duration, M3_per_low_treadmill = step_duration(M3_perturbation_low)
-M3_per_high_step_duration, M3_per_high_treadmill = step_duration(M3_perturbation_high)
+# Plotting
+custom_params = {"axes.spines.right": False, "axes.spines.top": False}
+sns.set(style="white", font_scale=1.5, rc=custom_params)
 
-results = {}
+pairs = [
+    [("WT", "Non-Perturbation"), ("WT", "Perturbation")],
+    [("PreDTX", "Non-Perturbation"), ("PreDTX", "Perturbation")],
+    [("PostDTX", "Non-Perturbation"), ("PostDTX", "Perturbation")],
+]
 
-# Presenting average step duration
-print("Non-Perturbation step duration for M1 at speed 0.100 m/sec:", np.mean(M1_non_low_step_duration), "standard deviation:", np.std(M1_non_low_step_duration))
-print("Non-Perturbation step duration for M1 at speed 0.300 m/sec:", np.mean(M1_non_high_step_duration), "standard deviation:", np.std(M1_non_high_step_duration))
-print("Pertubation step duration for M1 at speed 0.100 m/sec:", np.mean(M1_per_low_step_duration), "standard deviation:", np.std(M1_per_low_step_duration))
-print("Perturbation duration for M1 at speed 0.300 m/sec:", np.mean(M1_per_high_step_duration), "standard deviation:", np.std(M1_per_high_step_duration))
-print()
-print("Non-Perturbation step duration for M2 at speed 0.100 m/sec:", np.mean(M2_non_low_step_duration), "standard deviation:", np.std(M2_non_low_step_duration))
-print("Non-Perturbation step duration for M2 at speed 0.200 m/sec:", np.mean(M2_non_high_step_duration), "standard deviation:", np.std(M2_non_high_step_duration))
-print("Perturbation step duration for M2 at speed 0.100 m/sec:", np.mean(M2_per_low_step_duration), "standard deviation:", np.std(M2_per_low_step_duration))
-print()
-print("Non-perturbation for M3 at speed 0.100 m/sec:", np.mean(M3_non_low_step_duration), "standard deviation:", np.std(M3_non_low_step_duration))
-print("Non-perturbation for M3 at speed 0.200 m/sec:",  np.mean(M3_non_high_step_duration), "standard deviation:", np.std(M3_non_high_step_duration))
-print("Perturbation for M3 at speed 0.100 m/sec:",  np.mean(M3_per_low_step_duration), "standard deviation:", np.std(M3_per_low_step_duration))
-print("Perturbation for M3 at speed 0.200 m/sec:",  np.mean(M3_per_high_step_duration), "standard deviation:", np.std(M3_per_high_step_duration))
+plot_params = {
+    "data": cycle_df,
+    "x": "Condition",
+    "y": "Step Cycle Duration",
+    "hue": "Perturbation State",
+    "hue_order": perturbation_state_order,
+}
 
-# Performing stats for each set of speeds
-
-# T-test for effect of perturbation
-M1_low_ttest = ttest_ind(M1_non_low_step_duration, M1_per_low_step_duration)
-M1_high_ttest = ttest_ind(M1_non_high_step_duration, M1_per_high_step_duration)
-M2_low_ttest = ttest_ind(M2_non_low_step_duration, M2_per_low_step_duration)
-M3_low_ttest = ttest_ind(M3_non_low_step_duration, M3_per_low_step_duration)
-M3_high_ttest = ttest_ind(M3_non_high_step_duration, M3_per_high_step_duration)
-
-print("M1 test for 100 m/sec", M1_low_ttest)
-print("M1 test for 300 m/sec", M1_high_ttest)
-print("M2 test for 100 m/sec", M2_low_ttest)
-print("M3 test for 100 m/sec", M3_low_ttest)
-print("M3 test for 200 m/sec", M3_high_ttest)
-
-# Combine the data into a list
-M1_data = [M1_non_low_step_duration, M1_per_low_step_duration, M1_non_high_step_duration, M1_per_high_step_duration]
-M2_data = [M2_non_low_step_duration, M2_per_low_step_duration, M2_non_high_step_duration]
-M3_data = [M3_non_low_step_duration, M3_per_low_step_duration, M3_non_high_step_duration, M3_per_high_step_duration]
-
-# Combine the data into a list
-cumulative_data = [M1_non_low_step_duration, M1_per_low_step_duration, M1_non_high_step_duration, M1_per_high_step_duration, M2_non_low_step_duration, M2_per_low_step_duration, M2_non_high_step_duration, M3_non_low_step_duration, M3_per_low_step_duration, M3_non_high_step_duration, M3_per_high_step_duration]
-
-means = [np.mean(i) for i in cumulative_data]
-stds = [np.std(i) for i in cumulative_data]
-
-# Create a figure and axes for subplots
-x = np.arange(len(cumulative_data))
-
-# Add x-axis labels
-plt.xticks(x, ['M1-non-100', 'M1-per-100', 'M1-non-300', 'M1-per-300', 'M2-non-100', 'M2-per-100', 'M2-per-100', 'M3-non-100', 'M3-non-300', 'M3-per-100', 'M3-per-300'])
-
-# Add a title
-plt.title('Average step cycle by treadmill speed')
-
-# Creating a second boxplot with error bars
-means = [np.mean(i) for i in cumulative_data]
-stds = [np.std(i) for i in cumulative_data]
-
-x = np.arange(len(cumulative_data))
-
-# Plot the bar graph
-plt.bar(x, means)
-
-# Plot the error bars
-plt.errorbar(x, means, yerr=stds, fmt='.k', capsize=3)
-
-# Display the plot
+plt.title("Step Cycle Duration")
+plt.ylim(0, 1)
+cycle = sns.barplot(**plot_params, ci="sd", capsize=0.05)
+plt.ylabel('')
+plt.legend(loc='best', fontsize=12)
+annotator = Annotator(cycle, pairs, **plot_params)
+annotator.new_plot(cycle, pairs, plot="barplot", **plot_params)
+annotator.configure(hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside")
+annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 plt.show()
 

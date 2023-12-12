@@ -26,15 +26,15 @@ def nnmf_factorize(A, k):
     return W, H, C
 
 # Load Data
-data = pd.read_csv("./norm-emg-preDTX-per.csv", header=0)
+data = pd.read_csv("./norm-wt-m1-non.csv", header=0)
 A = data.to_numpy()
 
 # Setting various paramaters through the script I often change
-selected_primitive_filename = './full_width_test/predtx-per-prim.png'
-selected_primitive_title = 'Motor Primitive for PreDTX with pertubration at 0.100 m/s '
-modules_and_primitives_filename = './full_width_test/predtx-per-mod.png'
-modules_and_primitives_title = 'Muscle Synergies for PreDTX with perturbation 0.100 m/s cleaned'
-chosen_synergies = 7
+# selected_primitive_filename = './full_width_test/wt-m1-per-prim.png'
+selected_primitive_title = 'Motor Primitive for WT-M1 without pertubration at 0.100 m/s '
+# modules_and_primitives_filename = './full_width_test/wt-m1-per-mod.png'
+modules_and_primitives_title = 'Muscle Synergies for WT-M1 without perturbation 0.100 m/s cleaned'
+chosen_synergies = 3
 
 # Define some variables about the data
 number_cycles = len(A) // 200
@@ -42,9 +42,9 @@ number_cycles = len(A) // 200
 # Choosing best number of components
 W, H, C = nnmf_factorize(A, chosen_synergies)
 
-np.savetxt('./DTR-M5/primitives-predtx-per.csv', W, delimiter=',')
-np.savetxt('./DTR-M5/modules-predtx-per.csv', H, delimiter=',')
-np.savetxt('./DTR-M5/C3-predtx-per.csv', C, delimiter=',')
+# np.savetxt('./CoM-M1/primitives-com-m1-per.csv', W, delimiter=',')
+# np.savetxt('./CoM-M1/modules-com-m1-per.csv', H, delimiter=',')
+# np.savetxt('./CoM-M1/C3-com-m1-per.csv', C, delimiter=',')
 
 samples = np.arange(0, len(C))
 samples_binned = np.arange(200)
@@ -121,7 +121,7 @@ plt.gca().spines['right'].set_visible(False)
 plt.gca().spines['bottom'].set_visible(True)
 plt.gca().spines['left'].set_visible(True)
 plt.title(selected_primitive_title, fontsize=16, fontweight='bold')
-plt.savefig(selected_primitive_filename, dpi=300)
+# plt.savefig(selected_primitive_filename, dpi=300)
 
 # =======================================
 # Presenting Data as a mutliplot figure |
@@ -199,7 +199,7 @@ for col in range(chosen_synergies):
 plt.tight_layout()
 fig.suptitle(modules_and_primitives_title, fontsize=16, fontweight='bold')
 plt.subplots_adjust(top=0.9)
-plt.savefig(modules_and_primitives_filename, dpi=300)
+# plt.savefig(modules_and_primitives_filename, dpi=300)
 
 
 # Show all the plots
