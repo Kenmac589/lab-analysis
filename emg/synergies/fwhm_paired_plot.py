@@ -32,14 +32,16 @@ def fwhm(motor_p_full, synergy_selection):
         # diff_mcurrent = np.diff(mcurrent_primitive_full, axis=0)
         # mcurrent_primitive = mcurrent_primitive_full[np.arange(mcurrent_primitive_full.shape[0]), diff_mcurrent]
 
+        # Getting minimum
         abs_min_ind = np.argmin(mcurrent_primitive)
 
         # getting maximum
         max_ind = np.argmax(mcurrent_primitive)
 
+        # Getting half-width height
+        half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[abs_min_ind]) * 0.5
 
-        half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[abs_min_ind]) / 2
-
+        # Getting all values along curve that fall beow half width height
         count_above = np.nonzero(mcurrent_primitive > half_width_height)
 
         fwhm_index.append(count_above)

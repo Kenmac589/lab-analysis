@@ -207,7 +207,6 @@ def fwhm(motor_p_full, synergy_selection):
     # Save
     fwhm = np.array([])
     fwhm_index = [[]]
-    half_width_heights = []
 
     for i in range(number_cycles):
         current_primitive = motor_p_full[i * 200: (i + 1) * 200, synergy_selection - 1]
@@ -217,27 +216,24 @@ def fwhm(motor_p_full, synergy_selection):
         # applying mask to exclude values which were subject to rounding errors
         mcurrent_primitive = np.asarray(current_primitive[primitive_mask])
 
-        # Dealing with local maxima issues at ends of primitives
-        # diff_mcurrent = np.diff(mcurrent_primitive_full, axis=0)
-        # mcurrent_primitive = mcurrent_primitive_full[np.arange(mcurrent_primitive_full.shape[0]), diff_mcurrent]
-
+        # Getting minimum value
         abs_min_ind = np.argmin(mcurrent_primitive)
 
-        # getting maximum
+        # Getting maximum value
         max_ind = np.argmax(mcurrent_primitive)
 
+        # Getting half-width height
+        half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[abs_min_ind]) * 0.5
 
-        half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[abs_min_ind]) / 2
-        half_width_heights.append(half_width_height)
-
+        # Getting all values along curve that fall below half width height
         count_above = np.nonzero(mcurrent_primitive > half_width_height)
 
         fwhm_index.append(count_above)
         fwhm = np.append(fwhm, [len(count_above[0])])
 
-    fwhm = np.asarray(fwhm)
+    # fwhm = np.asarray(fwhm)
 
-    return half_width_heights
+    return fwhm
 
 def show_modules(data_input, chosen_synergies, modules_filename="./output.png"):
     """
@@ -291,11 +287,11 @@ def show_modules(data_input, chosen_synergies, modules_filename="./output.png"):
     # Adjust spacing between subplots
     plt.tight_layout()
     # fig.suptitle(synergies_title, fontsize=16, fontweight='bold')
-    plt.savefig(modules_filename, dpi=300)
+    # plt.savefig(modules_filename, dpi=300)
     # plt.subplots_adjust(top=0.9)
     plt.show()
 
-def show_synergies(data_input, refined_primitives, chosen_synergies, synergies_filename="./output.png"):
+def show_synergies(data_input, refined_primitives, chosen_synergies, synergies_name="./output.png"):
     """
     Make sure you check the channel order!!
 
@@ -384,13 +380,13 @@ def show_synergies(data_input, refined_primitives, chosen_synergies, synergies_f
 
     # Adjust spacing between subplots
     plt.tight_layout()
-    fig.suptitle("Output", fontsize=16, fontweight='bold')
+    fig.suptitle(synergies_name, fontsize=16, fontweight='bold')
     plt.subplots_adjust(top=0.9)
-    plt.savefig(synergies_filename, dpi=300)
+    # plt.savefig(synergies_filename, dpi=300)
 
 
     # Show all the plots
-    plt.show()
+    plt.show(block=True)
 
 def show_modules_dtr(data_input, chosen_synergies, modules_filename="./output.png"):
     """
@@ -445,18 +441,17 @@ def show_modules_dtr(data_input, chosen_synergies, modules_filename="./output.pn
     # Adjust spacing between subplots
     plt.tight_layout()
     # fig.suptitle(synergies_title, fontsize=16, fontweight='bold')
-    plt.savefig(modules_filename, dpi=300)
+    # plt.savefig(modules_filename, dpi=300)
     # plt.subplots_adjust(top=0.9)
     plt.show()
 
-def show_synergies_dtr(data_input, refined_primitives, chosen_synergies, synergies_filename="./output.png"):
+def show_synergies_dtr(data_input, refined_primitives, chosen_synergies, synergies_name="./output.png"):
     """
     Make sure you check the channel order!!
 
     """
 
-    motor_p_data = pd.read_csv(refined_primitives, header=None)
-    print(motor_p_data)
+    motor_p_data = pd.read_csv(refined_primitives, header=0)
     # =======================================
     # Presenting Data as a mutliplot figure |
     # =======================================
@@ -538,9 +533,9 @@ def show_synergies_dtr(data_input, refined_primitives, chosen_synergies, synergi
 
     # Adjust spacing between subplots
     plt.tight_layout()
-    fig.suptitle("Output", fontsize=16, fontweight='bold')
+    fig.suptitle(synergies_name, fontsize=16, fontweight='bold')
     plt.subplots_adjust(top=0.9)
-    plt.savefig(synergies_filename, dpi=300)
+    # plt.savefig(synergies_filename, dpi=300)
 
 
     # Show all the plots
@@ -725,36 +720,39 @@ def sel_primitive_trace(motor_primitives, synergy_selection, selected_primitive_
 
 
 def main():
+    synergy_selection = 3
 
-    # Analysis of fwhl_lenghts
+    # Title Names
+    title_names = [
+        "Synergies for DTR-M5 preDTX without perturbation",
+        "Synergies for DTR-M5 preDTX with perturbation",
+        "Synergies for DTR-M5 postDTX without perturbation",
+        "Synergies for DTR-M5 postDTX with perturbation",
 
-    conditions_normalized = [
-        './norm-wt-m1-non.csv',
-        './norm-wt-m1-per.csv',
-        '/norm-emg-preDTX-100.csv',
+    ]
+
+    # Normalized Data List
+    conditions_normalized_dtr = [
+        './norm-emg-preDTX-100.csv',
         './norm-emg-preDTX-per.csv',
         './norm-postdtx-non.csv',
         './norm-postdtx-per.csv',
     ]
-    conditions_primitives = [
-        './wt-m1-non-primitives.txt',
+
+    # Cleaned up Primitives
+    conditions_primitives_dtr = [
         './predtx-non-primitives-test.txt',
-        './postdtx-non-primitives.txt',
-        './wt-m1-non-primitives.txt',
         './predtx-per-primitives-test.txt',
+        './postdtx-non-primitives.txt',
         './postdtx-per-primitives.txt',
     ]
 
-    # Showing Modules
-    # show_modules('./norm-emg-com-non.csv', 3, "../figures/CoM-M1/mod_non.png")
-    # show_modules('./norm-emg-com-per.csv', 3, "../figures/CoM-M1/mod_per.png")
-    # show_modules_dtr('./norm-emg-preDTX-100.csv', 3, "../figures/dtr-m5/modules/mod_prenon.png")
-    # show_modules_dtr('./norm-emg-preDTX-per.csv', 3, "../figures/dtr-m5/modules/mod_preper.png")
-    # show_modules_dtr('./norm-postdtx-non.csv', 3, "../figures/dtr-m5/modules/mod_postnon.png")
-    # show_modules_dtr('./norm-postdtx-per.csv', 3, "../figures/dtr-m5/modules/mod_postper.png")
-    show_synergies('./norm-wt-m1-non.csv', './wt-m1-non-primitives.txt', 3, "/Users/kenzie_mackinnon/Downloads/synergies_non_test.jpg")
-    show_synergies('./norm-wt-m1-per.csv', './wt-m1-per-primitives.txt', 3, "/Users/kenzie_mackinnon/Downloads/synergies_per_test.jpg")
 
+    show_synergies('./norm-wt-m1-non.csv', './wt-m1-non-primitives.txt', synergy_selection, "Synergies for WT-M1 without perturbation")
+    show_synergies('./norm-wt-m1-per.csv', './wt-m1-per-primitives.txt', synergy_selection, "Synergies for WT-M1 with perturbation")
+
+    for i in range(len(conditions_normalized_dtr)):
+        show_synergies_dtr(conditions_normalized_dtr[i], conditions_primitives_dtr[i], synergy_selection, title_names[i])
 
 if __name__ == "__main__":
     main()

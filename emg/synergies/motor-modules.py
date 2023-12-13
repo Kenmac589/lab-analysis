@@ -126,7 +126,7 @@ plt.gca().spines['right'].set_visible(False)
 plt.gca().spines['bottom'].set_visible(True)
 plt.gca().spines['left'].set_visible(True)
 plt.title(selected_primitive_title, fontsize=16, fontweight='bold')
-plt.savefig(selected_primitive_filename, dpi=300)
+# plt.savefig(selected_primitive_filename, dpi=300)
 
 # =======================================
 # Presenting Data as a mutliplot figure |
@@ -204,7 +204,7 @@ for col in range(chosen_synergies):
 plt.tight_layout()
 fig.suptitle(modules_and_primitives_title, fontsize=16, fontweight='bold')
 plt.subplots_adjust(top=0.9)
-plt.savefig(modules_and_primitives_filename, dpi=300)
+# plt.savefig(modules_and_primitives_filename, dpi=300)
 
 
 # Show all the plots
