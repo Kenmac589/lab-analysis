@@ -6,6 +6,9 @@ synergy extraction.
 Some functions could be more recursive however, they have been used in
 applications such as synergy selection.
 """
+
+# %%
+
 import os
 import numpy as np
 import pandas as pd
@@ -15,6 +18,7 @@ from statannotations.Annotator import Annotator
 from scipy import ndimage, signal, interpolate
 from sklearn.decomposition import NMF
 
+# %%
 def read_all_csv(directory_path):
     data_dict = {}  # Initialize an empty dictionary to store the data
 
@@ -160,19 +164,10 @@ def full_width_half_abs_min_scipy(motor_p_full, synergy_selection):
 
     # Save
     fwhl = []
-    samples = np.arange(0, len(motor_p_full))
-    samples_binned = np.arange(200)
     number_cycles = len(motor_p_full) // 200
-    # half_width_height_array = np.array([])
-    # fwhl_start_stop = np.empty((number_cycles, 0))
 
     for i in range(number_cycles):
         current_primitive = motor_p_full[i * 200: (i + 1) * 200, synergy_selection - 1]
-
-        primitive_mask = current_primitive > 0.0
-
-        # # applying mask to exclude values which were subject to rounding errors
-        mcurrent_primitive = np.asarray(current_primitive[primitive_mask])
 
         # Find peaks
         peaks, properties = signal.find_peaks(current_primitive, distance=40, width=2)
@@ -234,6 +229,22 @@ def fwhm(motor_p_full, synergy_selection):
     # fwhm = np.asarray(fwhm)
 
     return fwhm
+
+def coa(motor_p_full, synergy_selection):
+
+    number_cycles = len(motor_p_full) // 200
+
+    # Save
+    a_martix = np.array([])
+    b_martix = np.array([])
+
+    np.arctan
+
+    for i in range(len(motor_p_full)):
+        alpha = 360 * ()
+
+
+    
 
 def show_modules(data_input, chosen_synergies, modules_filename="./output.png"):
     """
@@ -716,9 +727,9 @@ def sel_primitive_trace(motor_primitives, synergy_selection, selected_primitive_
     plt.show()
 
     # fwhl = np.asarray(fwhl)
-    # return fwhl
+    # return fwhllab
 
-
+# %%
 def main():
     synergy_selection = 3
 
@@ -753,6 +764,10 @@ def main():
 
     for i in range(len(conditions_normalized_dtr)):
         show_synergies_dtr(conditions_normalized_dtr[i], conditions_primitives_dtr[i], synergy_selection, title_names[i])
+    print("Hello World")
 
 if __name__ == "__main__":
     main()
+# %%
+# %%
+
