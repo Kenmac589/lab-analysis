@@ -10,6 +10,9 @@
 !*.latex
 !*.py
 !*.ipynb
+!*.R
+!*.r
+!*.qmd
 !*.s2s
 !*.s2cx
 
