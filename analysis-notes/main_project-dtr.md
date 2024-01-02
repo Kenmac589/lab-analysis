@@ -1,4 +1,24 @@
-# For DTR Mice Series (6 month group)
+# Notes Relating to Analysis of Age Related Decline
+
+## Topics
+
+[normalizing_emg_signal](normalizing_emg_signal.md)
+[calculating_estimated_means](calculating_estimated_means.md)
+[other_python_snippets](other_python_snippets.md)
+[full_width_half_maximum](full_width_half_maximum.md)
+[center_of_activity](center_of_activity.md)
+
+# Wild-type Controls
+
+## WT 1
+
+    - For non-perturbation @0.100, I used first recording
+    - synergies to use: 3
+    - For perturbation @0.100 I used recording starting at ~1067
+    - synergies to use: 3
+
+
+# For DTR Mice Series (4 month group)
 
 **The 6 month DTR mice have some channels that are mixed around from the order of implantation in the 1 yr mice which is based on the spike configuration currently being used**
 - For Gastrocnemius (Gs)
@@ -31,18 +51,21 @@ M5: 1.4 - 1.7
 
 [recording_summary](../com/dtr/dtr-6-months/recording_summary.csv)
 
-- [X] M1-pre
-- [X] M1-post
-- [X] M2-pre
-- [ ] M2-post
-    - [ ] Review data quality with Turgay.
-- [ ] M3-pre
-- [ ] M3-post
+**Turgay is planning on redoing all the 4 month group**
+
 - [X] M5-pre
-- [ ] M5-post
+- [X] M5-post
 
 # First Committee Meeting Analysis
 
 - Looking at 6m-M5-preDTX
     - First sinusoidal at 0.100 is broken into parts of constant stimulation and a full recording as well
     - Second sinusoidal at 0.400 much better looking in terms of just being cleaner
+
+# Post Facotrization 
+
+
+
+
+
+

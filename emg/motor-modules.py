@@ -36,16 +36,16 @@ def nnmf_factorize(A, k):
 #     return emg_norm
 
 # Load Data
-data = pd.read_csv("./norm-wt-m5-per.csv", header=0)
+data = pd.read_csv("./norm-wt-m1-non.csv", header=0)
 A = data.to_numpy()
 
 # Setting various paramaters
-selected_primitive_filename = './../figures/wt_m5_per_prim.png'
-selected_primitive_title = 'Motor Primitive for WT M5 with pertubration at 0.100'
-modules_and_primitives_filename = './../figures/wt_m5_per_mod.png'
-modules_and_primitives_title = 'Muscle Synergies for WT M5 with perturbation 0.100 m/s'
-primitives_data = './wt_data/wt_m5_per_primitives.csv'
-modules_data = './wt_data/wt_m5_per_modules.csv'
+selected_primitive_filename = './../figures/wt_m1_non_prim.png'
+selected_primitive_title = 'Motor Primitive for WT M1 without pertubration at 0.100'
+modules_and_primitives_filename = './../figures/wt_m1_non_mod.png'
+modules_and_primitives_title = 'Muscle Synergies for WT M1 without perturbation 0.100 m/s'
+primitives_data = './wt_data/wt_m1_primitives.csv'
+modules_data = './wt_data/wt_m1_modules.csv'
 trace_length = 200
 channel_order = ['GM', 'Ip', 'BF', 'VL', 'St', 'TA', 'Gs', 'Gr']
 chosen_synergies = 7
@@ -214,4 +214,4 @@ plt.savefig(modules_and_primitives_filename, dpi=300)
 
 
 # Show all the plots
-# plt.show()
+plt.show()

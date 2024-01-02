@@ -232,26 +232,64 @@ def fwhm(motor_p_full, synergy_selection):
 
     return fwhm
 
-def coa(motor_p_full, synergy_selection):
+def coa(refined_primitives, synergy_selection):
+    """Center of Activiy
+    @param refined_primitives: motor primitives
+    @param synergy_selection: Selected muscle synergy
 
-    number_cycles = len(motor_p_full) // 200
+    @return coa: array of center activities for the step cycles in the trial
+    """
 
+    motor_p_data = pd.read_csv(refined_primitives, header=0)
+    motor_p_full = motor_p_data.to_numpy()
+
+    # Make selection of synergy and bin primitives by step cycle
     selected_primitive = motor_p_full[:, synergy_selection - 1]
-    binned_primitives = selected_primitive.reshape((200, -1), order='F')
+    binned_primitives = np.split(selected_primitive, len(selected_primitive) // 200)
 
 
     # Save
-    a_martix = np.array([])
-    b_martix = np.array([])
+    # co_act_array = np.array([])
 
 
-    for pp in range(len(motor_p_full)):
-        # alpha = 360 * (pp - 1)) /
-        print(pp)
+    for i in range(len(binned_primitives)):
+        a_martix = np.array([])
+        b_martix = np.array([])
 
-    # co_act = co
+        # Get values for current cycle
+        current_cycle = binned_primitives[i]
+        points = current_cycle.size
 
-    return co_act
+        for pp in range(points):
+            alpha = 360 * (pp - 1) / (points - 1) * np.pi / 180
+            vector = current_cycle[pp]
+            a_value = vector * np.cos(alpha)
+            b_value = vector * np.sin(alpha)
+            np.append(a_martix, pp, a_value)
+            np.append(b_martix, pp, b_value)
+
+        a_sum = np.sum(a_martix)
+        b_sum = np.sum(b_martix)
+
+        coa_cycle = np.arctan(b_sum / a_sum) * 180 / np.pi
+
+        # to maintain signage
+        if a_sum > 0 and b_sum > 0:
+            coa_cycle = coa_cycle
+        elif a_sum < 0 and b_sum > 0:
+            coa_cycle = coa_cycle + 180
+        elif a_sum < 0 and b_sum < 0:
+            coa_cycle = coa_cycle + 180
+        elif a_sum > 0 and b_sum < 0:
+            coa_cycle = coa_cycle + 360
+
+        # Appending to list of center of activities
+        coa_cycle = coa_cycle * points / 360
+        # co_act_array = np.append(co_act_array, coa_cycle)
+
+
+    # Retuning center of activity values
+    # return co_act_array
 
 def show_modules(data_input, chosen_synergies, modules_filename="./output.png"):
     """
@@ -768,8 +806,9 @@ def main():
     ]
 
 
-    show_synergies('./norm-wt-m1-non.csv', './wt-m1-non-primitives.txt', synergy_selection, "Synergies for WT-M1 without perturbation")
-    show_synergies('./norm-wt-m1-per.csv', './wt-m1-per-primitives.txt', synergy_selection, "Synergies for WT-M1 with perturbation")
+    # show_synergies('./norm-wt-m1-non.csv', './wt-m1-non-primitives.txt', synergy_selection, "Synergies for WT-M1 without perturbation")
+    # show_synergies('./norm-wt-m1-per.csv', './wt-m1-per-primitives.txt', synergy_selection, "Synergies for WT-M1 with perturbation")
+    coa('./predtx-non-primitives-test.txt', synergy_selection)
 
     # for i in range(len(conditions_normalized_dtr)):
     #     show_synergies_dtr(conditions_normalized_dtr[i], conditions_primitives_dtr[i], synergy_selection, title_names[i])

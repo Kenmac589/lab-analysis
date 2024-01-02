@@ -1,4 +1,4 @@
-
+# Estimate Means Calulations
 
 To calculate estimated marginal means in Python, you can use the `scipy.stats` module. Specifically, you can use the `describe()` function to calculate summary statistics for a dataset. Here's an example of how you could do this:
 

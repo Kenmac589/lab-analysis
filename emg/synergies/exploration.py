@@ -23,6 +23,17 @@ import numpy as np
 # %%
 mpl.style.use(["ggplot", "mocha"])
 
+data_path = './wt-m1-non-primitives.txt'
+data_input = pd.read_csv(data_path, header=0)
+data_input.plot(subplots=True)
+plt.show()
+
+data_path_per_test = './wt-m1-per-primitives.txt'
+data_input_per_test = pd.read_csv(data_path_per_test, header=0)
+data_input_per_test.plot(subplots=True)
+plt.show()
+
+# %%
 data_path = './predtx-non-primitives.txt'
 data_input = pd.read_csv(data_path, header=0)
 data_input.plot(subplots=True)

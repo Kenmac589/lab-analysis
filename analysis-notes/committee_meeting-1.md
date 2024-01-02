@@ -4,6 +4,7 @@
 [calculating_estimated_means](calculating_estimated_means.md)
 [other_python_snippets](other_python_snippets.md)
 [full_width_half_maximum](full_width_half_maximum.md)
+[center_of_activity](center_of_activity.md)
 
 **These selections were made based on normalized data with spike script that had an error**
 
@@ -18,7 +19,7 @@ For postdtx with perturbation
 - Synergies: 4
     - maybe 3
 
-## CoM-M1
+## WT 1
 
 - For non-perturbation @0.100, I used first recording
     - synergies to use: 3
@@ -33,3 +34,5 @@ for perturbation at 0.100 used recording around 1290
 - preDTX per 0.100: 
 - postDTX non 0.100:
 - postDTX non 0.100:
+
+
