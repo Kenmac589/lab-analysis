@@ -1,10 +1,12 @@
-"""Non-Negative Matrix Factorization for Muscle Synergy Extraction
-This program performs Non-Negative Matrix Factorization for determing
-the appropriate number of components/muscle channels to use for muscle
-synergy extraction.
+"""Motorpyrimitives
+The main goal of these functions is to assist with the analysis of
+electromyographic data.
 
-Some functions could be more recursive however, they have been used in
-applications such as synergy selection.
+This includes
+
+Non-Negative Matrix factorization -> @nnmf_factorize
+Full width half maximum           -> @fwhm
+Center of Activity                -> @coa
 """
 
 # %%
@@ -234,17 +236,22 @@ def coa(motor_p_full, synergy_selection):
 
     number_cycles = len(motor_p_full) // 200
 
+    selected_primitive = motor_p_full[:, synergy_selection - 1]
+    binned_primitives = selected_primitive.reshape((200, -1), order='F')
+
+
     # Save
     a_martix = np.array([])
     b_martix = np.array([])
 
-    np.arctan
 
-    for i in range(len(motor_p_full)):
-        alpha = 360 * ()
+    for pp in range(len(motor_p_full)):
+        # alpha = 360 * (pp - 1)) /
+        print(pp)
 
+    # co_act = co
 
-    
+    return co_act
 
 def show_modules(data_input, chosen_synergies, modules_filename="./output.png"):
     """
@@ -261,12 +268,12 @@ def show_modules(data_input, chosen_synergies, modules_filename="./output.png"):
     fig, axs = plt.subplots(chosen_synergies, 1, figsize=(4, 10))
 
     # Calculate the average trace for each column
-    samples = np.arange(0, len(motor_primitives))
-    samples_binned = np.arange(200)
-    number_cycles = len(motor_primitives) // 200
+    # samples = np.arange(0, len(motor_primitives))
+    # samples_binned = np.arange(200)
+    # number_cycles = len(motor_primitives) // 200
 
     for col in range(chosen_synergies):
-        primitive_trace = np.zeros(200)  # Initialize an array for accumulating the trace values
+        # primitive_trace = np.zeros(200)  # Initialize an array for accumulating the trace values
 
         # Begin Presenting Motor Modules
 
@@ -416,9 +423,9 @@ def show_modules_dtr(data_input, chosen_synergies, modules_filename="./output.pn
     fig, axs = plt.subplots(chosen_synergies, 1, figsize=(4, 10))
 
     # Calculate the average trace for each column
-    samples = np.arange(0, len(motor_primitives))
-    samples_binned = np.arange(200)
-    number_cycles = len(motor_primitives) // 200
+    # samples = np.arange(0, len(motor_primitives))
+    # samples_binned = np.arange(200)
+    # number_cycles = len(motor_primitives) // 200
 
     for col in range(chosen_synergies):
 
@@ -730,7 +737,9 @@ def sel_primitive_trace(motor_primitives, synergy_selection, selected_primitive_
     # return fwhllab
 
 # %%
+
 def main():
+
     synergy_selection = 3
 
     # Title Names
@@ -762,12 +771,10 @@ def main():
     show_synergies('./norm-wt-m1-non.csv', './wt-m1-non-primitives.txt', synergy_selection, "Synergies for WT-M1 without perturbation")
     show_synergies('./norm-wt-m1-per.csv', './wt-m1-per-primitives.txt', synergy_selection, "Synergies for WT-M1 with perturbation")
 
-    for i in range(len(conditions_normalized_dtr)):
-        show_synergies_dtr(conditions_normalized_dtr[i], conditions_primitives_dtr[i], synergy_selection, title_names[i])
-    print("Hello World")
+    # for i in range(len(conditions_normalized_dtr)):
+    #     show_synergies_dtr(conditions_normalized_dtr[i], conditions_primitives_dtr[i], synergy_selection, title_names[i])
 
 if __name__ == "__main__":
     main()
-# %%
 # %%
 

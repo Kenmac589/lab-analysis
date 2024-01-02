@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from pandas import DataFrame as df
 import seaborn as sns
-from scipy import stats as st
+# from scipy import stats as st
 from statannotations.Annotator import Annotator
 import motorpyrimitives as mp
 
@@ -38,11 +38,31 @@ conditions_primitives_dtr = [
     './postdtx-per-primitives.txt',
 ]
 
+conditions_wt = [
+    './norm-wt-m1-non.csv',
+    './norm-wt-m1-per.csv',
+    './norm-wt-m2-non.csv',
+    './norm-wt-m2-per.csv',
+    './norm-wt-m3-non.csv',
+    './norm-wt-m3-per.csv',
+    './norm-wt-m4-non.csv',
+    './norm-wt-m4-per.csv',
+    './norm-wt-m5-non.csv',
+    './norm-wt-m5-per.csv',
+]
+
+
 mp.show_synergies('./norm-wt-m1-non.csv', './wt-m1-non-primitives.txt', synergy_selection, "/Users/kenzie_mackinnon/Downloads/synergies_non_test.jpg")
 mp.show_synergies('./norm-wt-m1-per.csv', './wt-m1-per-primitives.txt', synergy_selection, "/Users/kenzie_mackinnon/Downloads/synergies_per_test.jpg")
 
 for i in range(len(conditions_normalized_dtr)):
     mp.show_synergies_dtr(conditions_normalized_dtr[i], conditions_primitives_dtr[i], synergy_selection, title_names[i])
+
+wt_modules_total = np.array([])
+
+for i in range(len(conditions_wt)):
+    motor_primitives, motor_modules = mp.synergy_extraction(wt_modules_total, synergy_selection)
+    wt_modules_total = np.vstack(wt_modules_total, motor_modules[synergy_selection, :])
 
 # ================================
 # Full Width Half Maximum Analysis
@@ -66,7 +86,6 @@ fwhm_df = df(columns=["Condition", "Perturbation State", "Synergy", "FWHM"])
 for i in range(0, synergy_selection):
     current_synergy = i + 1
     synergy_tag = "Synergy {}".format(current_synergy)
-    print(synergy_tag)
     for j in range(0, len(conditions)):
         condition_tag = conditions_name[j]
         perturbation_state_tag = perturbation_state[j]
