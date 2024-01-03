@@ -38,24 +38,11 @@ conditions_primitives_dtr = [
     './postdtx-per-primitives.txt',
 ]
 
-
-# mp.show_synergies('./norm-wt-m1-non.csv', './wt-m1-non-primitives.txt', synergy_selection, "/Users/kenzie_mackinnon/Downloads/synergies_non_test.jpg")
-# mp.show_synergies('./norm-wt-m1-per.csv', './wt-m1-per-primitives.txt', synergy_selection, "/Users/kenzie_mackinnon/Downloads/synergies_per_test.jpg")
-
-# for i in range(len(conditions_normalized_dtr)):
-#     mp.show_synergies_dtr(conditions_normalized_dtr[i], conditions_primitives_dtr[i], synergy_selection, title_names[i])
-
-# wt_modules_total = np.array([])
-
-# for i in range(len(conditions_wt)):
-#     motor_primitives, motor_modules = mp.synergy_extraction(wt_modules_total, synergy_selection)
-#     wt_modules_total = np.vstack(wt_modules_total, motor_modules[synergy_selection, :])
-
 # ================================
 # Full Width Half Maximum Analysis
 # ================================
 
-conditions_wt = [
+conditions_wt_primitives = [
     './wt-m1-non-primitives.txt',
     './wt-m1-per-primitives.txt',
     './wt-m2-non-primitives.txt',
@@ -69,6 +56,8 @@ conditions_wt = [
 ]
 
 
+
+modules_df = df(columns=['Condition', 'Perturbation State', 'Synergy', 'GM', 'Ip', 'BF', 'VL', 'St', 'TA', 'Gs', 'Gr'])
 fwhm_df = df(columns=["Condition", "Perturbation State", "Synergy", "FWHM"])
 
 # Loading all WT's first
@@ -76,13 +65,13 @@ fwhm_df = df(columns=["Condition", "Perturbation State", "Synergy", "FWHM"])
 for i in range(0, synergy_selection):
     current_synergy = i + 1
     synergy_tag = "Synergy {}".format(current_synergy)
-    for j in range(0, len(conditions_wt)):
+    for j in range(0, len(conditions_wt_primitives)):
         condition_tag = "WT"
         if j == 0 or j % 2 == 0:
             perturbation_state_tag = "Non-Perturbation"
         else:
             perturbation_state_tag = "Perturbation"
-        motor_p_data = pd.read_csv(conditions_wt[j], header=0)
+        motor_p_data = pd.read_csv(conditions_wt_primitives[j], header=0)
         motor_p_array = motor_p_data.to_numpy()
         fwhm_list = mp.fwhm(motor_p_array, current_synergy)
         for k in range(0, len(fwhm_list)):
@@ -104,7 +93,6 @@ conditions_name = [
     "PostDTX"
 ]
 
-
 for i in range(0, synergy_selection):
     current_synergy = i + 1
     synergy_tag = "Synergy {}".format(current_synergy)
@@ -122,11 +110,8 @@ for i in range(0, synergy_selection):
             fwhm_entry = [[condition_tag, perturbation_state_tag, synergy_tag, fwhm_list[k]]]
             fwhm_df = fwhm_df._append(pd.DataFrame(fwhm_entry, columns=["Condition", "Perturbation State", "Synergy", "FWHM"]), ignore_index=True)
 
-print(fwhm_df)
 
-
-# fwhm_df.to_excel("./fwhm_output_text.xlsx", engine='xlsxwriter')
-fwhm_df.to_csv("./fwhm_output_text.csv")
+# fwhm_df.to_csv("./fwhm_output_text.csv")
 syn1_df = fwhm_df[fwhm_df["Synergy"] == "Synergy 1"]
 syn2_df = fwhm_df[fwhm_df["Synergy"] == "Synergy 2"]
 syn3_df = fwhm_df[fwhm_df["Synergy"] == "Synergy 3"]
@@ -163,6 +148,7 @@ annotator.new_plot(syn1, pairs, plot="barplot", **plot_params)
 annotator.configure(hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside")
 annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 plt.show()
+
 
 # Plot for Synergy 2
 plot_params = {
@@ -202,3 +188,4 @@ annotator.new_plot(syn3, pairs, plot="barplot", **plot_params)
 annotator.configure(hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside")
 annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 plt.show()
+

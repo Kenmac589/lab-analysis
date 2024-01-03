@@ -5,8 +5,7 @@
 [spike_guidance](spike_guidance.md)
 [spike_configuration](spike_configuration.md)
 [com_project](com_project.md)
-[committee_meeting 1](committee_meeting-1.md)
-[stats_applications](stats_applications.md)
+[anaylsis_background](anaylsis_background.md)
 
 # Wild-type Controls
 
@@ -64,4 +63,4 @@ M5: 1.4 - 1.7
 # Post Meeting Analysis
 
 - Working through the wild type mice
-
+- 
