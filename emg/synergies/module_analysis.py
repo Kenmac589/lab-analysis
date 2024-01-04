@@ -1,11 +1,14 @@
+# %%
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import pandas as pd
 from pandas import DataFrame as df
 import seaborn as sns
 # from scipy import stats as st
 from statannotations.Annotator import Annotator
 import motorpyrimitives as mp
+
 
 def show_modules(data_input, chosen_synergies, modules_filename="./output.png"):
     """
@@ -63,6 +66,7 @@ def show_modules(data_input, chosen_synergies, modules_filename="./output.png"):
     # plt.subplots_adjust(top=0.9)
     plt.show()
 
+# %%
 # ================
 # Synergy analysis
 # ================
@@ -108,6 +112,7 @@ for i in range(0, synergy_selection):
             perturbation_state_tag = "Non-Perturbation"
         else:
             perturbation_state_tag = "Perturbation"
+
         # motor_p, motor_m = mp.synergy_extraction(conditions_wt[j], synergy_selection)
         motor_data = pd.read_csv(modules_wt[j], header=None)
         motor_m_array = motor_data.to_numpy()
@@ -127,6 +132,9 @@ syn1_df = modules_df[modules_df["Synergy"] == "Synergy 1"]
 syn2_df = modules_df[modules_df["Synergy"] == "Synergy 2"]
 syn3_df = modules_df[modules_df["Synergy"] == "Synergy 3"]
 
+modules_df_flip = modules_df.T
+# modules_df.to_csv('./wt_modules.csv')
+# modules_df_flip.to_csv('./wt_modules_flipped.csv')
 # Plotting
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
 sns.set(style="white", font_scale=1.5, rc=custom_params)
@@ -166,8 +174,13 @@ plt.legend(loc='best', fontsize=12)
 # annotator.new_plot(syn1, pairs, plot="barplot", **plot_params)
 # annotator.configure(hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside")
 # annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
-plt.show()
-# 
+# plt.show()
+
+
+
+
+
+
 # Plot for Synergy 2
 # plot_params = {
 #     "data": syn2_df,
@@ -205,3 +218,6 @@ plt.show()
 # annotator.new_plot(syn3, pairs, plot="barplot", **plot_params)
 # annotator.configure(hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside")
 # annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
+
+# %%
+
