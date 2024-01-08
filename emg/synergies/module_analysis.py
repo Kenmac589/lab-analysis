@@ -10,62 +10,6 @@ from statannotations.Annotator import Annotator
 import motorpyrimitives as mp
 
 
-def show_modules(data_input, chosen_synergies, modules_filename="./output.png"):
-    """
-    Make sure you check the channel order!!
-
-    """
-
-    # =======================================
-    # Presenting Data as a mutliplot figure |
-    # =======================================
-    motor_primitives, motor_modules = synergy_extraction(data_input, chosen_synergies)
-    channel_order = ['GM', 'Ip', 'BF', 'VL', 'St', 'TA', 'Gs', 'Gr']
-
-    fig, axs = plt.subplots(chosen_synergies, 1, figsize=(4, 10))
-
-    # Calculate the average trace for each column
-    # samples = np.arange(0, len(motor_primitives))
-    # samples_binned = np.arange(200)
-    # number_cycles = len(motor_primitives) // 200
-
-    for col in range(chosen_synergies):
-        # primitive_trace = np.zeros(200)  # Initialize an array for accumulating the trace values
-
-        # Begin Presenting Motor Modules
-
-        # Get the data for the current column
-        motor_module_column_data = motor_modules[col, :]  # Select all rows for the current column
-
-        # Set the x-axis values for the bar graph
-        x_values = np.arange(len(motor_module_column_data))
-
-        # Plot the bar graph for the current column in the corresponding subplot
-        axs[col].bar(x_values, motor_module_column_data)
-
-        # Remove top and right spines of each subplot
-
-        # Remove x and y axis labels and ticks from the avg_trace subplot
-        axs[col].set_xticks([])
-        axs[col].set_yticks([])
-        axs[col].set_xlabel('')
-        axs[col].set_ylabel('')
-        axs[col].spines['top'].set_visible(False)
-        axs[col].spines['right'].set_visible(False)
-
-        # Remove x and y axis labels and ticks from the motor module subplot
-        axs[col].set_xticks(x_values, channel_order)
-        axs[col].set_yticks([])
-        # axs[1, col].set_xlabel('')
-        # axs[1, col].set_ylabel('')
-
-    # Adjust spacing between subplots
-    plt.tight_layout()
-    # fig.suptitle(synergies_title, fontsize=16, fontweight='bold')
-    # plt.savefig(modules_filename, dpi=300)
-    # plt.subplots_adjust(top=0.9)
-    plt.show()
-
 # %%
 # ================
 # Synergy analysis
@@ -113,10 +57,10 @@ for i in range(0, synergy_selection):
         else:
             perturbation_state_tag = "Perturbation"
 
-        # motor_p, motor_m = mp.synergy_extraction(conditions_wt[j], synergy_selection)
-        motor_data = pd.read_csv(modules_wt[j], header=None)
-        motor_m_array = motor_data.to_numpy()
-        current_module_set = motor_m_array[i, :]  # Select all rows for the current column
+        motor_p, motor_m = mp.synergy_extraction(conditions_wt[j], synergy_selection)
+        # motor_data = pd.read_csv(modules_wt[j], header=None)
+        # motor_m_array = motor_data.to_numpy()
+        current_module_set = motor_m[i, :]  # Select all rows for the current column
         identifiers = [condition_tag, perturbation_state_tag, synergy_tag]
         current_module_set = np.ndarray.tolist(current_module_set)
         entry = identifiers + current_module_set
@@ -176,48 +120,7 @@ plt.legend(loc='best', fontsize=12)
 # annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 # plt.show()
 
-
-
-
-
-
-# Plot for Synergy 2
-# plot_params = {
-#     "data": syn2_df,
-#     "x": "Condition",
-#     "y": "Activation",
-#     "hue": "Perturbation State",
-#     "hue_order": perturbation_state_order,
-# }
-# plt.title("Activation For Synergy 2")
-# plt.ylim(0, 250)
-# syn2 = sns.barplot(**plot_params, ci="sd", capsize=0.05)
-# plt.ylabel('')
-# plt.legend(loc='best', fontsize=12)
-# annotator = Annotator(syn2, pairs, **plot_params)
-# annotator.new_plot(syn2, pairs, plot="barplot", **plot_params)
-# annotator.configure(hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside")
-# annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
-# # plt.show()
-# 
-# # Plot for Synergy 3
-# plot_params = {
-#     "data": syn3_df,
-#     "x": "Condition",
-#     "y": "Activation",
-#     "hue": "Perturbation State",
-#     "hue_order": perturbation_state_order,
-# }
-# 
-# plt.title("Activation For Synergy 3")
-# plt.ylim(0, 250)
-# syn3 = sns.barplot(**plot_params, ci="sd", capsize=0.05)
-# plt.ylabel('')
-# plt.legend(loc='best', fontsize=12)
-# annotator = Annotator(syn3, pairs, **plot_params)
-# annotator.new_plot(syn3, pairs, plot="barplot", **plot_params)
-# annotator.configure(hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside")
-# annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
+# %%
 
 # %%
 
