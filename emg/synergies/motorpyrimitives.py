@@ -442,7 +442,7 @@ def show_synergies(data_input, refined_primitives, chosen_synergies, synergies_n
 
 
     # Show all the plots
-    plt.show(block=True)
+    # plt.show(block=True)
 
 def show_modules_dtr(data_input, chosen_synergies, modules_filename="./output.png"):
     """
@@ -683,6 +683,10 @@ def sel_primitive_trace(motor_primitives, synergy_selection, selected_primitive_
     @return null
     """
 
+    motor_p_data = pd.read_csv(motor_primitives, header=0)
+
+    motor_primitives = motor_p_data.to_numpy()
+    print(motor_primitives)
     # motor_primitives, motor_modules = synergy_extraction(data_input, synergy_selection)
 
     # Smoothen the data
