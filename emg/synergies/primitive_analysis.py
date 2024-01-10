@@ -19,9 +19,6 @@ def sel_primitive_trace(motor_primitives, synergy_selection, selected_primitive_
     @return null
     """
 
-    motor_p_data = pd.read_csv(motor_primitives, header=0)
-
-    motor_primitives = motor_p_data.to_numpy()
 
     samples = np.arange(0, len(motor_primitives))
     samples_binned = np.arange(200)
@@ -57,9 +54,6 @@ def sel_primitive_trace(motor_primitives, synergy_selection, selected_primitive_
 
     # Using the order F so the values are in column order
     binned_primitives_raw = selected_primitive.reshape((200, -1), order='F')
-    # binned_primitives = ndimage.median_filter(binned_primitives_raw, size=3)
-    # plt.plot(binned_primitives_raw[:, i], color='black', alpha=0.2)
-    # plt.plot(binned_primitives_raw, color='black', alpha=0.2)
 
     # Removing axis values
     plt.xticks([])
@@ -130,21 +124,41 @@ conditions_wt = [
     './norm-wt-m5-per.csv',
 ]
 
+conditions_wt_non = [
+    './norm-wt-m1-non.csv',
+    './norm-wt-m2-non.csv',
+    './norm-wt-m3-non.csv',
+    './norm-wt-m4-non.csv',
+    './norm-wt-m5-non.csv',
+]
+
+conditions_wt_per = [
+    './norm-wt-m1-per.csv',
+    './norm-wt-m2-per.csv',
+    './norm-wt-m3-per.csv',
+    './norm-wt-m4-per.csv',
+    './norm-wt-m5-per.csv',
+]
+
+
 for i in range(synergy_selection):
-    synergy_selection = i
-    for j in range(len(primtitives_wt_non)):
-        sel_primitive_trace(primtitives_wt_non[j], synergy_selection, 'WT Non-Perturbation Synergy {}'.format(i + 1))
+    synergy_selection = i + 1
+    for j in range(len(conditions_wt_per)):
+        motor_p, motor_m = mp.synergy_extraction(conditions_wt_per[j], synergy_selection)
+        sel_primitive_trace(motor_p, synergy_selection, 'WT Perturbation Synergy {}'.format(i + 1))
 
     plt.show()
 
 for i in range(synergy_selection):
-    synergy_selection = i
-    for j in range(len(primtitives_wt_per)):
-        sel_primitive_trace(primtitives_wt_per[j], synergy_selection, 'WT Perturbation Synergy {}'.format(i + 1))
+    synergy_selection = i + 1
+    for j in range(len(conditions_wt_non)):
+        motor_p, motor_m = mp.synergy_extraction(conditions_wt_non[j], synergy_selection)
+        mp.show_synergies(motor_p, synergy_selection, 'WT Non-Perturbation Synergy {}'.format(i + 1))
 
     plt.show()
 
 
+plt.show()
 modules_df = df(columns=["Condition", "Perturbation State", "Synergy", "GM", "Ip", "BF", "VL", "St", "TA", "Gs", "Gr"])
 
 module_entry = []

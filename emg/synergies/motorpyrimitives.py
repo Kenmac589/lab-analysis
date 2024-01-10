@@ -15,9 +15,8 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
-from statannotations.Annotator import Annotator
-from scipy import ndimage, signal, interpolate
+from scipy.interpolate import InterpolatedUnivariateSpline
+from statsmodels.nonparametric.kernel_regression import KernelReg
 from sklearn.decomposition import NMF
 
 # %%
@@ -290,6 +289,22 @@ def coa(refined_primitives, synergy_selection):
 
     # Retuning center of activity values
     # return co_act_array
+
+def interp(motor_input):
+
+    y = motor_input
+    x = np.arange(0, len(motor_input))
+
+    # spl = InterpolatedUnivariateSpline(x, y)
+    # xs = np.arange(0, len(motor_input))
+    # plt.plot(xs, spl(xs), 'g', lw=3, alpha=0.7)
+    # plt.show()
+
+    kr = KernelReg(y, x, "c")
+    y_pred, y_std = kr.fit(x)
+
+    plt.plot(x, y_pred)
+    plt.show()
 
 def show_modules(data_input, chosen_synergies, modules_filename="./output.png"):
     """
@@ -721,6 +736,7 @@ def sel_primitive_trace(motor_primitives, synergy_selection, selected_primitive_
         current_primitive = motor_primitives[i * 200: (i + 1) * 200, synergy_selection - 1]
 
         primitive_mask = current_primitive > 0.0
+        primitive_mask = interpolate_primitive(primitive_mask)
         # applying mask to exclude values which were subject to rounding errors
         mcurrent_primitive = np.asarray(current_primitive[primitive_mask])
 
@@ -809,13 +825,17 @@ def main():
         './postdtx-per-primitives.txt',
     ]
 
-
     # show_synergies('./norm-wt-m1-non.csv', './wt-m1-non-primitives.txt', synergy_selection, "Synergies for WT-M1 without perturbation")
     # show_synergies('./norm-wt-m1-per.csv', './wt-m1-per-primitives.txt', synergy_selection, "Synergies for WT-M1 with perturbation")
-    coa('./predtx-non-primitives-test.txt', synergy_selection)
+    # coa('./predtx-non-primitives-test.txt', synergy_selection)
 
     # for i in range(len(conditions_normalized_dtr)):
     #     show_synergies_dtr(conditions_normalized_dtr[i], conditions_primitives_dtr[i], synergy_selection, title_names[i])
+    motor_p, motor_m = synergy_extraction(conditions_normalized_dtr[0], synergy_selection)
+
+    print(motor_p[:,0])
+
+    #motor_p = [-5,-4.19,-3.54,-3.31,-2.56,-2.31,-1.66,-0.96,-0.22,0.62,1.21,3]
 
 if __name__ == "__main__":
     main()

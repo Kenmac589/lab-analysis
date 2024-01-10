@@ -13,6 +13,24 @@ import motorpyrimitives as mp
 
 synergy_selection = 3
 
+
+conditions_wt_non = [
+    './norm-wt-m1-non.csv',
+    './norm-wt-m2-non.csv',
+    './norm-wt-m3-non.csv',
+    './norm-wt-m4-non.csv',
+    './norm-wt-m5-non.csv',
+]
+
+conditions_wt_per = [
+    './norm-wt-m1-per.csv',
+    './norm-wt-m2-per.csv',
+    './norm-wt-m3-per.csv',
+    './norm-wt-m4-per.csv',
+    './norm-wt-m5-per.csv',
+]
+
+
 # Title Names
 title_names = [
     "Muscle Synergies for DTR-M5 preDTX without perturbation",
@@ -20,6 +38,19 @@ title_names = [
     "Muscle Synergies for DTR-M5 preDTX without perturbation",
     "Muscle Synergies for DTR-M5 preDTX without perturbation",
 
+]
+
+conditions_wt = [
+        './norm-wt-m1-non.csv',
+        './norm-wt-m1-per.csv',
+        './norm-wt-m2-non.csv',
+        './norm-wt-m2-per.csv',
+        './norm-wt-m3-non.csv',
+        './norm-wt-m3-per.csv',
+        './norm-wt-m4-non.csv',
+        './norm-wt-m4-per.csv',
+        './norm-wt-m5-non.csv',
+        './norm-wt-m5-per.csv',
 ]
 
 # Normalized Data List
@@ -71,8 +102,10 @@ for i in range(0, synergy_selection):
             perturbation_state_tag = "Non-Perturbation"
         else:
             perturbation_state_tag = "Perturbation"
+
         motor_p_data = pd.read_csv(conditions_wt_primitives[j], header=0)
         motor_p_array = motor_p_data.to_numpy()
+        # motor_p_array, motor_m = mp.synergy_extraction(conditions_wt[j], current_synergy)
         fwhm_list = mp.fwhm(motor_p_array, current_synergy)
         for k in range(0, len(fwhm_list)):
             fwhm_entry = [[condition_tag, perturbation_state_tag, synergy_tag, fwhm_list[k]]]
@@ -105,6 +138,8 @@ for i in range(0, synergy_selection):
         # print(condition_tag + " " + perturbation_state_tag)
         motor_p_data = pd.read_csv(conditions[j], header=0)
         motor_p_array = motor_p_data.to_numpy()
+
+        # motor_p_array, motor_m = mp.synergy_extraction(conditions_wt[j], current_synergy)
         fwhm_list = mp.fwhm(motor_p_array, current_synergy)
         for k in range(0, len(fwhm_list)):
             fwhm_entry = [[condition_tag, perturbation_state_tag, synergy_tag, fwhm_list[k]]]

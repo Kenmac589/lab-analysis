@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # %%
-mpl.style.use(["ggplot", "mocha"])
+# mpl.style.use(["ggplot", "mocha"])
 
 data_path = './wt-m1-non-primitives.txt'
 data_input = pd.read_csv(data_path, header=0)
