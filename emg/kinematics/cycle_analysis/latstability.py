@@ -121,10 +121,20 @@ def extract_cycles(input_dataframe, swonset_channel="44 sw onset"):
 
     return step_cycles
 
-def stance_duration(input_dataframe):
+def stance_duration(input_dataframe, swonset_channel="44 sw onset", swoffset_channel="45 sw offset"):
+    """Stance duration during step cycle
+    @param input_dataframe: spike file input as *.csv
+    @param swonset_channel: the channel with swing onsets
+    @param swoffset_channel: the channel with swing offsets
+
+    @return stance_duration_lengths: How long each stance duration is
+    @return stance_duration_timings:
+    """
 
     # Define the value and column to search for
     value_to_find = 1
+    stance_begin = swoffset_channel
+    stance_end = swonset_channel
     column_to_search = swonset_channel
     column_for_time = "Time"
     column_for_treadmill = "2 Trdml"
@@ -133,13 +143,21 @@ def stance_duration(input_dataframe):
     time_values = []
     treadmill_speed = []
 
+    # Find the first stance phase to start tracking time duration
+    first_stance = input_dataframe[stance_begin].loc[input_dataframe[stance_begin] == value_to_find].index[0]
+
     # Iterate through the DataFrame and process matches
-    for index, row in input_dataframe.iterrows():
-        if row[column_to_search] == value_to_find:
+    for index, row in input_dataframe.iloc[first_stance:].iterrows():
+        if row[swoffset_channel] == value_to_find:
+            print("swoff found at", row[column_for_time])
             time_value = row[column_for_time]
             time_values.append(time_value)
-            treadmill_value = row[column_for_treadmill]
-            treadmill_speed.append(treadmill_value)
+        elif row[swonset_channel] == value_to_find:
+            print("swon found at", row[column_for_time])
+            time_value = row[column_for_time]
+            time_values.append(time_value)
+            # treadmill_value = row[column_for_treadmill]
+            # treadmill_speed.append(treadmill_value)
 
     # Calculate the differences between consecutive time values
     time_differences = []
@@ -158,11 +176,11 @@ def stance_duration(input_dataframe):
     combined_filter = np.logical_and(cutoff_low, cutoff_high)
 
     # Applying the filter to the arrays
-    step_cycles = time_differences_array[combined_filter]
+    stance_duration_lengths = time_differences_array[combined_filter]
 
+    stance_duration_timings = time_values
 
-
-    return stance_periods
+    return stance_duration_lengths, stance_duration_timings
 
 def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)"):
 
@@ -257,19 +275,21 @@ def cycle_period_summary(directory_path):
 # Main Code Body
 def main():
 
-    wt1nondf = pd.read_csv('./wt_1_non-perturbation.csv', header=0)
-    wt_1_non_step_cycles = extract_cycles(wt1nondf)
+    # wt1nondf = pd.read_csv('./wt_1_non-perturbation.csv', header=0)
+    # wt_1_non_step_cycles = extract_cycles(wt1nondf)
 
-    hipH = hip_height(wt1nondf, toey="24 toey", hipy="16 Hipy")
+    # hipH = hip_height(wt1nondf, toey="24 toey", hipy="16 Hipy")
 
-    wt1perdf = pd.read_csv('./wt_1_perturbation.csv', header=0)
-    wt_1_per_step_cycles = extract_cycles(wt1perdf)
+    # wt1perdf = pd.read_csv('./wt_1_perturbation.csv', header=0)
+    # wt_1_per_step_cycles = extract_cycles(wt1perdf)
 
-    hipH = hip_height(wt1perdf)
-    xcomwtper = xcom(wt1perdf, hipH)
+    # hipH = hip_height(wt1perdf)
+    # xcomwtper = xcom(wt1perdf, hipH)
 
     wt4nondf = pd.read_csv('./wt_4_non-perturbation.csv')
-    hipH = hip_height(wt4nondf)
+    st_lengths, st_timings = stance_duration(wt4nondf)
+
+    print(st_lengths)
 
 if __name__ == "__main__":
     main()
