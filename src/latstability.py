@@ -13,9 +13,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from statannotations.Annotator import Annotator
-from scipy.stats import ttest_ind
-from scipy.stats import f_oneway
-
+import scipy as sp
 
 def read_all_csv(directory_path):
     data_dict = {}  # Initialize an empty dictionary to store the data
@@ -123,7 +121,50 @@ def extract_cycles(input_dataframe, swonset_channel="44 sw onset"):
 
     return step_cycles
 
-def hip_height(input_dataframe, toey="24 toey", hipy="16 Hipy"):
+def stance_duration(input_dataframe):
+
+    # Define the value and column to search for
+    value_to_find = 1
+    column_to_search = swonset_channel
+    column_for_time = "Time"
+    column_for_treadmill = "2 Trdml"
+
+    # Store time values and treadmill speed when the specified value is found
+    time_values = []
+    treadmill_speed = []
+
+    # Iterate through the DataFrame and process matches
+    for index, row in input_dataframe.iterrows():
+        if row[column_to_search] == value_to_find:
+            time_value = row[column_for_time]
+            time_values.append(time_value)
+            treadmill_value = row[column_for_treadmill]
+            treadmill_speed.append(treadmill_value)
+
+    # Calculate the differences between consecutive time values
+    time_differences = []
+    for i in range(len(time_values)):
+        time_diff = time_values[i] - time_values[i - 1]
+        time_differences.append(time_diff)
+
+    # Finding the average value for the list
+    time_differences_array = np.array(time_differences)
+
+    # Creating masks to filter any values above 1 as this would be between distinct recordings
+    recording_cutoff_high = 0.6
+    recording_cutoff_low = 0.000
+    cutoff_high = time_differences_array <= recording_cutoff_high
+    cutoff_low = time_differences_array >= recording_cutoff_low
+    combined_filter = np.logical_and(cutoff_low, cutoff_high)
+
+    # Applying the filter to the arrays
+    step_cycles = time_differences_array[combined_filter]
+
+
+
+    return stance_periods
+
+def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)"):
 
     # Bringing in the values for toey and hipy
     toey_values = input_dataframe[toey].tolist()
@@ -135,10 +176,6 @@ def hip_height(input_dataframe, toey="24 toey", hipy="16 Hipy"):
     toey_values = toey_values[np.logical_not(np.isnan(toey_values))]
     hipy_values = hipy_values[np.logical_not(np.isnan(hipy_values))]
 
-    # Converting to purely numerical datatype
-    toey_values = np.array(toey_values, dtype=np.int64)
-    hipy_values = np.array(hipy_values, dtype=np.int64)
-
     # Getting lower quartile value of toey as proxy for the ground
     toey_lowerq = np.percentile(toey_values, q=25)
     average_hip_value = np.mean(hipy_values)
@@ -146,7 +183,48 @@ def hip_height(input_dataframe, toey="24 toey", hipy="16 Hipy"):
     hip_height = average_hip_value - toey_lowerq
     return hip_height
 
-# def xcom(input_dataframe):
+def xcom(input_dataframe, hip_height, comy="37 CoMy (cm)"):
+
+    # Bring in data
+    comy_values = input_dataframe[comy].tolist()
+    comy_values = np.array(comy_values)
+    comy_values = comy_values[np.logical_not(np.isnan(comy_values))]
+
+    # Getting slope of values
+    vcom = np.diff(comy_values)
+
+    # Fixing 1 off
+    comy_values = np.delete(comy_values, - 1)
+
+    # Get xCoM in (cm)
+    xcom = comy_values + (vcom / np.sqrt(981 / hip_height))
+
+    print("comy", comy_values.size)
+    print("vcom", vcom.size)
+    print("xcom", xcom)
+
+    x_axis = np.arange(len(comy_values))
+
+
+    # Testing output
+    rbf = sp.interpolate.Rbf(x_axis, vcom, function='thin_plate', smooth=2)
+    xnew = np.linspace(x_axis.min(), x_axis.max(), num=100, endpoint=True)
+    ynew = rbf(xnew)
+
+    fig, axs = plt.subplots(4, 1, layout='constrained')
+    axs[0].set_title("CoMy")
+    axs[0].legend(loc="best")
+    axs[0].plot(x_axis, comy_values)
+    axs[1].set_title("vCoM")
+    axs[1].plot(x_axis, vcom)
+    axs[2].set_title("Radial basis funtion interpolation of vCoM")
+    axs[2].plot(xnew, ynew)
+    axs[0].plot(x_axis, xcom)
+
+    plt.show()
+
+    return xcom
+
 
 def cycle_period_summary(directory_path):
 
@@ -182,18 +260,16 @@ def main():
     wt1nondf = pd.read_csv('./wt_1_non-perturbation.csv', header=0)
     wt_1_non_step_cycles = extract_cycles(wt1nondf)
 
-    hipH = hip_height(wt1nondf)
-    print(hipH)
+    hipH = hip_height(wt1nondf, toey="24 toey", hipy="16 Hipy")
 
     wt1perdf = pd.read_csv('./wt_1_perturbation.csv', header=0)
     wt_1_per_step_cycles = extract_cycles(wt1perdf)
 
-    hipH = hip_height(wt1perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    print(hipH)
+    hipH = hip_height(wt1perdf)
+    xcomwtper = xcom(wt1perdf, hipH)
 
     wt4nondf = pd.read_csv('./wt_4_non-perturbation.csv')
-    hipH = hip_height(wt4nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    print(hipH)
+    hipH = hip_height(wt4nondf)
 
 if __name__ == "__main__":
     main()

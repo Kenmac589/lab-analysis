@@ -15,6 +15,7 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import scipy as sp
 from scipy.interpolate import InterpolatedUnivariateSpline
 from statsmodels.nonparametric.kernel_regression import KernelReg
 from sklearn.decomposition import NMF
@@ -292,18 +293,22 @@ def coa(refined_primitives, synergy_selection):
 
 def interp(motor_input):
 
-    y = motor_input
-    x = np.arange(0, len(motor_input))
+    # Getting slope of values
+    original_motor = motor_input
 
-    # spl = InterpolatedUnivariateSpline(x, y)
-    # xs = np.arange(0, len(motor_input))
-    # plt.plot(xs, spl(xs), 'g', lw=3, alpha=0.7)
-    # plt.show()
+    x_axis_motor = np.arange(len(original_motor))
 
-    kr = KernelReg(y, x, "c")
-    y_pred, y_std = kr.fit(x)
+    rbf = sp.interpolate.Rbf(x_axis_motor, original_motor, function='cubic', smooth=3)
+    xnew = np.linspace(x_axis_motor.min(), x_axis_motor.max(), num=100, endpoint=True)
+    ynew = rbf(xnew)
 
-    plt.plot(x, y_pred)
+
+    fig, axs = plt.subplots(2, 1, layout='constrained')
+    axs[0].set_title("Orignal motor input")
+    axs[0].plot(x_axis_motor, original_motor)
+    axs[1].set_title("Radial basis funtion interpolation of Motor input")
+    axs[1].plot(xnew, ynew)
+
     plt.show()
 
 def show_modules(data_input, chosen_synergies, modules_filename="./output.png"):
@@ -832,6 +837,8 @@ def main():
     # for i in range(len(conditions_normalized_dtr)):
     #     show_synergies_dtr(conditions_normalized_dtr[i], conditions_primitives_dtr[i], synergy_selection, title_names[i])
     motor_p, motor_m = synergy_extraction(conditions_normalized_dtr[0], synergy_selection)
+
+    interp(motor_p[:,0])
 
     print(motor_p[:,0])
 
