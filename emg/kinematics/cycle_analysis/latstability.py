@@ -1,18 +1,8 @@
-# This is another test
-
-"""Average length of gait cycle per condition
-
-This program is supposed to find the average
-
-"""
-
 import os
 import csv
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
-from statannotations.Annotator import Annotator
 import scipy as sp
 
 def read_all_csv(directory_path):
@@ -81,7 +71,12 @@ def step_duration(input_dataframe):
     return adjusted_time_differences, adjusted_treadmill_speeds
 
 def extract_cycles(input_dataframe, swonset_channel="44 sw onset"):
+    """Get cycle periods
+    @param input_dataframe: spike file input as *.csv
+    @param swonset_channel: the channel with swing onsets
 
+    @return step_cycles: the step cycles
+    """
     # Define the value and column to search for
     value_to_find = 1
     column_to_search = swonset_channel
@@ -134,14 +129,13 @@ def stance_duration(input_dataframe, swonset_channel="44 sw onset", swoffset_cha
     # Define the value and column to search for
     value_to_find = 1
     stance_begin = swoffset_channel
-    stance_end = swonset_channel
-    column_to_search = swonset_channel
+    # stance_end = swonset_channel
+    # column_to_search = swonset_channel
     column_for_time = "Time"
-    column_for_treadmill = "2 Trdml"
+    # column_for_treadmill = "2 Trdml"
 
     # Store time values and treadmill speed when the specified value is found
     time_values = []
-    treadmill_speed = []
 
     # Find the first stance phase to start tracking time duration
     first_stance = input_dataframe[stance_begin].loc[input_dataframe[stance_begin] == value_to_find].index[0]
@@ -149,11 +143,11 @@ def stance_duration(input_dataframe, swonset_channel="44 sw onset", swoffset_cha
     # Iterate through the DataFrame and process matches
     for index, row in input_dataframe.iloc[first_stance:].iterrows():
         if row[swoffset_channel] == value_to_find:
-            print("swoff found at", row[column_for_time])
+            # print("swoff found at", row[column_for_time])
             time_value = row[column_for_time]
             time_values.append(time_value)
         elif row[swonset_channel] == value_to_find:
-            print("swon found at", row[column_for_time])
+            # print("swon found at", row[column_for_time])
             time_value = row[column_for_time]
             time_values.append(time_value)
             # treadmill_value = row[column_for_treadmill]
@@ -181,6 +175,66 @@ def stance_duration(input_dataframe, swonset_channel="44 sw onset", swoffset_cha
     stance_duration_timings = time_values
 
     return stance_duration_lengths, stance_duration_timings
+
+def step_width(input_dataframe, rl_stance, ll_stance, rl_y, ll_y):
+    """Stance duration during step cycle
+    @param input_dataframe: spike file input as *.csv
+    @param rl_stance: when stance begins for the right limb
+    @param ll_stance: when stance begins for the left limb
+    @param rl_y: spike channel with y coordinate for the right limb
+    @param ll_y: spike channel with y coordinate for the right limb
+
+    @return step_widths: array of step width values for each step cycle
+    """
+
+    # Define the value and column to search for
+    column_to_search = "Time"
+    rl_column_for_search = rl_y
+    ll_column_for_search = ll_y
+
+    # Store time values and treadmill speed when the specified value is found
+    rl_step_placement = []
+    ll_step_placement = []
+
+    # Iterate through the DataFrame for the right limb
+    for i in range(len(rl_stance)):
+        for index, row in input_dataframe.iterrows():
+            if row[column_to_search] == rl_stance[i]:
+                rl_step_coord = row[rl_column_for_search]
+                rl_step_placement.append(rl_step_coord)
+
+    print("right limb step coordinates")
+    print(rl_step_placement)
+
+    for i in range(len(ll_stance)):
+        for index, row in input_dataframe.iterrows():
+            if row[column_to_search] == ll_stance[i]:
+                ll_step_coord = row[ll_column_for_search]
+                ll_step_placement.append(ll_step_coord)
+
+    print("left limb step coordinates")
+    print(ll_step_placement)
+
+    # Dealing with possible unequal amount of recorded swoffsets for each limb
+    comparable_steps = 0
+    if len(rl_step_placement) >= len(ll_step_placement):
+        comparable_steps = len(ll_step_placement)
+    else:
+        comparable_steps = len(rl_step_placement)
+
+    step_widths = []
+
+    # Compare step widths for each step
+    for i in range(comparable_steps):
+        new_width = np.abs(rl_step_placement[i] - ll_step_placement[i])
+        step_widths.append(new_width)
+
+    step_widths = np.asarray(step_widths)
+
+
+    return step_widths
+
+
 
 def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)"):
 
@@ -286,10 +340,28 @@ def main():
     # hipH = hip_height(wt1perdf)
     # xcomwtper = xcom(wt1perdf, hipH)
 
+    # Example for stance duration based on toex
     wt4nondf = pd.read_csv('./wt_4_non-perturbation.csv')
-    st_lengths, st_timings = stance_duration(wt4nondf)
 
-    print(st_lengths)
+    # Getting stance duration for all 4 limbs
+    lhl_st_lengths, lhl_st_timings = stance_duration(wt4nondf, swonset_channel="57 lHL swon", swoffset_channel="58 lHL swoff")
+    lfl_st_lengths, lfl_st_timings = stance_duration(wt4nondf, swonset_channel="53 lFL swon", swoffset_channel="54 lFL swoff")
+    rhl_st_lengths, rhl_st_timings = stance_duration(wt4nondf, swonset_channel="55 rHL swon", swoffset_channel="56 rHL swoff")
+    rfl_st_lengths, rfl_st_timings = stance_duration(wt4nondf, swonset_channel="51 rFL swon", swoffset_channel="52 rFL swoff")
+
+    # For forelimb
+    print("Forelimb measurements")
+    fl_step_widths = step_width(wt4nondf, rfl_st_timings, lfl_st_timings, rl_y="35 FRy (cm)", ll_y="33 FLy (cm)")
+    print("Average forelimb width")
+    print(np.mean(fl_step_widths))
+    print()
+    print("Hindlimb measurements")
+    hl_step_widths = step_width(wt4nondf, rhl_st_timings, lhl_st_timings, rl_y="30 HRy (cm)", ll_y="28 HLy (cm)")
+
+    print("Average hindlimb width")
+    print(np.mean(hl_step_widths))
+    print("Average forelimb width")
+    print(np.mean(fl_step_widths))
 
 if __name__ == "__main__":
     main()

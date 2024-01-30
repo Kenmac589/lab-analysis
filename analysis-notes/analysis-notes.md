@@ -9,6 +9,8 @@
 
 # Wild-type Controls
 
+- Most of what's being looked at here is 0.100 m/s
+
 ## WT 1
 
     - For non-perturbation @0.100, I used first recording
@@ -16,6 +18,9 @@
     - For perturbation @0.100 I used recording starting at ~1067
     - synergies to use: 3
 
+## WT 4
+
+- I used first non-perturbation recording and the perturbation recording starts at around 1205
 
 # For DTR Mice Series (4 month group)
 
