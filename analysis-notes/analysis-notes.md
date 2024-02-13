@@ -68,4 +68,32 @@ M5: 1.4 - 1.7
 # Post Meeting Analysis
 
 - Working through the wild type mice
-- 
+
+# 1yr group
+
+## 1yrDTRnoRosa-preDTX Analysis
+
+- for M1 I labelled
+    - vid 0
+    - vid 08
+    - vid 22
+- for M2 I labelled
+    - vid 0
+    - vid 9
+    - vid 21
+- 0.100 m/s videos from recordings
+    - M1-oct19-2023: 0 (non-per), 7-16 (per), 17-20 (sin)
+    - M2-oct23-2023: 0 (non-per), 8-17, (per), 17-20 (sin)
+
+```python
+videos_of_interest = [
+    '/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/1yr/1yrDTRnoRosa-preDTX-kenzie-2024-01-31_analyzed/videos/1yrDTRnoRosa-M1-19102023_000000.avi',
+    '/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/1yr/1yrDTRnoRosa-preDTX-kenzie-2024-01-31_analyzed/videos/1yrDTRnoRosa-M1-19102023_000007.avi',
+    '/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/1yr/1yrDTRnoRosa-preDTX-kenzie-2024-01-31_analyzed/videos/1yrDTRnoRosa-M1-19102023_000008.avi',
+    '/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/1yr/1yrDTRnoRosa-preDTX-kenzie-2024-01-31_analyzed/videos/1yrDTRnoRosa-M1-19102023_000018.avi',
+    
+
+]
+
+
+```
