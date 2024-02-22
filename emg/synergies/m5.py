@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from statannotations.Annotator import Annotator
 from scipy import stats as st
+mp.nnmf_factorize
 
 def barplot_annotate_brackets(num1, num2, data, center, height, yerr=None, dh=.05, barh=.05, fs=None, maxasterix=None):
     """
