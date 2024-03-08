@@ -145,7 +145,7 @@ for i in range(synergy_selection):
     synergy_selection = i + 1
     for j in range(len(conditions_wt_per)):
         motor_p, motor_m = mp.synergy_extraction(conditions_wt_per[j], synergy_selection)
-        sel_primitive_trace(motor_p, synergy_selection, 'WT Perturbation Synergy {}'.format(i + 1))
+        sel_primitive_trace(motor_p, synergy_selection, f'WT Perturbation Synergy {i + 1}')
 
     plt.show()
 
@@ -153,7 +153,7 @@ for i in range(synergy_selection):
     synergy_selection = i + 1
     for j in range(len(conditions_wt_non)):
         motor_p, motor_m = mp.synergy_extraction(conditions_wt_non[j], synergy_selection)
-        mp.show_synergies(motor_p, synergy_selection, 'WT Non-Perturbation Synergy {}'.format(i + 1))
+        mp.show_synergies(motor_p, synergy_selection, f'WT Non-Perturbation Synergy {i + 1}')
 
     plt.show()
 

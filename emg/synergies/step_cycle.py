@@ -5,13 +5,14 @@ This program is supposed to find the average
 """
 
 import os
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy.stats import f_oneway, ttest_ind
 from statannotations.Annotator import Annotator
-from scipy.stats import ttest_ind
-from scipy.stats import f_oneway
+
 
 def read_all_csv(directory_path):
 
@@ -29,6 +30,7 @@ def read_all_csv(directory_path):
 
     return data_dict
 
+
 def step_duration(input_dataframe):
 
     # Define the value and column to search for
@@ -37,7 +39,7 @@ def step_duration(input_dataframe):
     column_for_time = "Time"
     column_for_treadmill = "2 Trdml"
 
-    # Store time values and treadmill speed when the specified value is found 
+    # Store time values and treadmill speed when the specified value is found
     time_values = []
     treadmill_speed = []
 
@@ -75,6 +77,7 @@ def step_duration(input_dataframe):
 
     return adjusted_time_differences
 
+
 def conditional_cycle(file_paths, cycle_df, condition_tag):
     """
     @param input_data: Pandas Dataframe
@@ -92,7 +95,13 @@ def conditional_cycle(file_paths, cycle_df, condition_tag):
         step_cycles = step_duration(trial_df)
         for j in range(len(step_cycles)):
             cycle_entry = [[condition_tag, pertubation_state_tag, step_cycles[j]]]
-            cycle_df = cycle_df.append(pd.DataFrame(cycle_entry, columns=["Condition", "Perturbation State", "Step Cycle Duration"]), ignore_index=True)
+            cycle_df = cycle_df.append(
+                pd.DataFrame(
+                    cycle_entry,
+                    columns=["Condition", "Perturbation State", "Step Cycle Duration"],
+                ),
+                ignore_index=True,
+            )
 
     # Going through second half for Perturbation
     for i in range(len(file_paths) // 2, len(file_paths)):
@@ -101,9 +110,17 @@ def conditional_cycle(file_paths, cycle_df, condition_tag):
         step_cycles = step_duration(trial_df)
         for j in range(len(step_cycles)):
             cycle_entry = [[condition_tag, pertubation_state_tag, step_cycles[j]]]
-            cycle_df = cycle_df.append(pd.DataFrame(cycle_entry, columns=["Condition", "Perturbation State", "Step Cycle Duration"]), ignore_index=True)
+            cycle_df = cycle_df.append(
+                pd.DataFrame(
+                    cycle_entry,
+                    columns=["Condition", "Perturbation State", "Step Cycle Duration"],
+                ),
+                ignore_index=True,
+            )
 
     return cycle_df
+
+
 # Main Code Body
 # conditions = ["WT", "PreDTX", "PostDTX"]
 
@@ -124,17 +141,17 @@ conditions = {
     "PostDTX": [
         "../../kinematics/cycle_analysis/DTR-M5/PostDTX without Perturbation.csv",
         "../../kinematics/cycle_analysis/DTR-M5/PostDTX with Perturbation.csv",
-    ]
+    ],
 }
 
 conditions_names_order = ["WT", "PreDTX", "PostDTX"]
 # trials = list(conditions.keys())
 # test_df = pd.DataFrame(columns=["Condition", "Perturbation State", "Step Cycle Duration"])
-# 
+#
 # for i in conditions:
 #     file_list = conditions[i]
 #     test_df = conditional_cycle(file_list, test_df, "WT")
-# 
+#
 # print(test_df)
 
 conditions = [
@@ -151,8 +168,30 @@ conditions = [
 ]
 
 # Giving them nice tags
-conditions_names = ["WT", "WT", "WT", "PreDTX", "PostDTX", "WT", "WT", "WT", "PreDTX", "PostDTX"]
-perturbation_state = ["Non-Perturbation", "Non-Perturbation", "Non-Perturbation", "Non-Perturbation", "Non-Perturbation", "Perturbation", "Perturbation", "Perturbation", "Perturbation", "Perturbation"]
+conditions_names = [
+    "WT",
+    "WT",
+    "WT",
+    "PreDTX",
+    "PostDTX",
+    "WT",
+    "WT",
+    "WT",
+    "PreDTX",
+    "PostDTX",
+]
+perturbation_state = [
+    "Non-Perturbation",
+    "Non-Perturbation",
+    "Non-Perturbation",
+    "Non-Perturbation",
+    "Non-Perturbation",
+    "Perturbation",
+    "Perturbation",
+    "Perturbation",
+    "Perturbation",
+    "Perturbation",
+]
 
 conditions_names_order = ["WT", "PreDTX", "PostDTX"]
 perturbation_state_order = ["Non-Perturbation", "Perturbation"]
@@ -160,7 +199,9 @@ perturbation_state_order = ["Non-Perturbation", "Perturbation"]
 
 cycle_means = []
 
-cycle_df = pd.DataFrame(columns=["Condition", "Perturbation State", "Step Cycle Duration"])
+cycle_df = pd.DataFrame(
+    columns=["Condition", "Perturbation State", "Step Cycle Duration"]
+)
 
 for i in range(len(conditions)):
     condition_tag = conditions_names[i]
@@ -169,8 +210,21 @@ for i in range(len(conditions)):
     step_cycles = step_duration(trial_df)
 
     for j in range(len(step_cycles)):
-        cycle_entry = [[condition_tag, pertubation_state_tag, step_cycles[j], np.std(step_cycles)]]
-        cycle_df = cycle_df._append(pd.DataFrame(cycle_entry, columns=["Condition", "Perturbation State", "Step Cycle Duration", "Error"]), ignore_index=True)
+        cycle_entry = [
+            [condition_tag, pertubation_state_tag, step_cycles[j], np.std(step_cycles)]
+        ]
+        cycle_df = cycle_df._append(
+            pd.DataFrame(
+                cycle_entry,
+                columns=[
+                    "Condition",
+                    "Perturbation State",
+                    "Step Cycle Duration",
+                    "Error",
+                ],
+            ),
+            ignore_index=True,
+        )
 
 
 # Plotting
@@ -194,11 +248,12 @@ plot_params = {
 plt.title("Step Cycle Duration")
 plt.ylim(0, 1)
 cycle = sns.barplot(**plot_params, ci="sd", capsize=0.05)
-plt.ylabel('')
-plt.legend(loc='best', fontsize=12)
+plt.ylabel("")
+plt.legend(loc="best", fontsize=12)
 annotator = Annotator(cycle, pairs, **plot_params)
 annotator.new_plot(cycle, pairs, plot="barplot", **plot_params)
-annotator.configure(hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside")
+annotator.configure(
+    hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside"
+)
 annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 plt.show()
-

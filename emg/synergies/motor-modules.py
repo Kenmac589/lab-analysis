@@ -48,7 +48,7 @@ primitives_data = './wt_data/wt_m5_per_primitives.csv'
 modules_data = './wt_data/wt_m5_per_modules.csv'
 trace_length = 200
 channel_order = ['GM', 'Ip', 'BF', 'VL', 'St', 'TA', 'Gs', 'Gr']
-chosen_synergies = 7
+chosen_synergies = 3
 
 # Define some variables about the data
 number_cycles = len(A) // trace_length
