@@ -1,6 +1,7 @@
 import csv
 import os
 import time
+from typing import Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -167,7 +168,7 @@ def stance_duration(
     @param swoffset_channel: the channel with swing offsets
 
     @return stance_duration_lengths: How long each stance duration is
-    @return stance_duration_timings:
+    @return stance_duration_timings: List of timings where stance duration begins
     """
 
     # Define the value and column to search for
@@ -255,13 +256,13 @@ def spike_slope(input_dataframe, time_constant, comy="37 CoMy (cm)"):
 
 def step_width(input_dataframe, rl_stance, ll_stance, rl_y, ll_y):
     """Stance duration during step cycle
-    @param input_dataframe: spike file input as *.csv
-    @param rl_stance: when stance begins for the right limb
-    @param ll_stance: when stance begins for the left limb
-    @param rl_y: spike channel with y coordinate for the right limb
-    @param ll_y: spike channel with y coordinate for the right limb
+    :param input_dataframe: spike file input as *.csv
+    :param rl_stance: when stance begins for the right limb
+    :param ll_stance: when stance begins for the left limb
+    :param rl_y: spike channel with y coordinate for the right limb
+    :param ll_y: spike channel with y coordinate for the right limb
 
-    @return step_widths: array of step width values for each step cycle
+    :return step_widths: array of step width values for each step cycle
     """
     parsing_start = time.time()
 
@@ -309,6 +310,50 @@ def step_width(input_dataframe, rl_stance, ll_stance, rl_y, ll_y):
     step_widths = np.asarray(step_widths)
     calculation_stop = time.time()
     print(f"Calculation duration\n{calculation_stop - calculation_start}\n")
+
+    return step_widths
+
+
+def step_width_gw(
+    input_dataframe: pd.DataFrame,
+    rl_stance: Union[np.ndarray, list],
+    ll_stance: Union[np.ndarray, list],
+    rl_y: str,
+    ll_y: str,
+) -> np.array:
+    """Stance duration during step cycle
+    :param input_dataframe: spike file input as *.csv
+    :param rl_stance: when stance begins for the right limb
+    :param ll_stance: when stance begins for the left limb
+    :param rl_y: spike channel with y coordinate for the right limb
+    :param ll_y: spike channel with y coordinate for the right limb
+
+    :return step_widths: array of step width values for each step cycle
+    """
+
+    # Filtering whole dataframe down to values we are considering
+    input_dataframe_subset = input_dataframe.loc[:, ["Time", rl_y, ll_y]]
+    input_dataframe_subset = input_dataframe_subset.set_index("Time")
+
+    # Grabbing analogous values from 
+    ll_step_placement = input_dataframe_subset.loc[ll_stance, :][ll_y].values
+    rl_step_placement = input_dataframe_subset.loc[rl_stance, :][rl_y].values
+
+    # Dealing with possible unequal amount of recorded swoffsets for each limb
+    comparable_steps = 0
+    if rl_step_placement.shape[0] >= ll_step_placement.shape[0]:
+        comparable_steps = ll_step_placement.shape[0]
+    else:
+        comparable_steps = rl_step_placement.shape[0]
+
+    step_widths = []
+
+    # Compare step widths for each step
+    for i in range(comparable_steps):
+        new_width = np.abs(rl_step_placement[i] - ll_step_placement[i])
+        step_widths.append(new_width)
+
+    step_widths = np.asarray(step_widths)
 
     return step_widths
 
@@ -406,46 +451,50 @@ def cycle_period_summary(directory_path):
 
 # Main Code Body
 def main():
-    t0 = time.time()
-    # Test for speed of step width
-    wt4nondf = pd.read_csv("./wt_4_non-perturbation.csv")
 
-    # Getting stance duration for all 4 limbs
-    lhl_st_lengths, lhl_st_timings = stance_duration(
-        wt4nondf, swonset_channel="57 lHL swon", swoffset_channel="58 lHL swoff"
-    )
-    lfl_st_lengths, lfl_st_timings = stance_duration(
-        wt4nondf, swonset_channel="53 lFL swon", swoffset_channel="54 lFL swoff"
-    )
-    rhl_st_lengths, rhl_st_timings = stance_duration(
-        wt4nondf, swonset_channel="55 rHL swon", swoffset_channel="56 rHL swoff"
-    )
-    rfl_st_lengths, rfl_st_timings = stance_duration(
-        wt4nondf, swonset_channel="51 rFL swon", swoffset_channel="52 rFL swoff"
-    )
+    # t0 = time.time()
+    # # Test for speed of step width
+    # wt4nondf = pd.read_csv("./wt_4_non-perturbation.csv")
 
-    # For forelimb
-    fl_step_widths = step_width(
-        wt4nondf, rfl_st_timings, lfl_st_timings, rl_y="35 FRy (cm)", ll_y="33 FLy (cm)"
-    )
-    hl_step_widths = step_width(
-        wt4nondf, rhl_st_timings, lhl_st_timings, rl_y="30 HRy (cm)", ll_y="28 HLy (cm)"
-    )
+    # # Getting stance duration for all 4 limbs
+    # lhl_st_lengths, lhl_st_timings = stance_duration(
+    #     wt4nondf, swonset_channel="57 lHL swon", swoffset_channel="58 lHL swoff"
+    # )
+    # lfl_st_lengths, lfl_st_timings = stance_duration(
+    #     wt4nondf, swonset_channel="53 lFL swon", swoffset_channel="54 lFL swoff"
+    # )
+    # rhl_st_lengths, rhl_st_timings = stance_duration(
+    #     wt4nondf, swonset_channel="55 rHL swon", swoffset_channel="56 rHL swoff"
+    # )
+    # rfl_st_lengths, rfl_st_timings = stance_duration(wt4nondf, swonset_channel=)
+    # print(f"Timings: {type(lfl_st_timings)}")
+    # print(f"Right stance duration {rfl_st_lengths}\n")
+    # print(f"Right stance phase beginning {rfl_st_timings}\n")
 
-    print("Average forelimb width")
-    print(np.mean(fl_step_widths))
-    print("Average hindlimb width")
-    print(np.mean(hl_step_widths))
-    print()
+    # # For forelimb
+    # fl_step_widths = step_width_gw(
+    #     wt4nondf, rfl_st_timings, lfl_st_timings, rl_y="35 FRy (cm)", ll_y="33 FLy (cm)"
+    # )
+    # print(fl_step_widths)
+    # hl_step_widths = step_width_gw(
+    #     wt4nondf, rhl_st_timings, lhl_st_timings, rl_y="30 HRy (cm)", ll_y="28 HLy (cm)"
+    # )
 
-    t1 = time.time()
+    # # print("Average forelimb width")
+    # # print(np.mean(fl_step_widths))
+    # # print("Average hindlimb width")
+    # # print(np.mean(hl_step_widths))
+    # # print()
 
-    total = t1 - t0
-    print("Time Elapsed", total)
+    # t1 = time.time()
+
+    # total = t1 - t0
+    # print("Time Elapsed", total)
 
     # xCom tests
     # wt4nondf = pd.read_csv("./wt_4_non-perturbation.csv")
     # spike_slope(wt4nondf, 12)
+    print("help")
 
 
 if __name__ == "__main__":
