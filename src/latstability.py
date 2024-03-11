@@ -1,6 +1,7 @@
 import csv
 import os
 import time
+from typing import Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -248,56 +249,34 @@ def spike_slope(input_dataframe, time_constant, comy="37 CoMy (cm)"):
             values_to_consider = np.array(comy_values[0:time_factor])
             current_slope = np.mean(values_to_consider)
         else:
-            previous_values = np.array(comy_values[i - time_factor:i])
-            next_values = np.array(comy_values[i:i + time_factor])
+            previous_values = np.array(comy_values[i - time_factor : i])
+            next_values = np.array(comy_values[i : i + time_factor])
             print(current_slope)
 
 
-def step_width(input_dataframe, rl_stance, ll_stance, rl_y, ll_y):
-    """Stance duration during step cycle
-    @param input_dataframe: spike file input as *.csv
-    @param rl_stance: when stance begins for the right limb
-    @param ll_stance: when stance begins for the left limb
-    @param rl_y: spike channel with y coordinate for the right limb
-    @param ll_y: spike channel with y coordinate for the right limb
+def step_width(
+    input_dataframe: pd.DataFrame,
+    rl_stance: Union[np.ndarray, list],
+    ll_stance: Union[np.ndarray, list],
+    rl_y: str,
+    ll_y: str,
+) -> np.array:
 
-    @return step_widths: array of step width values for each step cycle
-    """
-    parsing_start = time.time()
+    start_time = time.time()
 
-    # Define the value and column to search for
-    column_to_search = "Time"
-    rl_column_for_search = rl_y
-    ll_column_for_search = ll_y
+    input_dataframe_subset = input_dataframe.loc[:, ["Time", rl_y, ll_y]].set_index(
+        "Time"
+    )
 
-    # Store time values and treadmill speed when the specified value is found
-    rl_step_placement = []
-    ll_step_placement = []
+    ll_step_placement = input_dataframe_subset.loc[ll_stance, :][ll_y].values
+    rl_step_placement = input_dataframe_subset.loc[rl_stance, :][rl_y].values
 
-    # Iterate through the DataFrame for the right limb
-    for i in range(len(rl_stance)):
-        for index, row in input_dataframe.iterrows():
-            if row[column_to_search] == rl_stance[i]:
-                rl_step_coord = row[rl_column_for_search]
-                rl_step_placement.append(rl_step_coord)
-
-    # Repeat for left limb
-    for i in range(len(ll_stance)):
-        for index, row in input_dataframe.iterrows():
-            if row[column_to_search] == ll_stance[i]:
-                ll_step_coord = row[ll_column_for_search]
-                ll_step_placement.append(ll_step_coord)
-
-    parsing_stop = time.time()
-    print(f"Parsing duration\n{parsing_stop - parsing_start}\n")
-
-    calculation_start = time.time()
     # Dealing with possible unequal amount of recorded swoffsets for each limb
     comparable_steps = 0
-    if len(rl_step_placement) >= len(ll_step_placement):
-        comparable_steps = len(ll_step_placement)
+    if rl_step_placement.shape[0] >= ll_step_placement.shape[0]:
+        comparable_steps = ll_step_placement.shape[0]
     else:
-        comparable_steps = len(rl_step_placement)
+        comparable_steps = rl_step_placement.shape[0]
 
     step_widths = []
 
@@ -307,8 +286,8 @@ def step_width(input_dataframe, rl_stance, ll_stance, rl_y, ll_y):
         step_widths.append(new_width)
 
     step_widths = np.asarray(step_widths)
-    calculation_stop = time.time()
-    print(f"Calculation duration\n{calculation_stop - calculation_start}\n")
+    stop_time = time.time()
+    print(f"Calculation duration\n{stop_time - start_time}\n")
 
     return step_widths
 
