@@ -33,10 +33,10 @@ rfl_st_lengths, rfl_st_timings = ls.stance_duration(
 )
 
 # For forelimb
-wt1_fl_step_widths = ls.step_width_gw(
+wt1_fl_step_widths = ls.step_width(
     wt1nondf, rfl_st_timings, lfl_st_timings, rl_y="35 FRy", ll_y="33 FLy"
 )
-wt1_hl_step_widths = ls.step_width_gw(
+wt1_hl_step_widths = ls.step_width(
     wt1nondf, rhl_st_timings, lhl_st_timings, rl_y="30 HRy", ll_y="28 HLy"
 )
 
@@ -71,10 +71,10 @@ rfl_st_lengths, rfl_st_timings = ls.stance_duration(
 )
 
 # For forelimb
-wt_1_per_fl_step_widths = ls.step_width_gw(
+wt_1_per_fl_step_widths = ls.step_width(
     wt1perdf, rfl_st_timings, lfl_st_timings, rl_y="35 FRy (cm)", ll_y="33 FLy (cm)"
 )
-wt_1_per_hl_step_widths = ls.step_width_gw(
+wt_1_per_hl_step_widths = ls.step_width(
     wt1perdf, rhl_st_timings, lhl_st_timings, rl_y="30 HRy (cm)", ll_y="28 HLy (cm)"
 )
 
@@ -117,10 +117,10 @@ rfl_st_lengths, rfl_st_timings = ls.stance_duration(
 )
 
 # For forelimb
-wt4_fl_step_widths = ls.step_width_gw(
+wt4_fl_step_widths = ls.step_width(
     wt4nondf, rfl_st_timings, lfl_st_timings, rl_y="35 FRy (cm)", ll_y="33 FLy (cm)"
 )
-wt4_hl_step_widths = ls.step_width_gw(
+wt4_hl_step_widths = ls.step_width(
     wt4nondf, rhl_st_timings, lhl_st_timings, rl_y="30 HRy (cm)", ll_y="28 HLy (cm)"
 )
 
@@ -153,10 +153,10 @@ rfl_st_lengths, rfl_st_timings = ls.stance_duration(
 )
 
 # For forelimb
-wt_4_per_fl_step_widths = ls.step_width_gw(
+wt_4_per_fl_step_widths = ls.step_width(
     wt4perdf, rfl_st_timings, lfl_st_timings, rl_y="35 FRy (cm)", ll_y="33 FLy (cm)"
 )
-wt_4_per_hl_step_widths = ls.step_width_gw(
+wt_4_per_hl_step_widths = ls.step_width(
     wt4perdf, rhl_st_timings, lhl_st_timings, rl_y="30 HRy (cm)", ll_y="28 HLy (cm)"
 )
 
@@ -216,7 +216,6 @@ hl_test = sp.stats.ttest_ind(
 print(f"Comparing Hindlimb widths:\n{hl_test}\n")
 
 # Plotting
-# sns.barplot(list(step_width_results.keys()), list(step_width_results.values()))
+# sns.barplot(ste)
 # plt.show()
-
 # %%

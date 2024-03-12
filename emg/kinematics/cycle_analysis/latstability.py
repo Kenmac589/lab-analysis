@@ -1,6 +1,5 @@
 import csv
 import os
-import time
 from typing import Union
 
 import matplotlib.pyplot as plt
@@ -23,7 +22,6 @@ def read_all_csv(directory_path):
             data_dict[filename] = data
 
     return data_dict
-
 
 def step_duration(input_dataframe):
     """
@@ -73,7 +71,6 @@ def step_duration(input_dataframe):
     average_step_difference = np.mean(adjusted_time_differences)
 
     return adjusted_time_differences, adjusted_treadmill_speeds
-
 
 def extract_cycles(input_dataframe, swonset_channel="44 sw onset"):
     """Get cycle periods
@@ -232,8 +229,7 @@ def spike_slope(input_dataframe, time_constant, comy="37 CoMy (cm)"):
     time_factor = int(time_constant / 2)
 
     # Bring in data and convert to numpy array
-    comy_values = input_dataframe[comy].tolist()
-    comy_values = np.array(comy_values)
+    comy_values = input_dataframe[comy].values
 
     # Remove missing values
     # filter = comy_values[np.logical_not(np.isnan(comy_values))]
@@ -242,86 +238,42 @@ def spike_slope(input_dataframe, time_constant, comy="37 CoMy (cm)"):
 
     # Calculate slope based on spike 2 specifications
 
-    current_slope = 0
+    slope = []
 
     for i in range(len(comy_values)):
         if i <= 5:
             values_to_consider = np.array(comy_values[0:time_factor])
             current_slope = np.mean(values_to_consider)
+            slope.append(current_slope)
         else:
             previous_values = np.array(comy_values[i - time_factor : i])
             next_values = np.array(comy_values[i : i + time_factor])
-            print(current_slope)
+            current_slope = (np.mean(previous_values) + np.mean(next_values)) / 2
+            slope.append(current_slope)
+
+    return slope
 
 
-def step_width(input_dataframe, rl_stance, ll_stance, rl_y, ll_y):
-    """Stance duration during step cycle
+def copressure(input_dataframe, ds_channel, hl_channel, fl_channel):
+    """Calculation for center of pressure
     :param input_dataframe: spike file input as *.csv
-    :param rl_stance: when stance begins for the right limb
-    :param ll_stance: when stance begins for the left limb
-    :param rl_y: spike channel with y coordinate for the right limb
-    :param ll_y: spike channel with y coordinate for the right limb
 
-    :return step_widths: array of step width values for each step cycle
     """
-    parsing_start = time.time()
+    input_dataframe_subset = input_dataframe.loc[
+        :, ["Time", ds_channel, hl_channel, fl_channel]
+    ]
 
-    # Define the value and column to search for
-    column_to_search = "Time"
-    rl_column_for_search = rl_y
-    ll_column_for_search = ll_y
-
-    # Store time values and treadmill speed when the specified value is found
-    rl_step_placement = []
-    ll_step_placement = []
-
-    # Iterate through the DataFrame for the right limb
-    for i in range(len(rl_stance)):
-        for index, row in input_dataframe.iterrows():
-            if row[column_to_search] == rl_stance[i]:
-                rl_step_coord = row[rl_column_for_search]
-                rl_step_placement.append(rl_step_coord)
-
-    # Repeat for left limb
-    for i in range(len(ll_stance)):
-        for index, row in input_dataframe.iterrows():
-            if row[column_to_search] == ll_stance[i]:
-                ll_step_coord = row[ll_column_for_search]
-                ll_step_placement.append(ll_step_coord)
-
-    parsing_stop = time.time()
-    print(f"Parsing duration\n{parsing_stop - parsing_start}\n")
-
-    calculation_start = time.time()
-    # Dealing with possible unequal amount of recorded swoffsets for each limb
-    comparable_steps = 0
-    if len(rl_step_placement) >= len(ll_step_placement):
-        comparable_steps = len(ll_step_placement)
-    else:
-        comparable_steps = len(rl_step_placement)
-
-    step_widths = []
-
-    # Compare step widths for each step
-    for i in range(comparable_steps):
-        new_width = np.abs(rl_step_placement[i] - ll_step_placement[i])
-        step_widths.append(new_width)
-
-    step_widths = np.asarray(step_widths)
-    calculation_stop = time.time()
-    print(f"Calculation duration\n{calculation_stop - calculation_start}\n")
-
-    return step_widths
+    print(input_dataframe_subset)
 
 
-def step_width_gw(
+def step_width(
     input_dataframe: pd.DataFrame,
     rl_stance: Union[np.ndarray, list],
     ll_stance: Union[np.ndarray, list],
     rl_y: str,
     ll_y: str,
 ) -> np.array:
-    """Stance duration during step cycle
+    """Step width during step cycle
     :param input_dataframe: spike file input as *.csv
     :param rl_stance: when stance begins for the right limb
     :param ll_stance: when stance begins for the left limb
@@ -335,7 +287,7 @@ def step_width_gw(
     input_dataframe_subset = input_dataframe.loc[:, ["Time", rl_y, ll_y]]
     input_dataframe_subset = input_dataframe_subset.set_index("Time")
 
-    # Grabbing analogous values from 
+    # Grabbing analogous values from
     ll_step_placement = input_dataframe_subset.loc[ll_stance, :][ll_y].values
     rl_step_placement = input_dataframe_subset.loc[rl_stance, :][rl_y].values
 
@@ -359,6 +311,13 @@ def step_width_gw(
 
 
 def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)"):
+    """Approximates Hip Height
+    :param input_dataframe: spike file input as *.csv
+    :param toey: spike channel with y coordinate for the toe
+    :param hipy: spike channel with y coordinate for the hip
+
+    :return hip_heiht: returns hip height in meters (cm)
+    """
 
     # Bringing in the values for toey and hipy
     toey_values = input_dataframe[toey].tolist()
@@ -378,11 +337,26 @@ def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)"):
     return hip_height
 
 
+def froud_number(
+    input_dataframe, trdm="2 Trdml", toey="24 toey (cm)", hipy="16 Hipy (cm)"
+):
+    # Need to get hip height and convert into centimeters
+    hip = hip_height(input_dataframe, toey, hipy) / 100
+
+    # Getting average treadmill speed
+    treadmill_speed = input_dataframe[trdm].values
+    avg_treadmill_speed = np.round(np.mean(treadmill_speed), 2)
+
+    # Calculating number
+    froud_number = np.power(avg_treadmill_speed, 2) / (9.81 * hip)
+
+    return froud_number
+
+
 def xcom(input_dataframe, hip_height, comy="37 CoMy (cm)"):
 
     # Bring in data
-    comy_values = input_dataframe[comy].tolist()
-    comy_values = np.array(comy_values)
+    comy_values = input_dataframe[comy].values
     comy_values = comy_values[np.logical_not(np.isnan(comy_values))]
 
     # Getting slope of values
@@ -452,11 +426,13 @@ def cycle_period_summary(directory_path):
 # Main Code Body
 def main():
 
-    # t0 = time.time()
-    # # Test for speed of step width
-    # wt4nondf = pd.read_csv("./wt_4_non-perturbation.csv")
+    # Test for speed of step width
+    wt1nondf = pd.read_csv("./wt_1_non-perturbation.csv")
+    wt1perdf = pd.read_csv("./wt_4_perturbation.csv")
+    wt4nondf = pd.read_csv("./wt_4_non-perturbation.csv")
+    wt4perdf = pd.read_csv("./wt_4_perturbation.csv")
 
-    # # Getting stance duration for all 4 limbs
+    # Getting stance duration for all 4 limbs
     # lhl_st_lengths, lhl_st_timings = stance_duration(
     #     wt4nondf, swonset_channel="57 lHL swon", swoffset_channel="58 lHL swoff"
     # )
@@ -466,35 +442,29 @@ def main():
     # rhl_st_lengths, rhl_st_timings = stance_duration(
     #     wt4nondf, swonset_channel="55 rHL swon", swoffset_channel="56 rHL swoff"
     # )
-    # rfl_st_lengths, rfl_st_timings = stance_duration(wt4nondf, swonset_channel=)
-    # print(f"Timings: {type(lfl_st_timings)}")
+    # rfl_st_lengths, rfl_st_timings = stance_duration(wt4nondf)
     # print(f"Right stance duration {rfl_st_lengths}\n")
     # print(f"Right stance phase beginning {rfl_st_timings}\n")
 
     # # For forelimb
-    # fl_step_widths = step_width_gw(
+    # fl_step_widths = step_width(
     #     wt4nondf, rfl_st_timings, lfl_st_timings, rl_y="35 FRy (cm)", ll_y="33 FLy (cm)"
     # )
     # print(fl_step_widths)
-    # hl_step_widths = step_width_gw(
+    # hl_step_widths = step_width(
     #     wt4nondf, rhl_st_timings, lhl_st_timings, rl_y="30 HRy (cm)", ll_y="28 HLy (cm)"
     # )
 
-    # # print("Average forelimb width")
-    # # print(np.mean(fl_step_widths))
-    # # print("Average hindlimb width")
-    # # print(np.mean(hl_step_widths))
-    # # print()
-
-    # t1 = time.time()
-
-    # total = t1 - t0
-    # print("Time Elapsed", total)
-
-    # xCom tests
-    # wt4nondf = pd.read_csv("./wt_4_non-perturbation.csv")
-    # spike_slope(wt4nondf, 12)
-    print("help")
+    # print("Average forelimb width")
+    # print(np.mean(fl_step_widths))
+    # print("Average hindlimb width")
+    # print(np.mean(hl_step_widths))
+    # print()
+    print(
+        copressure(
+            wt1nondf, ds_channel="59 Left DS", hl_channel="28 HLy", fl_channel="33 FLy"
+        )
+    )
 
 
 if __name__ == "__main__":
