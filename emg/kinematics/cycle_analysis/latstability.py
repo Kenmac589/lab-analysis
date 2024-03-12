@@ -23,6 +23,7 @@ def read_all_csv(directory_path):
 
     return data_dict
 
+
 def step_duration(input_dataframe):
     """
     @param: inpo
@@ -72,6 +73,7 @@ def step_duration(input_dataframe):
 
     return adjusted_time_differences, adjusted_treadmill_speeds
 
+
 def extract_cycles(input_dataframe, swonset_channel="44 sw onset"):
     """Get cycle periods
     @param input_dataframe: spike file input as *.csv
@@ -119,6 +121,7 @@ def extract_cycles(input_dataframe, swonset_channel="44 sw onset"):
     return step_cycles
 
 
+# TODO: Create method for approximating swing onset for DLCLive
 def swingon_estim():
     """Full width half maxiumum calculation
     Currently a work in progress
@@ -223,6 +226,7 @@ def stance_duration(
     return stance_duration_lengths, stance_duration_timings
 
 
+# TODO: Need visit documentation to understand how to get slope
 def spike_slope(input_dataframe, time_constant, comy="37 CoMy (cm)"):
 
     # Converting time constant to meaningful indices
@@ -254,6 +258,7 @@ def spike_slope(input_dataframe, time_constant, comy="37 CoMy (cm)"):
     return slope
 
 
+# TODO: Center of pressure calculation needs to get done
 def copressure(input_dataframe, ds_channel, hl_channel, fl_channel):
     """Calculation for center of pressure
     :param input_dataframe: spike file input as *.csv
@@ -353,6 +358,7 @@ def froud_number(
     return froud_number
 
 
+# NOTE: Depending on completion of `spike_slope`
 def xcom(input_dataframe, hip_height, comy="37 CoMy (cm)"):
 
     # Bring in data
