@@ -1,4 +1,4 @@
-# Data Analysis Notes
+## Data Analysis Notes
 
 # Topics
 

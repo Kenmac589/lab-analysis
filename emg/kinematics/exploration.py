@@ -17,17 +17,29 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import mplcatppuccin
 import numpy as np
-
-# %%
 import pandas as pd
 import scipy as sp
 
 # %%
 # mpl.style.use(["ggplot", "mocha"])
 # Comparing primitives
+df = pd.read_csv("./xCom-test.txt", header=0, delimiter=",")
+print(df.head())
 
-data_path = "./wt_M1-non-perturbation-mos.csv"
-data_input = pd.read_csv(data_path, header=0)
-data_input.plot(subplots=True)
+# %%
+# Plotting
+fig, ax1 = plt.subplots()
 
-plt.show()
+x = df["Time"]
+y1 = df["37b CoMy (cm)"]
+y2 = df["v7 xCoM"]
+
+ax2 = ax1.twinx()
+
+ax1.plot(x, y1, "g-", label="CoM position")
+ax2.plot(x, y2, "b-", label="xCoM")
+fig.suptitle("CoM Position versus xCoM")
+fig.legend()
+fig.show()
+
+# %%

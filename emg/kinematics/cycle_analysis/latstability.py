@@ -217,13 +217,100 @@ def stance_duration(
     cutoff_high = time_differences_array <= recording_cutoff_high
     cutoff_low = time_differences_array >= recording_cutoff_low
     combined_filter = np.logical_and(cutoff_low, cutoff_high)
-
     # Applying the filter to the arrays
     stance_duration_lengths = time_differences_array[combined_filter]
 
     stance_duration_timings = time_values
 
     return stance_duration_lengths, stance_duration_timings
+
+
+def weighted_slope(input_dataframe, p, comy="37 CoMy (cm)"):
+    data = input_dataframe[comy].values
+
+    n = len(data)
+    slope = [0] * n  # initialize with zeros
+
+    for i in range(p, n - p):
+        past = data[i - p : i]
+        future = data[i + 1 : i + p + 1]
+
+        # calculate means of past and future points
+        mean_past = np.mean(past)
+        mean_future = np.mean(future)
+
+        # update slope at time i using the calculated means
+        slope[i] = (mean_future - mean_past) / 2
+
+    slop = np.array(slope)
+
+    return slope
+
+
+def median_filter(arr, k):
+    """
+    :param arr: input numpy array
+    :param k: is the size of the window you want to slide over the array (kernel).
+
+    :return filtarr: An array of the same length where each element is the median of
+    a window centered around the index in the array.
+    """
+    # Initialize output array
+    result = []
+
+    # Iterate over every index in arr
+    for i in range(len(arr)):
+        if i < (k // 2) or i > len(arr) - (k // 2) - 1:
+            # Add a placeholder for the indices before k//2 and after length of array - k//2 - 1
+            result.append(np.nan)
+        else:
+            # Calculate median within window and append to result list
+            result.append(np.median(arr[i - (k // 2) : i + (k // 2) + 1]))
+
+    filter = np.isnan(comy_values)
+    filtarr = np.asarray(result)
+    filtarr = filtarr[~filter]
+
+    return filtarr
+
+
+def slope(data, p):
+    slopes = []
+
+    # Iterate through each element of the data (except last 'p' elements)
+    for i in range(len(data) - p - 1):
+        # Calculating means using equal weighting
+        mean_before = sum(data[i : i + p]) / p if p > 0 else 0
+        mean_after = sum(data[i + 1 : i + p + 1]) / p if p > 0 else 0
+
+        # Calculating slope using the line equation (y2-y1)/(x2-x1)
+        slope = (mean_before - mean_after) / (p + p)
+
+        slopes.append(slope)
+
+    return np.asarray(slopes)
+
+
+def fir_filter(data, taps):
+    """
+    data : input signal
+    taps : number of filter taps
+    """
+
+    # Define the FIR filter using a low-pass prototype.
+    taps = min(len(data), taps)
+    cutoff_freq = 0.3  # Cutoff frequency is set to 30% of the Nyquist rate.
+    # This means that only frequencies below this will pass through the filter,
+    # and all others will be attenuated.
+
+    nyquist = len(data) // 2
+    freqs = np.arange(taps) / taps
+    gains = 0.5 - 0.5 * np.cos(2 * np.pi * (freqs - cutoff_freq))
+
+    # Apply the filter using a convolution, which is equivalent to multiplication in the frequency domain.
+    filtered = sp.signal.lfilter([1], gains, data)
+
+    return filtered
 
 
 # TODO: Need visit documentation to understand how to get slope
@@ -366,38 +453,77 @@ def xcom(input_dataframe, hip_height, comy="37 CoMy (cm)"):
     comy_values = comy_values[np.logical_not(np.isnan(comy_values))]
 
     # Getting slope of values
-    vcom = np.diff(comy_values)
-
-    # Fixing 1 off
-    comy_values = np.delete(comy_values, -1)
+    vcom = slope(comy_values, 6)
 
     # Get xCoM in (cm)
     xcom = comy_values + (vcom / np.sqrt(981 / hip_height))
 
-    print("comy", comy_values.size)
-    print("vcom", vcom.size)
-    print("xcom", xcom)
+    # print("comy", comy_values.size)
+    # print("vcom", vcom.size)
+    # print("xcom", xcom)
 
-    x_axis = np.arange(len(comy_values))
+    # x_axis = np.arange(len(comy_values))
 
     # Testing output
-    rbf = sp.interpolate.Rbf(x_axis, vcom, function="thin_plate", smooth=2)
-    xnew = np.linspace(x_axis.min(), x_axis.max(), num=100, endpoint=True)
-    ynew = rbf(xnew)
+    # rbf = sp.interpolate.Rbf(x_axis, vcom, function="thin_plate", smooth=2)
+    # xnew = np.linspace(x_axis.min(), x_axis.max(), num=100, endpoint=True)
+    # ynew = rbf(xnew)
 
-    fig, axs = plt.subplots(4, 1, layout="constrained")
-    axs[0].set_title("CoMy")
-    axs[0].legend(loc="best")
-    axs[0].plot(x_axis, comy_values)
-    axs[1].set_title("vCoM")
-    axs[1].plot(x_axis, vcom)
-    axs[2].set_title("Radial basis funtion interpolation of vCoM")
-    axs[2].plot(xnew, ynew)
-    axs[0].plot(x_axis, xcom)
+    # fig, axs = plt.subplots(4, 1, layout="constrained")
+    # axs[0].set_title("CoMy")
+    # axs[0].legend(loc="best")
+    # axs[0].plot(x_axis, comy_values)
+    # axs[1].set_title("vCoM")
+    # axs[1].plot(x_axis, vcom)
+    # axs[2].set_title("Radial basis funtion interpolation of vCoM")
+    # axs[2].plot(xnew, ynew)
+    # axs[0].plot(x_axis, xcom)
 
-    plt.show()
+    # plt.show()
 
     return xcom
+
+
+def mos(xcom, leftcop, rightcop):
+
+    # Remove periods where it is not present or not valid
+    rightcop[rightcop == 0.0] = np.nan
+    leftcop[leftcop == 0.0] = np.nan
+
+    # Getting peaks and troughs
+    xcom_peaks, _ = sp.signal.find_peaks(xcom, width=30)
+    xcom_troughs, _ = sp.signal.find_peaks(-xcom, width=30)
+
+    lmos_values = np.array([])
+    rmos_values = np.array([])
+
+    for i in range(len(xcom_peaks) - 1):
+        # Getting window between peak values
+        beginning = xcom_peaks[i]
+        end = xcom_peaks[i + 1]
+        region_to_consider = leftcop[beginning:end]
+
+        # Getting non-nan values from region
+        value_cop = region_to_consider[~np.isnan(region_to_consider)]
+        cop_point = np.mean(value_cop)
+        lmos = cop_point - xcom[beginning]
+        lmos_values = np.append(lmos_values, lmos)
+        # print(f"Left measurement of stability {lmos}")
+
+    for i in range(len(xcom_troughs) - 1):
+        # Getting window between peak values
+        beginning = xcom_troughs[i]
+        end = xcom_troughs[i + 1]
+        region_to_consider = rightcop[beginning:end]
+
+        # Getting non-nan values from region
+        value_cop = region_to_consider[~np.isnan(region_to_consider)]
+        cop_point = np.mean(value_cop)
+        rmos = xcom[beginning] - cop_point
+        rmos_values = np.append(rmos_values, rmos)
+        # print(f"Right measurement of stability {rmos}")
+
+    return lmos_values, rmos_values
 
 
 def cycle_period_summary(directory_path):
@@ -434,6 +560,9 @@ def main():
 
     # Test for speed of step width
     wt1nondf = pd.read_csv("./wt_1_non-perturbation.csv")
+    wt1xcom = pd.read_csv("./wt-1_non-perturbation-cop.txt")
+    spike_com = wt1xcom["37a CoMy (cm)"].values
+    spike_xcom = wt1xcom["67 xCoM"].values
     wt1perdf = pd.read_csv("./wt_4_perturbation.csv")
     wt4nondf = pd.read_csv("./wt_4_non-perturbation.csv")
     wt4perdf = pd.read_csv("./wt_4_perturbation.csv")
@@ -461,16 +590,30 @@ def main():
     #     wt4nondf, rhl_st_timings, lhl_st_timings, rl_y="30 HRy (cm)", ll_y="28 HLy (cm)"
     # )
 
-    # print("Average forelimb width")
-    # print(np.mean(fl_step_widths))
-    # print("Average hindlimb width")
-    # print(np.mean(hl_step_widths))
-    # print()
-    print(
-        copressure(
-            wt1nondf, ds_channel="59 Left DS", hl_channel="28 HLy", fl_channel="33 FLy"
-        )
-    )
+    # print(
+    #     copressure(
+    #         wt1nondf, ds_channel="59 Left DS", hl_channel="28 HLy", fl_channel="33 FLy"
+    #     )
+    # )
+
+    # Slope test
+    hip_h = hip_height(wt1nondf, toey="24 toey", hipy="16 Hipy")
+    com = wt1nondf["37 CoMy"].values
+    func_test = slope(com, 1)
+    vcom = weighted_slope(wt1nondf, 6, comy="37 CoMy")
+    # xcom_wt1 = xcom(wt1nondf, hip_h, comy="37 CoMy")
+
+    # print(vcom)
+    fig, axs = plt.subplots(3)
+    legend = ["CoMy", "xCoM"]
+    axs[0].plot(com)
+    # axs[0].plot(xcom_wt1)
+    axs[0].legend(legend)
+    axs[1].plot(spike_xcom)
+    axs[1].plot(spike_com)
+    axs[1].legend(legend)
+    axs[2].plot(func_test)
+    plt.show()
 
 
 if __name__ == "__main__":

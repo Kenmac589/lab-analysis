@@ -61,7 +61,7 @@ You can also assign the appropriate variable in the code block below
 
 """
 
-# v%% Imports
+# %% Imports
 import os
 import platform
 from datetime import datetime
@@ -93,53 +93,55 @@ def directoryPresent(targetPath, projName):
 
 
 # Gathering User input
-projectName = "Non-Perturbation-general"
+projectName = "non-perturbation-general"
 experimenterName = "kenzie"
-targetForProject = "/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/1yr/"
-video_import_path = "/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/1yr/1yrDTRnoRosa-postDTX_video_selection/"
-file_paths = filePathList(video_import_path)
+targetForProject = (
+    "/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/extrapolation_test"
+)
+videoImportPath = "/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/extrapolation_test/100-non-perturbation/"
+
 # Depending on the OS processing the file we will run different functions to create file path lists
 operatingSystem = platform.system()
 
-# if operatingSystem == "Windows":
-#     print("Window operating system detected!")
-#
-#     # Path where recorded videos can currently be found
-#     videoImportPath = "\\Kenzie\\CoM\\DTR\\DTR-M5\\DTR-M5-20230404_pre-DTX\\"
-#
-#     # Creating list of file paths for each video in specified folder
-#     file_paths = filePathList(videoImportPath)
-#
-#     # Changing file paths from Unix format to DOS for videos
-#     dos_path_conversion = pathconvUnixToDos(file_paths)
-#     file_paths = dos_path_conversion
-#
-#     # Changing file paths from Unix format to DOS for target directory
-#     # unixPathComponents = targetForProject.split('/')
-#     # targetForProject = os.path.join(*unixPathComponents).replace('/', os.sep)
-#     # print(targetForProject)
-# elif operatingSystem == "Linux":
-#     print("Linux operating system detected!")
-#     # Path where recorded videos can currently be found
-#     videoImportPath = str(input("Enter file path for videos you want to import: "))
-#
-#     # Creating list of file paths for each video in specified folder
-#     file_paths = filePathList(videoImportPath)
-# elif operatingSystem == "Darwin":
-#     print("Darwin(MacOS) operating system detected!")
-#     # Path where recorded videos can currently be found
-#     videoImportPath = str(input("Enter file path for videos you want to import: "))
-#
-#     # Creating list of file paths for each video in specified folder
-#     file_paths = filePathList(videoImportPath)
-# else:
-#     print("Operating system not detected!")
-#     print("Falling back onto Unix path protocol")
-#     # Path where recorded videos can currently be found
-#     videoImportPath = str(input("Enter file path for videos you want to import: "))
-#
-#     # Creating list of file paths for each video in specified folder
-#     file_paths = filePathList(videoImportPath)
+if operatingSystem == "Windows":
+    print("Window operating system detected!")
+
+    # Path where recorded videos can currently be found
+    videoImportPath = "\\Kenzie\\CoM\\DTR\\DTR-M5\\DTR-M5-20230404_pre-DTX\\"
+
+    # Creating list of file paths for each video in specified folder
+    file_paths = filePathList(videoImportPath)
+
+    # Changing file paths from Unix format to DOS for videos
+    dos_path_conversion = pathconvUnixToDos(file_paths)
+    file_paths = dos_path_conversion
+
+    # Changing file paths from Unix format to DOS for target directory
+    # unixPathComponents = targetForProject.split('/')
+    # targetForProject = os.path.join(*unixPathComponents).replace('/', os.sep)
+    # print(targetForProject)
+elif operatingSystem == "Linux":
+    print("Linux operating system detected!")
+    # Path where recorded videos can currently be found
+    # videoImportPath = str(input("Enter file path for videos you want to import: "))
+
+    # Creating list of file paths for each video in specified folder
+    file_paths = filePathList(videoImportPath)
+elif operatingSystem == "Darwin":
+    print("Darwin(MacOS) operating system detected!")
+    # Path where recorded videos can currently be found
+    # videoImportPath = str(input("Enter file path for videos you want to import: "))
+
+    # Creating list of file paths for each video in specified folder
+    file_paths = filePathList(videoImportPath)
+else:
+    print("Operating system not detected!")
+    print("Falling back onto Unix path protocol")
+    # Path where recorded videos can currently be found
+    # videoImportPath = str(input("Enter file path for videos you want to import: "))
+
+    # Creating list of file paths for each video in specified folder
+    file_paths = filePathList(videoImportPath)
 
 # Checking result of variable file path importing
 print("Project Name: " + projectName)
@@ -167,6 +169,7 @@ else:
     )
 
 # # %% Extract frames from videos
+
 # deeplabcut.extract_frames(config_path, mode='automatic', userfeedback=False)
 #
 # # %% Label frames

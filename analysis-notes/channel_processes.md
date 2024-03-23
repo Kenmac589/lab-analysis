@@ -1,4 +1,4 @@
-# Channel Processes
+# Channel Processes for Spike 10
 
 A channel process is an operation, for example rectification, applied dynamically to data channels. The original data is not changed, but all users of the channel see data modified by the process. Multiple processes can be applied, for example DC removal then rectification then smoothing of a waveform channel or time shifting and de-bounce of an event channel. Every time you use the data, the processing is applied, so using a processed channel is slower than using raw data. If a channel has an attached process, the channel number is displayed in red.
 
@@ -51,6 +51,9 @@ This process has one argument, a time period in seconds, p. The output at time t
 ## Slope (wave)
 
 This process has one argument, a time period in seconds, p. The slope at time t is calculated using an equal weighting of the points from time t-p to t+p. This is done by calculating the mean of the points ahead and the mean of the points behind each data point, and the slope is taken from the line through the centre of the points behind to the centre of the points ahead. This calculation is equivalent to applying an FIR filter, it is not a least squares fit through the points. This method is used because it can be applied iteratively very efficiently to a long run of data. If you apply this process to a channel, the channel scale, offset and units change. If the current channels units are no more than 3 characters long, "/s" is added to them, so units of "V" become units of "V/s". If there is not sufficient space, the final character of the units becomes "!" to indicate that the units are no longer correct. The offset becomes 0, and the scale changes to generate the correct units.
+
+Prompt: The function has one argument, a time period in seconds, p. The slope at time t is calculated using an equal weighting of the points from time t-p to t+p. This is done by calculating the mean of the points ahead and the mean of the points behind each data point, and the slope is taken from the line through the centre of the points behind to the centre of the points ahead.
+
 
 ## Time shift (any channel)
 
