@@ -74,6 +74,32 @@ def step_duration(input_dataframe):
     return adjusted_time_differences, adjusted_treadmill_speeds
 
 
+def manual_marks(related_trace, title="Select Points"):
+    """Manually annotate points of interest on a given trace
+    :param related_trace: Trace you want to annotate
+
+    :return manual_marks_x: array of indices to approx desired value in original trace
+    :return manual_marks_y: array of selected values
+    """
+
+    # Open interface with trace
+    plt.plot(related_trace)
+    plt.title(title)
+
+    # Go through and label regions desired
+    manual_marks_pair = plt.ginput(0, 0)
+
+    # Store x coordinates as rounded off ints to be used as indices
+    manual_marks_x = np.asarray(list(map(lambda x: x[0], manual_marks_pair)))
+    manual_marks_x = manual_marks_x.astype(np.int32)
+
+    # Store y coordinates as the actual value desired
+    manual_marks_y = np.asarray(list(map(lambda x: x[1], manual_marks_pair)))
+    plt.show()
+
+    return manual_marks_x, manual_marks_y
+
+
 def extract_cycles(input_dataframe, swonset_channel="44 sw onset"):
     """Get cycle periods
     @param input_dataframe: spike file input as *.csv
@@ -139,7 +165,9 @@ def swingon_estim():
         current_primitive = motor_p_full[i * 200 : (i + 1) * 200, synergy_selection - 1]
 
         # Find peaks
-        peaks, properties = signal.find_peaks(current_primitive, distance=40, width=2)
+        peaks, properties = sp.signal.find_peaks(
+            current_primitive, distance=40, width=2
+        )
         max_ind = np.argmax(peaks)
         # min_ind = np.argmin(mcurrent_primitive[0:max_ind])
 
@@ -484,15 +512,22 @@ def xcom(input_dataframe, hip_height, comy="37 CoMy (cm)"):
     return xcom
 
 
-def mos(xcom, leftcop, rightcop):
+def mos(xcom, leftcop, rightcop, manual_peaks=False):
 
     # Remove periods where it is not present or not valid
-    rightcop[rightcop == 0.0] = np.nan
-    leftcop[leftcop == 0.0] = np.nan
+    left_band = np.mean(xcom)
+    right_band = 3
+    rightcop[rightcop < right_band] = np.nan
+    leftcop[leftcop < left_band] = np.nan
 
-    # Getting peaks and troughs
-    xcom_peaks, _ = sp.signal.find_peaks(xcom, width=30)
-    xcom_troughs, _ = sp.signal.find_peaks(-xcom, width=30)
+    # Optional manual point selection
+    if manual_peaks is False:
+        # Getting peaks and troughs
+        xcom_peaks, _ = sp.signal.find_peaks(xcom, width=40)
+        xcom_troughs, _ = sp.signal.find_peaks(-xcom, width=40)
+    elif manual_peaks is True:
+        xcom_peaks, _ = manual_marks(xcom, title="Select Peaks")
+        xcom_troughs, _ = manual_marks(xcom, title="Select Troughs")
 
     lmos_values = np.array([])
     rmos_values = np.array([])
@@ -505,10 +540,12 @@ def mos(xcom, leftcop, rightcop):
 
         # Getting non-nan values from region
         value_cop = region_to_consider[~np.isnan(region_to_consider)]
-        cop_point = np.mean(value_cop)
-        lmos = cop_point - xcom[beginning]
-        lmos_values = np.append(lmos_values, lmos)
-        # print(f"Left measurement of stability {lmos}")
+
+        # Making sure we are actually grabbing the last meaningful region of center of pressure
+        if value_cop.shape[0] >= 2:
+            cop_point = np.mean(value_cop)
+            lmos = cop_point - xcom[beginning]
+            lmos_values = np.append(lmos_values, lmos)
 
     for i in range(len(xcom_troughs) - 1):
         # Getting window between peak values
@@ -518,10 +555,10 @@ def mos(xcom, leftcop, rightcop):
 
         # Getting non-nan values from region
         value_cop = region_to_consider[~np.isnan(region_to_consider)]
-        cop_point = np.mean(value_cop)
-        rmos = xcom[beginning] - cop_point
-        rmos_values = np.append(rmos_values, rmos)
-        # print(f"Right measurement of stability {rmos}")
+        if value_cop.shape[0] >= 2:
+            cop_point = np.mean(value_cop)
+            rmos = xcom[beginning] - cop_point
+            rmos_values = np.append(rmos_values, rmos)
 
     return lmos_values, rmos_values
 
@@ -559,14 +596,15 @@ def cycle_period_summary(directory_path):
 def main():
 
     # Test for speed of step width
-    wt1nondf = pd.read_csv("./wt_1_non-perturbation.csv")
-    wt1xcom = pd.read_csv("./wt-1_non-perturbation-cop.txt")
-    spike_com = wt1xcom["37a CoMy (cm)"].values
-    spike_xcom = wt1xcom["67 xCoM"].values
-    wt1perdf = pd.read_csv("./wt_4_perturbation.csv")
+    # wt1nondf = pd.read_csv("./wt_1_non-perturbation.csv")
     wt4nondf = pd.read_csv("./wt_4_non-perturbation.csv")
     wt4perdf = pd.read_csv("./wt_4_perturbation.csv")
+    wt5nondf = pd.read_csv("./wt-5-non-perturbation-all.txt", delimiter=",", header=0)
+    wt5perdf = pd.read_csv("./wt-5-perturbation-all.txt", delimiter=",", header=0)
 
+    # wt1xcom = pd.read_csv("./wt-1_non-perturbation-cop.txt")
+    # spike_com = wt1xcom["37a CoMy (cm)"].values
+    # spike_xcom = wt1xcom["67 xCoM"].values
     # Getting stance duration for all 4 limbs
     # lhl_st_lengths, lhl_st_timings = stance_duration(
     #     wt4nondf, swonset_channel="57 lHL swon", swoffset_channel="58 lHL swoff"
@@ -596,24 +634,31 @@ def main():
     #     )
     # )
 
-    # Slope test
-    hip_h = hip_height(wt1nondf, toey="24 toey", hipy="16 Hipy")
-    com = wt1nondf["37 CoMy"].values
-    func_test = slope(com, 1)
-    vcom = weighted_slope(wt1nondf, 6, comy="37 CoMy")
-    # xcom_wt1 = xcom(wt1nondf, hip_h, comy="37 CoMy")
+    # Getting hip heights
+    wt4non_hip_h = hip_height(wt4nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    wt4per_hip_h = hip_height(wt4perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    wt5non_hip_h = hip_height(wt5nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    wt5per_hip_h = hip_height(wt5perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
 
-    # print(vcom)
-    fig, axs = plt.subplots(3)
-    legend = ["CoMy", "xCoM"]
-    axs[0].plot(com)
-    # axs[0].plot(xcom_wt1)
-    axs[0].legend(legend)
-    axs[1].plot(spike_xcom)
-    axs[1].plot(spike_com)
-    axs[1].legend(legend)
-    axs[2].plot(func_test)
-    plt.show()
+    print(wt5per_hip_h)
+
+    # Working through xcom caluclation to be better
+    # com = wt1nondf["37 CoMy"].values
+    # func_test = slope(com, 1)
+    # vcom = weighted_slope(wt1nondf, 6, comy="37 CoMy")
+    # # xcom_wt1 = xcom(wt1nondf, hip_h, comy="37 CoMy")
+    #
+    # # print(vcom)
+    # fig, axs = plt.subplots(3)
+    # legend = ["CoMy", "xCoM"]
+    # axs[0].plot(com)
+    # # axs[0].plot(xcom_wt1)
+    # axs[0].legend(legend)
+    # axs[1].plot(spike_xcom)
+    # axs[1].plot(spike_com)
+    # axs[1].legend(legend)
+    # axs[2].plot(func_test)
+    # plt.show()
 
 
 if __name__ == "__main__":

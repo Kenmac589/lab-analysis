@@ -31,6 +31,8 @@
 
 27 recordings
 
+- Left hindlimb and forelimb values fairly unusable at the perturbation part.
+
 # CoM-M2-WT-20220419
 
 12 recordings
