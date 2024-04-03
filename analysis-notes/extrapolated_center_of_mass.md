@@ -5,6 +5,10 @@
     - Ch(6006) : Also a random channel Turgay made which is just the CoMy
     - Ch(37) : Is a smoothened and sloped version of CoMy
         - The smoothening factor applied here 0.02 (damn).
+    - Revised = `Ch(37) + (Ch(6002)/Sqrt(9.81/0.0214))`
+        - `Ch(37)` is just CoMy
+        - `Ch(6002)` is a smoothened and sloped version of CoMy
+        - `0.0214` is the hip_height
 - For centre of pressure
     - For the right side it will be ((Ch(30) + Ch(35)) / 2) * Ch(60)
         - These are based on the y coordinates for these limbs

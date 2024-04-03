@@ -436,7 +436,7 @@ def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)"):
     :param toey: spike channel with y coordinate for the toe
     :param hipy: spike channel with y coordinate for the hip
 
-    :return hip_heiht: returns hip height in meters (cm)
+    :return hip_height: returns hip height in meters (cm)
     """
 
     # Bringing in the values for toey and hipy
@@ -512,7 +512,7 @@ def xcom(input_dataframe, hip_height, comy="37 CoMy (cm)"):
     return xcom
 
 
-def mos(xcom, leftcop, rightcop, manual_peaks=False):
+def mos(xcom, leftcop, rightcop, manual_peaks=False, width_threshold=40):
 
     # Remove periods where it is not present or not valid
     left_band = np.mean(xcom)
@@ -523,8 +523,8 @@ def mos(xcom, leftcop, rightcop, manual_peaks=False):
     # Optional manual point selection
     if manual_peaks is False:
         # Getting peaks and troughs
-        xcom_peaks, _ = sp.signal.find_peaks(xcom, width=40)
-        xcom_troughs, _ = sp.signal.find_peaks(-xcom, width=40)
+        xcom_peaks, _ = sp.signal.find_peaks(xcom, width=width_threshold)
+        xcom_troughs, _ = sp.signal.find_peaks(-xcom, width=width_threshold)
     elif manual_peaks is True:
         xcom_peaks, _ = manual_marks(xcom, title="Select Peaks")
         xcom_troughs, _ = manual_marks(xcom, title="Select Troughs")
@@ -560,7 +560,7 @@ def mos(xcom, leftcop, rightcop, manual_peaks=False):
             rmos = xcom[beginning] - cop_point
             rmos_values = np.append(rmos_values, rmos)
 
-    return lmos_values, rmos_values
+    return lmos_values, rmos_values, xcom_peaks, xcom_troughs
 
 
 def cycle_period_summary(directory_path):
@@ -597,6 +597,8 @@ def main():
 
     # Test for speed of step width
     # wt1nondf = pd.read_csv("./wt_1_non-perturbation.csv")
+    wt2nondf = pd.read_csv("./wt-2-non-perturbation-all.txt", delimiter=",", header=0)
+    wt2perdf = pd.read_csv("./wt-2-perturbation-all.txt", delimiter=",", header=0)
     wt4nondf = pd.read_csv("./wt_4_non-perturbation.csv")
     wt4perdf = pd.read_csv("./wt_4_perturbation.csv")
     wt5nondf = pd.read_csv("./wt-5-non-perturbation-all.txt", delimiter=",", header=0)
@@ -635,12 +637,15 @@ def main():
     # )
 
     # Getting hip heights
+    wt2non_hip_h = hip_height(wt2nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    wt2per_hip_h = hip_height(wt2perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    wt4non_hip_h = hip_height(wt4nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
     wt4non_hip_h = hip_height(wt4nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
     wt4per_hip_h = hip_height(wt4perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
     wt5non_hip_h = hip_height(wt5nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
     wt5per_hip_h = hip_height(wt5perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
 
-    print(wt5per_hip_h)
+    print(f"WT-2 Hip {wt2per_hip_h}")
 
     # Working through xcom caluclation to be better
     # com = wt1nondf["37 CoMy"].values
