@@ -148,7 +148,7 @@ def extract_cycles(input_dataframe, swonset_channel="44 sw onset"):
 
 
 # TODO: Create method for approximating swing onset for DLCLive
-def swingon_estim():
+def swingon_estim(input_dataframe, toey="24 toey (cm)"):
     """Full width half maxiumum calculation
     Currently a work in progress
     @param: motor_p_full_full: full length numpy array of selected motor
@@ -158,8 +158,7 @@ def swingon_estim():
     """
 
     # Save
-    fwhl = []
-    number_cycles = len(motor_p_full) // 200
+    toey_values = input_dataframe[toey].values
 
     for i in range(number_cycles):
         current_primitive = motor_p_full[i * 200 : (i + 1) * 200, synergy_selection - 1]
@@ -270,7 +269,7 @@ def weighted_slope(input_dataframe, p, comy="37 CoMy (cm)"):
         # update slope at time i using the calculated means
         slope[i] = (mean_future - mean_past) / 2
 
-    slop = np.array(slope)
+    slope = np.array(slope)
 
     return slope
 
@@ -430,7 +429,7 @@ def step_width(
     return step_widths
 
 
-def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)"):
+def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=False):
     """Approximates Hip Height
     :param input_dataframe: spike file input as *.csv
     :param toey: spike channel with y coordinate for the toe
@@ -440,20 +439,46 @@ def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)"):
     """
 
     # Bringing in the values for toey and hipy
-    toey_values = input_dataframe[toey].tolist()
-    hipy_values = input_dataframe[hipy].tolist()
-    toey_values = np.array(toey_values)
-    hipy_values = np.array(hipy_values)
+    toey_values = input_dataframe[toey].values
+    hipy_values = input_dataframe[hipy].values
 
     # Remove missing values
     toey_values = toey_values[np.logical_not(np.isnan(toey_values))]
     hipy_values = hipy_values[np.logical_not(np.isnan(hipy_values))]
 
-    # Getting lower quartile value of toey as proxy for the ground
-    toey_lowerq = np.percentile(toey_values, q=25)
-    average_hip_value = np.mean(hipy_values)
+    # Either manually mark regions foot is on the ground or go with proxy
+    if manual is False:
 
-    hip_height = average_hip_value - toey_lowerq
+        # Getting lower quartile value of toey as proxy for the ground
+        toey_lowerq = np.percentile(toey_values, q=25)
+        average_hip_value = np.mean(hipy_values)
+        hip_height = average_hip_value - toey_lowerq
+
+    elif manual is True:
+        # Selection of regions foot would be on the ground
+        # on_ground_regions, _ = manual_marks(
+        #     toey, title="Select Regions foot is on the ground"
+        # )
+        on_ground_regions = [0, 1, 2, 3, 4, 5]
+        toe_to_consider = np.array([])
+        hip_to_consider = np.array([])
+        stance_begin = on_ground_regions[0::2]
+        swing_begin = on_ground_regions[1::2]
+
+        for i in range(len(stance_begin)):
+            # Get regions to consider
+            begin = stance_begin[i]
+            end = swing_begin[i]
+
+            relevant_toe = toey_values[begin:end]
+            relevant_hip = hipy_values[begin:end]
+
+            toe_to_consider = np.append(toe_to_consider, relevant_toe)
+            hip_to_consider = np.append(hip_to_consider, relevant_hip)
+
+    else:
+        print("The `manual` variable must be a boolean")
+
     return hip_height
 
 
@@ -515,7 +540,7 @@ def xcom(input_dataframe, hip_height, comy="37 CoMy (cm)"):
 def mos(xcom, leftcop, rightcop, manual_peaks=False, width_threshold=40):
 
     # Remove periods where it is not present or not valid
-    left_band = np.mean(xcom)
+    left_band = np.percentile(xcom, q=50)
     right_band = 3
     rightcop[rightcop < right_band] = np.nan
     leftcop[leftcop < left_band] = np.nan
@@ -528,6 +553,8 @@ def mos(xcom, leftcop, rightcop, manual_peaks=False, width_threshold=40):
     elif manual_peaks is True:
         xcom_peaks, _ = manual_marks(xcom, title="Select Peaks")
         xcom_troughs, _ = manual_marks(xcom, title="Select Troughs")
+    else:
+        print("The `manual` variable must be a boolean")
 
     lmos_values = np.array([])
     rmos_values = np.array([])
@@ -597,13 +624,29 @@ def main():
 
     # Test for speed of step width
     # wt1nondf = pd.read_csv("./wt_1_non-perturbation.csv")
-    wt2nondf = pd.read_csv("./wt-2-non-perturbation-all.txt", delimiter=",", header=0)
-    wt2perdf = pd.read_csv("./wt-2-perturbation-all.txt", delimiter=",", header=0)
-    wt4nondf = pd.read_csv("./wt_4_non-perturbation.csv")
-    wt4perdf = pd.read_csv("./wt_4_perturbation.csv")
-    wt5nondf = pd.read_csv("./wt-5-non-perturbation-all.txt", delimiter=",", header=0)
-    wt5perdf = pd.read_csv("./wt-5-perturbation-all.txt", delimiter=",", header=0)
+    # wt2nondf = pd.read_csv("./wt-2-non-perturbation-all.txt", delimiter=",", header=0)
+    # wt2perdf = pd.read_csv("./wt-2-perturbation-all.txt", delimiter=",", header=0)
+    # wt4nondf = pd.read_csv("./wt_4_non-perturbation.csv")
+    # wt4perdf = pd.read_csv("./wt_4_perturbation.csv")
+    # wt5nondf = pd.read_csv("./wt-5-non-perturbation-all.txt", delimiter=",", header=0)
+    # wt5perdf = pd.read_csv("./wt-5-perturbation-all.txt", delimiter=",", header=0)
 
+    # For Egr3 KO's
+    egr3_6nondf = pd.read_csv(
+        "./egr3-6-non-perturbation-all.txt", delimiter=",", header=0
+    )
+    egr3_7nondf = pd.read_csv(
+        "./egr3-7-non-perturbation-all.txt", delimiter=",", header=0
+    )
+    egr3_8nondf = pd.read_csv(
+        "./egr3-8-non-perturbation-all.txt", delimiter=",", header=0
+    )
+    egr3_9nondf = pd.read_csv(
+        "./egr3-9-non-perturbation-all.txt", delimiter=",", header=0
+    )
+    egr3_10nondf = pd.read_csv(
+        "./egr3-10-non-perturbation-all.txt", delimiter=",", header=0
+    )
     # wt1xcom = pd.read_csv("./wt-1_non-perturbation-cop.txt")
     # spike_com = wt1xcom["37a CoMy (cm)"].values
     # spike_xcom = wt1xcom["67 xCoM"].values
@@ -637,15 +680,27 @@ def main():
     # )
 
     # Getting hip heights
-    wt2non_hip_h = hip_height(wt2nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    wt2per_hip_h = hip_height(wt2perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    wt4non_hip_h = hip_height(wt4nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    wt4non_hip_h = hip_height(wt4nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    wt4per_hip_h = hip_height(wt4perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    wt5non_hip_h = hip_height(wt5nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    wt5per_hip_h = hip_height(wt5perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    # wt2non_hip_h = hip_height(wt2nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    # wt2per_hip_h = hip_height(wt2perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    # wt4non_hip_h = hip_height(wt4nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    # wt4non_hip_h = hip_height(wt4nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    # wt4per_hip_h = hip_height(wt4perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    # wt5non_hip_h = hip_height(wt5nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    # wt5per_hip_h = hip_height(wt5perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
 
-    print(f"WT-2 Hip {wt2per_hip_h}")
+    # egr3_6non_hip_h = hip_height(egr3_6nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    # egr3_7non_hip_h = hip_height(egr3_7nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    # egr3_8non_hip_h = hip_height(egr3_8nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    # egr3_9non_hip_h = hip_height(egr3_9nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
+    egr3_10non_hip_h = hip_height(
+        egr3_10nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)"
+    )
+
+    # print(f"Egr3 M6 Hip {egr3_6non_hip_h}")
+    # print(f"Egr3 M7 Hip {egr3_7non_hip_h}")
+    # print(f"Egr3 M8 Hip {egr3_8non_hip_h}")
+    # print(f"Egr3 M9 Hip {egr3_9non_hip_h}")
+    # print(f"Egr3 M10 Hip {egr3_10non_hip_h}")
 
     # Working through xcom caluclation to be better
     # com = wt1nondf["37 CoMy"].values
