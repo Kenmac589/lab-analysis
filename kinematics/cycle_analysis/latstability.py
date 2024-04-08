@@ -456,10 +456,10 @@ def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual
 
     elif manual is True:
         # Selection of regions foot would be on the ground
-        # on_ground_regions, _ = manual_marks(
-        #     toey, title="Select Regions foot is on the ground"
-        # )
-        on_ground_regions = [0, 1, 2, 3, 4, 5]
+        on_ground_regions, _ = manual_marks(
+            toey_values, title="Select Regions foot is on the ground"
+        )
+
         toe_to_consider = np.array([])
         hip_to_consider = np.array([])
         stance_begin = on_ground_regions[0::2]
@@ -475,6 +475,11 @@ def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual
 
             toe_to_consider = np.append(toe_to_consider, relevant_toe)
             hip_to_consider = np.append(hip_to_consider, relevant_hip)
+
+        # Calculate hip height from filtered regions
+        average_hip_value = np.mean(hip_to_consider)
+        average_toe_value = np.mean(toe_to_consider)
+        hip_height = average_hip_value - average_toe_value
 
     else:
         print("The `manual` variable must be a boolean")
@@ -647,6 +652,7 @@ def main():
     egr3_10nondf = pd.read_csv(
         "./egr3-10-non-perturbation-all.txt", delimiter=",", header=0
     )
+    egr3_8perdf = pd.read_csv("./egr3-8-perturbation-all.txt", delimiter=",", header=0)
     # wt1xcom = pd.read_csv("./wt-1_non-perturbation-cop.txt")
     # spike_com = wt1xcom["37a CoMy (cm)"].values
     # spike_xcom = wt1xcom["67 xCoM"].values
@@ -688,19 +694,29 @@ def main():
     # wt5non_hip_h = hip_height(wt5nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
     # wt5per_hip_h = hip_height(wt5perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
 
-    # egr3_6non_hip_h = hip_height(egr3_6nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    # egr3_7non_hip_h = hip_height(egr3_7nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    # egr3_8non_hip_h = hip_height(egr3_8nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    # egr3_9non_hip_h = hip_height(egr3_9nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    egr3_10non_hip_h = hip_height(
-        egr3_10nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)"
+    # egr3_6non_hip_h = hip_height(
+    #     egr3_6nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=True
+    # )
+    # egr3_7non_hip_h = hip_height(
+    #     egr3_7nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=True
+    # )
+    egr3_8non_hip_h = hip_height(
+        egr3_8nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=False
     )
+    # egr3_9non_hip_h = hip_height(
+    #     egr3_9nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=True
+    # )
+    egr3_8perdf_hip_h = hip_height(egr3_8perdf)
+    # egr3_10non_hip_h = hip_height(
+    #     egr3_10nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=True
+    # )
 
-    # print(f"Egr3 M6 Hip {egr3_6non_hip_h}")
-    # print(f"Egr3 M7 Hip {egr3_7non_hip_h}")
-    # print(f"Egr3 M8 Hip {egr3_8non_hip_h}")
-    # print(f"Egr3 M9 Hip {egr3_9non_hip_h}")
-    # print(f"Egr3 M10 Hip {egr3_10non_hip_h}")
+    # print(f"Egr3 M6  Hip manually {egr3_6non_hip_h}")
+    # print(f"Egr3 M7  Hip manually {egr3_7non_hip_h}")
+    print(f"Egr3 M8  Hip manually {egr3_8non_hip_h}")
+    print(f"Egr3 M8 Hip {egr3_8perdf_hip_h}")
+    # print(f"Egr3 M9  Hip manually {egr3_9non_hip_h}")
+    # print(f"Egr3 M10 Hip manually {egr3_10non_hip_h}")
 
     # Working through xcom caluclation to be better
     # com = wt1nondf["37 CoMy"].values

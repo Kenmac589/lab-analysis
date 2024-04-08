@@ -73,7 +73,7 @@ def main():
     # wt1perdf = pd.read_csv("./wt-1-perturbation-xcom.txt", delimiter=",", header=0)
     # wt1sindf = pd.read_csv("./wt-1-sinus.txt", delimiter=",", header=0)
     # wt2nondf = pd.read_csv("./wt-2-non-perturbation-xcom.txt", delimiter=",", header=0)
-    # wt2perdf = pd.read_csv("./wt-2-perturbation-xcom.txt", delimiter=",", header=0)
+    wt2perdf = pd.read_csv("./wt-2-perturbation-xcom.txt", delimiter=",", header=0)
     # wt2sindf = pd.read_csv("./wt-2-sinus.txt", delimiter=",", header=0)
     # wt3nondf = pd.read_csv("./wt-3-non-perturbation-xcom.txt", delimiter=",", header=0)
     # wt3perdf = pd.read_csv("./wt-3-perturbation-xcom.txt", delimiter=",", header=0)
@@ -84,28 +84,18 @@ def main():
     # wt5nondf = pd.read_csv("./wt-5-non-perturbation-xcom.txt", delimiter=",", header=0)
     # wt5perdf = pd.read_csv("./wt-5-non-perturbation-xcom.txt", delimiter=",", header=0)
 
-    # For Egr3 KO mice
-    egr3_6nondf = pd.read_csv(
-        "./egr3-6-non-perturbation-xcom.txt", delimiter=",", header=0
-    )
-
     # Grabbing individual channels
-    egr3_6non_xcom = egr3_6nondf["v1 xCoM"].to_numpy(dtype=float)
-    egr3_6non_leftcop = egr3_6nondf["v3 L COP"].to_numpy(dtype=float)
-    egr3_6non_rightcop = egr3_6nondf["v2 R COP"].to_numpy(dtype=float)
 
-    # wt2per_xcom = wt2perdf["v1 xCoM"].to_numpy(dtype=float)
-    # wt2per_leftcop = wt2perdf["v3 L COP"].to_numpy(dtype=float)
-    # wt2per_rightcop = wt2perdf["v2 R COP"].to_numpy(dtype=float)
+    wt2per_xcom = wt2perdf["v1 xCoM"].to_numpy(dtype=float)
+    wt2per_leftcop = wt2perdf["v3 L COP"].to_numpy(dtype=float)
+    wt2per_rightcop = wt2perdf["v2 R COP"].to_numpy(dtype=float)
 
     # Calculating margin of stability
-    egr3_6non_lmos, egr3_6non_rmos, egr3_6non_xcom_peaks, egr3_6non_xcom_troughs = (
-        ls.mos(
-            egr3_6non_xcom,
-            egr3_6non_leftcop,
-            egr3_6non_rightcop,
-            manual_peaks=True,
-        )
+    wt2per_lmos, wt2per_rmos, wt2per_xcom_peaks, wt2per_xcom_troughs = ls.mos(
+        wt2per_xcom,
+        wt2per_leftcop,
+        wt2per_rightcop,
+        manual_peaks=True,
     )
 
     # Plotting
@@ -126,27 +116,27 @@ def main():
 
     # For plotting figure demonstrating how calculation was done
     axs[0].set_title("How MoS is Derived")
-    axs[0].plot(egr3_6non_xcom)
-    axs[0].plot(egr3_6non_xcom_peaks, egr3_6non_xcom[egr3_6non_xcom_peaks], "^")
-    axs[0].plot(egr3_6non_xcom_troughs, egr3_6non_xcom[egr3_6non_xcom_troughs], "v")
+    axs[0].plot(wt2per_xcom)
+    axs[0].plot(wt2per_xcom_peaks, wt2per_xcom[wt2per_xcom_peaks], "^")
+    axs[0].plot(wt2per_xcom_troughs, wt2per_xcom[wt2per_xcom_troughs], "v")
     axs[0].plot(
-        egr3_6non_leftcop,
+        wt2per_leftcop,
     )
-    axs[0].plot(egr3_6non_rightcop)
+    axs[0].plot(wt2per_rightcop)
     axs[0].legend(xcom_legend, bbox_to_anchor=(1, 0.7))
 
     # Looking at result
     axs[1].set_title("MoS Result")
-    axs[1].bar(0, np.mean(egr3_6non_lmos), yerr=np.std(egr3_6non_lmos), capsize=5)
-    axs[1].bar(1, np.mean(egr3_6non_rmos), yerr=np.std(egr3_6non_rmos), capsize=5)
+    axs[1].bar(0, np.mean(wt2per_lmos), yerr=np.std(wt2per_lmos), capsize=5)
+    axs[1].bar(1, np.mean(wt2per_rmos), yerr=np.std(wt2per_rmos), capsize=5)
     axs[1].legend(mos_legend, bbox_to_anchor=(1, 0.7))
 
     plt.tight_layout()
     # plt.show()
 
     # Saving results
-    np.savetxt("./egr3_6non_lmos.csv", egr3_6non_lmos, delimiter=",")
-    np.savetxt("./egr3_6non_rmos.csv", egr3_6non_rmos, delimiter=",")
+    # np.savetxt("./wt2per_lmos.csv", wt2per_lmos, delimiter=",")
+    # np.savetxt("./wt2per_rmos.csv", wt2per_rmos, delimiter=",")
     #
 
 
