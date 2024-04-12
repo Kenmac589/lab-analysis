@@ -95,5 +95,27 @@ videos_of_interest = [
 
 ]
 
-
 ```
+
+# Measurement of Dynamic Lateral Stability (MoS)
+
+- Going over the possibly affected data files
+    - So far there is
+    - By the looks of it, all of them with perturbation and sinusoidal
+        - [ ] Perturbation and sinus for egr 10
+            - Noting that for the perturbation, despite overlap, it's during a stimulation, mouse must of stumbled.
+            - Will follow up TODO: Check this with Turgay
+        - [X] Perturbation and sinus for egr 9
+            - Added a second perturbation recording under cursors 7 to 8
+                - related export is the first of the perturbation ones
+                - other is between 3-4
+        - [X] Perturbation and sinus for egr 8
+        - [X] Perturbation and sinus for egr 7
+        - [X] Perturbation and sinus for egr 6
+        - [ ] Definitely check all the WT's
+            - [ ] WT 1
+            - [ ] WT 2
+            - [ ] WT 3
+            - [ ] WT 4
+            - [ ] WT 5
+

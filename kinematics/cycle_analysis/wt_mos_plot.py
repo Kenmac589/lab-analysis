@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from pandas import DataFrame as df
+
 # from scipy import stats as st
 from statannotations.Annotator import Annotator
 
@@ -100,6 +101,8 @@ limb_pairs = [
 
 combo_pairs = [
     [("Non-Perturbation"), ("Perturbation")],
+    [("Non-Perturbation"), ("Sinusoidal")],
+    [("Perturbation"), ("Sinusoidal")],
 ]
 combo_legend = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
 
@@ -117,7 +120,7 @@ limb_plot_params = {
 fig.suptitle("Margin of Lateral Dynamic Lateral Stability (MoS) in WT")
 
 axs[0].set_title("MoS for WT by Limb")
-limb_comp = sns.barplot(**limb_plot_params, ci="sd", capsize=0.05, ax=axs[0])
+limb_comp = sns.barplot(**limb_plot_params, ci=95, capsize=0.05, ax=axs[0])
 # axs[0].legend(fontsize=12, bbox_to_anchor=(2.49, 0.7))
 axs[0].legend(fontsize=12, loc="best")
 annotator = Annotator(limb_comp, limb_pairs, **limb_plot_params)
@@ -135,7 +138,7 @@ combo_plot_params = {
 }
 
 axs[1].set_title("MoS for WT by Pertubation State")
-combo_comp = sns.barplot(**combo_plot_params, ci="sd", capsize=0.05, ax=axs[1])
+combo_comp = sns.barplot(**combo_plot_params, ci=95, capsize=0.05, ax=axs[1])
 # axs[1].legend(combo_legend, loc="upper left", fontsize=12)
 annotator = Annotator(combo_comp, combo_pairs, **combo_plot_params)
 annotator.new_plot(combo_comp, combo_pairs, plot="barplot", **combo_plot_params)
