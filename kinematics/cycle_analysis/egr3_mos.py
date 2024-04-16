@@ -176,43 +176,41 @@ def cop_filter(input_dataframe, ds_timings, cop_channel):
 def main():
 
     # For Egr3 KO mice
-    # egr3_6nondf = pd.read_csv("./egr3-6-non-xcom.txt", delimiter=",", header=0)
-    # egr3_6perdf = pd.read_csv("./egr3-6-perturbation-xcom.txt", delimiter=",", header=0)
-    # egr3_6sindf = pd.read_csv("./egr3-6-sinus-xcom.txt", delimiter=",", header=0)
-    # egr3_7nondf = pd.read_csv("./egr3-7-non-xcom.txt", delimiter=",", header=0)
-    # egr3_7perdf = pd.read_csv("./egr3-7-perturbation-xcom.txt", delimiter=",", header=0)
-    # egr3_7sindf = pd.read_csv("./egr3-7-sinus-xcom.txt", delimiter=",", header=0)
-    # egr3_8nondf = pd.read_csv("./egr3-8-non-xcom.txt", delimiter=",", header=0)
-    # egr3_8perdf = pd.read_csv("./egr3-8-perturbation-xcom.txt", delimiter=",", header=0)
-    # egr3_8sindf = pd.read_csv("./egr3-8-sinus-xcom.txt", delimiter=",", header=0)
-    # egr3_9nondf = pd.read_csv("./egr3-9-non-xcom.txt", delimiter=",", header=0)
-    # egr3_9perdf = pd.read_csv("./egr3-9-perturbation-xcom.txt", delimiter=",", header=0)
-    # egr3_9sindf = pd.read_csv("./egr3-9-sinus-xcom.txt", delimiter=",", header=0)
-    # egr3_10nondf = pd.read_csv("./egr3-10-non-xcom.txt", delimiter=",", header=0)
+    # egr3_6nondf = pd.read_csv("./egr3_data/egr3-6-non-xcom-redo.txt", delimiter=",", header=0)
+    # egr3_6perdf = pd.read_csv("./egr3_data/egr3-6-per-xcom-redo.txt", delimiter=",", header=0)
+    # egr3_6sindf = pd.read_csv("./egr3_data/egr3-6-sinus-xcom-redo.txt", delimiter=",", header=0)
+    # egr3_7nondf = pd.read_csv("./egr3_data/egr3-7-non-xcom-redo.txt", delimiter=",", header=0)
+    # egr3_7perdf = pd.read_csv("./egr3_data/egr3-7-per-xcom-redo.txt", delimiter=",", header=0)
+    # egr3_7sindf = pd.read_csv("./egr3_data/egr3-7-sinus-xcom-redo.txt", delimiter=",", header=0)
+    # egr3_8nondf = pd.read_csv("./egr3_data/egr3-8-non-xcom-redo.txt", delimiter=",", header=0)
+    # egr3_8perdf = pd.read_csv("./egr3_data/egr3-8-per-xcom-redo.txt", delimiter=",", header=0)
+    # egr3_8sindf = pd.read_csv("./egr3_data/egr3-8-sinus-xcom-redo.txt", delimiter=",", header=0)
+    # egr3_9nondf = pd.read_csv("./egr3_data/egr3-9-non-xcom-redo.txt", delimiter=",", header=0)
+    # egr3_9perdf = pd.read_csv("./egr3_data/egr3-9-per-xcom-redo-2.txt", delimiter=",", header=0)
+    # egr3_9sindf = pd.read_csv("./egr3_data/egr3-9-sinus-xcom-redo-2.txt", delimiter=",", header=0)
+    # egr3_10nondf = pd.read_csv("./egr3_data/egr3-10-non-xcom-redo.txt", delimiter=",", header=0)
     egr3_10perdf = pd.read_csv(
-        "./egr3-10-perturbation-xcom-2.txt", delimiter=",", header=0
+        "./egr3_data/egr3-10-per-xcom-redo-pt2.txt", delimiter=",", header=0
     )
-    # egr3_10sindf = pd.read_csv(
-    #     "./egr3-10-sinus-xcom.txt", delimiter=",", header=0
-    # )
+    # egr3_10sindf = pd.read_csv("./egr3_data/egr3-10-sinus-xcom.txt", delimiter=",", header=0)
 
     # Some things to set for plotting/saving
     manual_analysis = True
     save_auto = False
-    lmos_filename = "./egr3_10per_lmos-2.csv"
-    rmos_filename = "./egr3_10per_rmos-2.csv"
-    figure_title = "Measurement of Stability For Egr3 KO M10 with Perturbation"
+    lmos_filename = "./egr3_data/egr3_10per_lmos-2.csv"
+    rmos_filename = "./egr3_data/egr3_10per_rmos-2.csv"
+    figure_title = "Measurement of Stability For Egr3 KO M10 with Perturbation (2)"
 
     # Grabbing individual channels
     xcom = egr3_10perdf["v1 xCoM"].to_numpy(dtype=float)
     leftcop = egr3_10perdf["v3 L COP"].to_numpy(dtype=float)
     rightcop = egr3_10perdf["v2 R COP"].to_numpy(dtype=float)
-    left_DS = egr3_10perdf["68 LDS clean"].to_numpy(dtype=float)
-    right_DS = egr3_10perdf["67 RDS clean"].to_numpy(dtype=float)
+    left_DS = egr3_10perdf["67 LDS cle"].to_numpy(dtype=float)
+    right_DS = egr3_10perdf["66 RDS cle"].to_numpy(dtype=float)
 
     # Remove periods where it is not present or not valid
     left_band = np.percentile(xcom, q=50)
-    right_band = 3
+    right_band = 2
     rightcop = np.where(rightcop == 0.0, np.nan, rightcop)
     rightcop[rightcop < right_band] = np.nan
     leftcop[leftcop < left_band] = np.nan

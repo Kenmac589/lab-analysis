@@ -78,51 +78,51 @@ wt_sin_rmos = [
 
 # For Egr3
 egr3_non_lmos = [
-    "./egr3_6non_lmos.csv",
-    "./egr3_7non_lmos.csv",
-    "./egr3_8non_lmos.csv",
-    "./egr3_9non_lmos.csv",
-    "./egr3_10non_lmos.csv",
+    "./egr3_data/egr3_6non_lmos.csv",
+    "./egr3_data/egr3_7non_lmos.csv",
+    "./egr3_data/egr3_8non_lmos.csv",
+    "./egr3_data/egr3_9non_lmos.csv",
+    "./egr3_data/egr3_10non_lmos.csv",
 ]
 
 egr3_non_rmos = [
-    "./egr3_6non_rmos.csv",
-    "./egr3_7non_rmos.csv",
-    "./egr3_8non_rmos.csv",
-    "./egr3_9non_rmos.csv",
-    "./egr3_10non_rmos.csv",
+    "./egr3_data/egr3_6non_rmos.csv",
+    "./egr3_data/egr3_7non_rmos.csv",
+    "./egr3_data/egr3_8non_rmos.csv",
+    "./egr3_data/egr3_9non_rmos.csv",
+    "./egr3_data/egr3_10non_rmos.csv",
 ]
 
 egr3_per_lmos = [
-    "./egr3_6per_lmos.csv",
-    "./egr3_7per_lmos.csv",
-    "./egr3_8per_lmos.csv",
-    "./egr3_9per_lmos.csv",
-    "./egr3_10per_lmos.csv",
+    "./egr3_data/egr3_6per_lmos.csv",
+    "./egr3_data/egr3_7per_lmos.csv",
+    "./egr3_data/egr3_8per_lmos.csv",
+    "./egr3_data/egr3_9per_lmos.csv",
+    "./egr3_data/egr3_10per_lmos.csv",
 ]
 
 egr3_per_rmos = [
-    "./egr3_6per_rmos.csv",
-    "./egr3_7per_rmos.csv",
-    "./egr3_8per_rmos.csv",
-    "./egr3_9per_rmos.csv",
-    "./egr3_10per_rmos.csv",
+    "./egr3_data/egr3_6per_rmos.csv",
+    "./egr3_data/egr3_7per_rmos.csv",
+    "./egr3_data/egr3_8per_rmos.csv",
+    "./egr3_data/egr3_9per_rmos.csv",
+    "./egr3_data/egr3_10per_rmos.csv",
 ]
 
 egr3_sin_lmos = [
-    "./egr3_6sin_lmos.csv",
-    "./egr3_7sin_lmos.csv",
-    "./egr3_8sin_lmos.csv",
-    "./egr3_9sin_lmos.csv",
-    "./egr3_10sin_lmos.csv",
+    "./egr3_data/egr3_6sin_lmos.csv",
+    "./egr3_data/egr3_7sin_lmos.csv",
+    "./egr3_data/egr3_8sin_lmos.csv",
+    "./egr3_data/egr3_9sin_lmos.csv",
+    "./egr3_data/egr3_10sin_lmos.csv",
 ]
 
 egr3_sin_rmos = [
-    "./egr3_6sin_rmos.csv",
-    "./egr3_7sin_rmos.csv",
-    "./egr3_8sin_rmos.csv",
-    "./egr3_9sin_rmos.csv",
-    "./egr3_10sin_rmos.csv",
+    "./egr3_data/egr3_6sin_rmos.csv",
+    "./egr3_data/egr3_7sin_rmos.csv",
+    "./egr3_data/egr3_8sin_rmos.csv",
+    "./egr3_data/egr3_9sin_rmos.csv",
+    "./egr3_data/egr3_10sin_rmos.csv",
 ]
 
 

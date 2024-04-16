@@ -102,7 +102,7 @@ videos_of_interest = [
 - Going over the possibly affected data files
     - So far there is
     - By the looks of it, all of them with perturbation and sinusoidal
-        - [ ] Perturbation and sinus for egr 10
+        - [X] Perturbation and sinus for egr 10
             - Noting that for the perturbation, despite overlap, it's during a stimulation, mouse must of stumbled.
             - Will follow up TODO: Check this with Turgay
         - [X] Perturbation and sinus for egr 9
@@ -119,3 +119,5 @@ videos_of_interest = [
             - [ ] WT 4
             - [ ] WT 5
 
+- Seeing some weird stuff with the Egr3-7 mouse check videos
+- 
