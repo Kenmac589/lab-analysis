@@ -120,4 +120,6 @@ videos_of_interest = [
             - [ ] WT 5
 
 - Seeing some weird stuff with the Egr3-7 mouse check videos
+- General issue for M2 that the mouse if fairly biased towards one side.
 - 
+

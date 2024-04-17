@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
-# import scipy as sp
+import scipy as sp
 import seaborn as sns
 
 import latstability as ls
@@ -38,6 +37,115 @@ def double_support_timings(input_dataframe, ds_channel):
     return ds_timings
 
 
+def peak_grabber_test(related_trace, width_threshold=35):
+
+    # Getting peaks and troughs
+    xcom = related_trace
+    xcom_peaks, _ = sp.signal.find_peaks(xcom, width=width_threshold)
+    xcom_troughs, _ = sp.signal.find_peaks(-xcom, width=width_threshold)
+
+    plt.plot(xcom)
+    plt.plot(xcom_peaks, xcom[xcom_peaks], "^")
+    plt.plot(xcom_troughs, xcom[xcom_troughs], "v")
+    plt.show()
+
+
+def mos_manual_marks(related_trace, leftcop, rightcop, title="Select Points"):
+    """Manually annotate points of interest on a given trace
+    :param related_trace: Trace you want to annotate
+
+    :return manual_marks_x: array of indices to approx desired value in original trace
+    :return manual_marks_y: array of selected values
+    """
+
+    # Removing 0 values
+    rightcop = np.where(rightcop == 0.0, np.nan, rightcop)
+    leftcop = np.where(leftcop == 0.0, np.nan, leftcop)
+
+    # Correcting to DS regions are close to label
+    left_adjustment = np.mean(related_trace) + 0.5
+    right_adjustment = np.mean(related_trace) - 0.5
+
+    rightcop = rightcop * right_adjustment
+    leftcop = leftcop * left_adjustment
+
+    # Open interface with trace
+    plt.plot(related_trace)
+    plt.plot(leftcop)
+    plt.plot(rightcop)
+    plt.title(title)
+
+    # Go through and label regions desired
+    manual_marks_pair = plt.ginput(0, 0)
+
+    # Store x coordinates as rounded off ints to be used as indices
+    manual_marks_x = np.asarray(list(map(lambda x: x[0], manual_marks_pair)))
+    manual_marks_x = manual_marks_x.astype(np.int32)
+
+    # Store y coordinates as the actual value desired
+    manual_marks_y = np.asarray(list(map(lambda x: x[1], manual_marks_pair)))
+    plt.show()
+
+    return manual_marks_x, manual_marks_y
+
+
+def mos(
+    xcom, leftcop, rightcop, leftds, rightds, manual_peaks=False, width_threshold=40
+):
+
+    # Remove periods where it is not present or not valid
+    left_band = np.percentile(xcom, q=50)
+    rightcop = np.where(rightcop == 0.0, np.nan, rightcop)
+    # rightcop[rightcop < right_band] = np.nan
+    leftcop[leftcop < left_band] = np.nan
+
+    # Optional manual point selection
+    if manual_peaks is False:
+        # Getting peaks and troughs
+        xcom_peaks, _ = sp.signal.find_peaks(xcom, width=width_threshold)
+        xcom_troughs, _ = sp.signal.find_peaks(-xcom, width=width_threshold)
+    elif manual_peaks is True:
+        xcom_peaks, _ = mos_manual_marks(xcom, leftds, rightds, title="Select Peaks")
+        xcom_troughs, _ = mos_manual_marks(
+            xcom, leftds, rightds, title="Select Troughs"
+        )
+    else:
+        print("The `manual` variable must be a boolean")
+
+    lmos_values = np.array([])
+    rmos_values = np.array([])
+
+    for i in range(len(xcom_peaks) - 1):
+        # Getting window between peak values
+        beginning = xcom_peaks[i]
+        end = xcom_peaks[i + 1]
+        region_to_consider = leftcop[beginning:end]
+
+        # Getting non-nan values from region
+        value_cop = region_to_consider[~np.isnan(region_to_consider)]
+
+        # Making sure we are actually grabbing the last meaningful region of center of pressure
+        if value_cop.shape[0] >= 2:
+            cop_point = np.mean(value_cop)
+            lmos = cop_point - xcom[beginning]
+            lmos_values = np.append(lmos_values, lmos)
+
+    for i in range(len(xcom_troughs) - 1):
+        # Getting window between peak values
+        beginning = xcom_troughs[i]
+        end = xcom_troughs[i + 1]
+        region_to_consider = rightcop[beginning:end]
+
+        # Getting non-nan values from region
+        value_cop = region_to_consider[~np.isnan(region_to_consider)]
+        if value_cop.shape[0] >= 2:
+            cop_point = np.mean(value_cop)
+            rmos = xcom[beginning] - cop_point
+            rmos_values = np.append(rmos_values, rmos)
+
+    return lmos_values, rmos_values, xcom_peaks, xcom_troughs
+
+
 def cop_filter(input_dataframe, ds_timings, cop_channel):
     """Stance duration during step cycle
     @param input_dataframe: spike file input as *.csv
@@ -69,33 +177,48 @@ def main():
 
     # For WT Group
 
-    # wt1nondf = pd.read_csv("./wt-1_non-perturbation-cop.txt", delimiter=",", header=0)
-    # wt1perdf = pd.read_csv("./wt-1-perturbation-xcom.txt", delimiter=",", header=0)
-    # wt1sindf = pd.read_csv("./wt-1-sinus.txt", delimiter=",", header=0)
-    # wt2nondf = pd.read_csv("./wt-2-non-perturbation-xcom.txt", delimiter=",", header=0)
-    wt2perdf = pd.read_csv("./wt-2-perturbation-xcom.txt", delimiter=",", header=0)
-    # wt2sindf = pd.read_csv("./wt-2-sinus.txt", delimiter=",", header=0)
-    # wt3nondf = pd.read_csv("./wt-3-non-perturbation-xcom.txt", delimiter=",", header=0)
-    # wt3perdf = pd.read_csv("./wt-3-perturbation-xcom.txt", delimiter=",", header=0)
-    # wt3sindf = pd.read_csv("./wt-3-sinus.txt", delimiter=",", header=0)
-    # wt4nondf = pd.read_csv("./wt-4-non-perturbation-xcom.txt", delimiter=",", header=0)
-    # wt4perdf = pd.read_csv("./wt-4-perturbation-xcom.txt", delimiter=",", header=0)
-    # wt4sindf = pd.read_csv("./wt-4-sinus.txt", delimiter=",", header=0)
-    # wt5nondf = pd.read_csv("./wt-5-non-perturbation-xcom.txt", delimiter=",", header=0)
-    # wt5perdf = pd.read_csv("./wt-5-non-perturbation-xcom.txt", delimiter=",", header=0)
+    # wt1nondf = pd.read_csv("./wt_data/wt-1-non-xcom-redo.txt", delimiter=",", header=0)
+    # wt1perdf = pd.read_csv("./wt_data/wt-1-per-xcom-redo.txt", delimiter=",", header=0)
+    # wt1sindf = pd.read_csv("./wt_data/wt-1-sin-xcom-redo.txt", delimiter=",", header=0)
+    # wt2nondf = pd.read_csv("./wt_data/wt-2-non-xcom-redo.txt", delimiter=",", header=0)
+    # wt2perdf = pd.read_csv("./wt_data/wt-2-per-xcom-redo.txt", delimiter=",", header=0)
+    # wt2sindf = pd.read_csv("./wt_data/wt-2-sin-xcom-redo.txt", delimiter=",", header=0)
+    # wt3nondf = pd.read_csv("./wt_data/wt-3-non-xcom-redo.txt", delimiter=",", header=0)
+    # wt3perdf = pd.read_csv("./wt_data/wt-3-per-xcom-redo.txt", delimiter=",", header=0)
+    # wt3sindf = pd.read_csv("./wt_data/wt-3-sin-xcom-redo.txt", delimiter=",", header=0)
+    # wt4nondf = pd.read_csv("./wt_data/wt-4-non-xcom-redo.txt", delimiter=",", header=0)
+    # wt4perdf = pd.read_csv("./wt_data/wt-4-per-xcom-redo.txt", delimiter=",", header=0)
+    # wt4sindf = pd.read_csv("./wt_data/wt-4-sin-xcom-redo.txt", delimiter=",", header=0)
+    # wt5nondf = pd.read_csv("./wt_data/wt-5-non-xcom-redo.txt", delimiter=",", header=0)
+    wt5perdf = pd.read_csv("./wt_data/wt-5-per-xcom-redo.txt", delimiter=",", header=0)
 
-    # Grabbing individual channels
+    # Some things to set for plotting/saving
+    manual_analysis = False
+    save_auto = True
+    lmos_filename = "./wt_data/wt5per_lmos.csv"
+    rmos_filename = "./wt_data/wt5per_rmos.csv"
+    figure_title = "Measurement of Stability For WT M5 with Perturbation"
 
-    wt2per_xcom = wt2perdf["v1 xCoM"].to_numpy(dtype=float)
-    wt2per_leftcop = wt2perdf["v3 L COP"].to_numpy(dtype=float)
-    wt2per_rightcop = wt2perdf["v2 R COP"].to_numpy(dtype=float)
+    xcom = wt5perdf["v1 xCoM"].to_numpy(dtype=float)
+    rightcop = wt5perdf["v3 R COP"].to_numpy(dtype=float)
+    leftcop = wt5perdf["v2 L COP"].to_numpy(dtype=float)
+    right_DS = wt5perdf["60 RDS cle"].to_numpy(dtype=float)
+    left_DS = wt5perdf["61 LDS cle"].to_numpy(dtype=float)
 
-    # Calculating margin of stability
-    wt2per_lmos, wt2per_rmos, wt2per_xcom_peaks, wt2per_xcom_troughs = ls.mos(
-        wt2per_xcom,
-        wt2per_leftcop,
-        wt2per_rightcop,
-        manual_peaks=True,
+    # Remove periods where it is not present or not valid
+    left_band = np.percentile(xcom, q=50)
+    right_band = 2
+    rightcop = np.where(rightcop == 0.0, np.nan, rightcop)
+    rightcop[rightcop < right_band] = np.nan
+    leftcop[leftcop < left_band] = np.nan
+
+    lmos, rmos, xcom_peaks, xcom_troughs = mos(
+        xcom,
+        leftcop,
+        rightcop,
+        left_DS,
+        right_DS,
+        manual_peaks=manual_analysis,
     )
 
     # Plotting
@@ -112,32 +235,35 @@ def main():
     ]
     mos_legend = ["L MoS", "R MoS"]
     fig, axs = plt.subplots(2)
-    fig.suptitle("Measurement of Stability For Egr3 KO without Perturbation")
+    fig.suptitle(figure_title)
 
     # For plotting figure demonstrating how calculation was done
     axs[0].set_title("How MoS is Derived")
-    axs[0].plot(wt2per_xcom)
-    axs[0].plot(wt2per_xcom_peaks, wt2per_xcom[wt2per_xcom_peaks], "^")
-    axs[0].plot(wt2per_xcom_troughs, wt2per_xcom[wt2per_xcom_troughs], "v")
-    axs[0].plot(
-        wt2per_leftcop,
-    )
-    axs[0].plot(wt2per_rightcop)
+    axs[0].plot(xcom)
+    axs[0].plot(xcom_peaks, xcom[xcom_peaks], "^")
+    axs[0].plot(xcom_troughs, xcom[xcom_troughs], "v")
+    axs[0].plot(leftcop)
+    axs[0].plot(rightcop)
     axs[0].legend(xcom_legend, bbox_to_anchor=(1, 0.7))
 
     # Looking at result
     axs[1].set_title("MoS Result")
-    axs[1].bar(0, np.mean(wt2per_lmos), yerr=np.std(wt2per_lmos), capsize=5)
-    axs[1].bar(1, np.mean(wt2per_rmos), yerr=np.std(wt2per_rmos), capsize=5)
+    axs[1].bar(0, np.mean(lmos), yerr=np.std(lmos), capsize=5)
+    axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
     axs[1].legend(mos_legend, bbox_to_anchor=(1, 0.7))
 
     plt.tight_layout()
-    # plt.show()
+    plt.show()
 
     # Saving results
-    # np.savetxt("./wt2per_lmos.csv", wt2per_lmos, delimiter=",")
-    # np.savetxt("./wt2per_rmos.csv", wt2per_rmos, delimiter=",")
-    #
+    if manual_analysis is True:
+        np.savetxt(lmos_filename, lmos, delimiter=",")
+        np.savetxt(rmos_filename, rmos, delimiter=",")
+    elif manual_analysis is False and save_auto is True:
+        np.savetxt(lmos_filename, lmos, delimiter=",")
+        np.savetxt(rmos_filename, rmos, delimiter=",")
+    else:
+        print("not saved")
 
 
 if __name__ == "__main__":
