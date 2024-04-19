@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from pandas import DataFrame as df
-
 # from scipy import stats as st
 from statannotations.Annotator import Annotator
 
@@ -155,7 +154,7 @@ con_mos_combo = mos_df.drop(columns=["Limb"])
 
 # Plotting
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
-sns.set(style="white", font="Arial", font_scale=1.5, rc=custom_params)
+sns.set(style="white", font_scale=1.5, rc=custom_params)
 
 fig, axs = plt.subplots(1, 2)
 

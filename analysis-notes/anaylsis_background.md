@@ -1,7 +1,5 @@
 # Background Information
 
-
-
 # General Background
 
 

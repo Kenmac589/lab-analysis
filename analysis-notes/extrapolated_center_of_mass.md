@@ -18,9 +18,13 @@
         - `Ch(6002)` is a smoothened and sloped version of CoMy
         - `0.0214` is the hip_height
 - For centre of pressure
-    - For the right side it will be `((Ch(30) + Ch(35)) / 2) * Ch(60)`
-        - These are based on the y coordinates for these limbs
-    - For the left side it would be `((Ch(33) + Ch(28)) / 2) * Ch(59)`
+    - For the **right** side it will be 
+        - `((Ch(30) + Ch(35)) / 2) * Ch(60)` for Egr3/WT
+        - `((Ch(36) + Ch(40)) / 2) * Ch(51)` for DTR
+    - For the **left** side it would be
+        - `((Ch(33) + Ch(28)) / 2) * Ch(59)` for Egr3/WT
+        - `((Ch(38) + Ch(34)) / 2) * Ch(52)` for Egr3/WT
+    - These are based on the y coordinates for the respective limbs multiplied by the COP level marker 
 - For double support
     - Forelimb sw of to hindlimb swon
     - level type of channel
