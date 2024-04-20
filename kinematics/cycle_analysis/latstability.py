@@ -541,6 +541,7 @@ def xcom(input_dataframe, hip_height, comy="37 CoMy (cm)"):
 
     return xcom
 
+
 def mos_marks(related_trace, leftcop, rightcop, title="Select Points"):
     """Manually annotate points of interest on a given trace
     :param related_trace: Trace you want to annotate
@@ -579,6 +580,7 @@ def mos_marks(related_trace, leftcop, rightcop, title="Select Points"):
 
     return manual_marks_x, manual_marks_y
 
+
 def mos(
     xcom, leftcop, rightcop, leftds, rightds, manual_peaks=False, width_threshold=40
 ):
@@ -586,8 +588,9 @@ def mos(
     # Remove periods where it is not present or not valid
     left_band = np.percentile(xcom, q=50)
     rightcop = np.where(rightcop == 0.0, np.nan, rightcop)
+    leftcop = np.where(leftcop == 0.0, np.nan, leftcop)
     # rightcop[rightcop < right_band] = np.nan
-    leftcop[leftcop < left_band] = np.nan
+    # leftcop[leftcop < left_band] = np.nan
 
     # Optional manual point selection
     if manual_peaks is False:
@@ -596,9 +599,7 @@ def mos(
         xcom_troughs, _ = sp.signal.find_peaks(-xcom, width=width_threshold)
     elif manual_peaks is True:
         xcom_peaks, _ = mos_marks(xcom, leftds, rightds, title="Select Peaks")
-        xcom_troughs, _ = mos_marks(
-            xcom, leftds, rightds, title="Select Troughs"
-        )
+        xcom_troughs, _ = mos_marks(xcom, leftds, rightds, title="Select Troughs")
     else:
         print("The `manual` variable must be a boolean")
 
@@ -634,6 +635,7 @@ def mos(
             rmos_values = np.append(rmos_values, rmos)
 
     return lmos_values, rmos_values, xcom_peaks, xcom_troughs
+
 
 def cycle_period_summary(directory_path):
 
