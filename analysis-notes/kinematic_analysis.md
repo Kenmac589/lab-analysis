@@ -70,3 +70,6 @@ NOTE: For the sw on and offset channels are only cleaned for conditions I will b
         - Length of thigh: 1.4
         - Length of shank: 1.6
 
+- There are really no valid recordings for perturbation or sinusoidal conditions.
+
+

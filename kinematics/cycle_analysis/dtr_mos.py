@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import mlx as mx
 import numpy as np
 import pandas as pd
 import scipy as sp
@@ -97,34 +96,39 @@ def main():
     # dtrpre_3per = pd.read_csv(
     #     "./dtr_data/predtx/dtr-pre-3-per-all.txt", delimiter=",", header=0
     # )
-    dtrpre_3sin = pd.read_csv(
-        "./dtr_data/predtx/dtr-pre-3-sin-all-2.txt", delimiter=",", header=0
-    )
-
+    # dtrpre_3sin = pd.read_csv(
+    #     "./dtr_data/predtx/dtr-pre-3-sin-all-2.txt", delimiter=",", header=0
+    # )
     # dtrpre_3non = pd.read_csv(
     #     "./dtr_data/predtx/dtr-pre-3-non-all.txt", delimiter=",", header=0
     # )
     # dtrpre_5non = pd.read_csv(
     #     "./dtr_data/predtx/dtr-pre-5-non-all.txt", delimiter=",", header=0
     # )
+    # dtrpre_5per = pd.read_csv(
+    #     "./dtr_data/predtx/dtr-pre-5-per-all-2.txt", delimiter=",", header=0
+    # )
+    dtrpre_5sin = pd.read_csv(
+        "./dtr_data/predtx/dtr-pre-5-sin-all.txt", delimiter=",", header=0
+    )
 
     # For MoS
 
     # Some things to set for plotting/saving
     manual_analysis = False
-    save_auto = True
-    lmos_filename = "./dtr_data/predtx/predtx_3sin_lmos-2.csv"
-    rmos_filename = "./dtr_data/predtx/predtx_3sin_rmos-2.csv"
+    save_auto = False
+    lmos_filename = "./dtr_data/predtx/predtx_5sin_lmos.csv"
+    rmos_filename = "./dtr_data/predtx/predtx_5sin_rmos.csv"
     figure_title = (
-        "Measurement of Stability For DTR M3 with Sinusoidal Perturbation pre-DTX (2)"
+        "Measurement of Stability For DTR M5 with Sinusoidal Perturbation pre-DTX"
     )
 
     # Grabbing individual channels
-    xcom = dtrpre_3sin["v1 xCoM"].to_numpy(dtype=float)
-    leftcop = dtrpre_3sin["v3 L COP"].to_numpy(dtype=float)
-    rightcop = dtrpre_3sin["v2 R COP"].to_numpy(dtype=float)
-    left_DS = dtrpre_3sin["48 LDS cle"].to_numpy(dtype=float)
-    right_DS = dtrpre_3sin["47 RDS cle"].to_numpy(dtype=float)
+    xcom = dtrpre_5sin["v1 xCoM"].to_numpy(dtype=float)
+    leftcop = dtrpre_5sin["v3 L COP"].to_numpy(dtype=float)
+    rightcop = dtrpre_5sin["v2 R COP"].to_numpy(dtype=float)
+    left_DS = dtrpre_5sin["50 LDS cle"].to_numpy(dtype=float)
+    right_DS = dtrpre_5sin["49 RDS cle"].to_numpy(dtype=float)
 
     # Remove periods where it is not present or not valid
     # leftcop = np.where(leftcop == 0.0, np.nan, leftcop)

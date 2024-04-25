@@ -134,34 +134,42 @@ egr3_sin_rmos = [
 dtrpre_non_lmos = [
     "./dtr_data/predtx/predtx_2non_lmos.csv",
     "./dtr_data/predtx/predtx_3non_lmos.csv",
+    "./dtr_data/predtx/predtx_5non_lmos.csv",
 ]
 
 dtrpre_non_rmos = [
     "./dtr_data/predtx/predtx_2non_rmos.csv",
     "./dtr_data/predtx/predtx_3non_rmos.csv",
+    "./dtr_data/predtx/predtx_5non_rmos.csv",
 ]
 
 
 dtrpre_per_lmos = [
     "./dtr_data/predtx/predtx_2per_lmos.csv",
     "./dtr_data/predtx/predtx_3per_lmos.csv",
+    "./dtr_data/predtx/predtx_5per_lmos-1.csv",
+    "./dtr_data/predtx/predtx_5per_lmos-2.csv",
 ]
 
 dtrpre_per_rmos = [
     "./dtr_data/predtx/predtx_2per_rmos.csv",
     "./dtr_data/predtx/predtx_3per_rmos.csv",
+    "./dtr_data/predtx/predtx_5per_rmos-1.csv",
+    "./dtr_data/predtx/predtx_5per_rmos-2.csv",
 ]
 
 dtrpre_sin_lmos = [
     "./dtr_data/predtx/predtx_2sin_lmos.csv",
     "./dtr_data/predtx/predtx_3sin_lmos-1.csv",
     "./dtr_data/predtx/predtx_3sin_lmos-2.csv",
+    "./dtr_data/predtx/predtx_5sin_lmos.csv",
 ]
 
 dtrpre_sin_rmos = [
     "./dtr_data/predtx/predtx_2sin_rmos.csv",
     "./dtr_data/predtx/predtx_3sin_rmos-1.csv",
     "./dtr_data/predtx/predtx_3sin_rmos-2.csv",
+    "./dtr_data/predtx/predtx_5sin_rmos.csv",
 ]
 
 mos_df = df(columns=["Condition", "Limb", "Perturbation State", "MoS"])
@@ -237,9 +245,9 @@ perturbation_state_order = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
 
 # Intercondition Comparison
 condition_pairs = [
-    [("WT", "Non-Perturbation"), ("Egr3", "Non-Perturbation")],
-    [("WT", "Perturbation"), ("Egr3", "Perturbation")],
-    [("WT", "Sinusoidal"), ("Egr3", "Sinusoidal")],
+    [("WT", "Non-Perturbation"), ("Pre-DTX", "Non-Perturbation")],
+    [("WT", "Sinusoidal"), ("Pre-DTX", "Sinusoidal")],
+    [("WT", "Perturbation"), ("Pre-DTX", "Perturbation")],
     [("WT", "Non-Perturbation"), ("WT", "Perturbation")],
     [("WT", "Sinusoidal"), ("WT", "Perturbation")],
     [("WT", "Non-Perturbation"), ("WT", "Sinusoidal")],
@@ -261,11 +269,11 @@ cond_combo_plot_params = {
 }
 
 plt.title("MoS between conditions")
-cond_combo_comp = sns.barplot(**cond_combo_plot_params, ci=95, capsize=0.05)
+cond_combo_comp = sns.violinplot(**cond_combo_plot_params, ci=95, capsize=0.05)
 plt.legend(loc="upper right", fontsize=12)
 annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
 annotator.new_plot(
-    cond_combo_comp, condition_pairs, plot="barplot", **cond_combo_plot_params
+    cond_combo_comp, condition_pairs, plot="violinplot", **cond_combo_plot_params
 )
 annotator.configure(
     hide_non_significant=True, test="t-test_ind", text_format="star", loc="inside"
