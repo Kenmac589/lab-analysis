@@ -46,9 +46,27 @@ NOTE: For the sw on and offset channels are only cleaned for conditions I will b
 
 - Even non-perturbation for DTR-M2 is shit but kind of salvageable.
 
-### DTR-
+### DTR-M6-8
 
 ### Kinematics for DTR M6-M8
 
 - M6-preDTX-000019 video is fairly poor, so keep that in mind in terms of the model performance.
+    
+- PreDTX
+    - M6:
+        - Length of thigh: 1.5
+        - Length of shank: 1.5
+    - M7:
+        - Length of thigh: 1.2
+        - Length of shank: 1.4
+- PostDTX
+    - M6:
+        - Length of thigh: 1.4
+        - Length of shank: 1.6
+    - M7:
+        - Length of thigh: 1.4
+        - Length of shank: 1.6
+    - M8:
+        - Length of thigh: 1.4
+        - Length of shank: 1.6
 

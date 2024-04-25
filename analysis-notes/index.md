@@ -98,8 +98,6 @@ videos_of_interest = [
     '/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/1yr/1yrDTRnoRosa-preDTX-kenzie-2024-01-31_analyzed/videos/1yrDTRnoRosa-M1-19102023_000007.avi',
     '/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/1yr/1yrDTRnoRosa-preDTX-kenzie-2024-01-31_analyzed/videos/1yrDTRnoRosa-M1-19102023_000008.avi',
     '/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/1yr/1yrDTRnoRosa-preDTX-kenzie-2024-01-31_analyzed/videos/1yrDTRnoRosa-M1-19102023_000018.avi',
-    
-
 ]
 
 ```

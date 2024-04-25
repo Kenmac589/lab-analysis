@@ -40,7 +40,7 @@ FilePathSet(path$);
 
 for tr%:=1 to ntrial% do										'repat this proces for each trial
 
-    Fileopen("*.CSV",8);                                        'opens the .CSV file for the trials
+    Fileopen("*.csv",8);                                        'opens the .CSV file for the trials
     
 '********************************Figures out teh size of teh .cvs file************************************    
 for I%:=1 to 3920 do												

@@ -194,7 +194,7 @@ def main():
 
     # Some things to set for plotting/saving
     manual_analysis = False
-    save_auto = True
+    save_auto = False
     lmos_filename = "./wt_data/wt5per_lmos.csv"
     rmos_filename = "./wt_data/wt5per_rmos.csv"
     figure_title = "Measurement of Stability For WT M5 with Perturbation"
