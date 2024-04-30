@@ -147,45 +147,6 @@ def extract_cycles(input_dataframe, swonset_channel="44 sw onset"):
     return step_cycles
 
 
-# TODO: Create method for approximating swing onset for DLCLive
-def swingon_estim(input_dataframe, toey="24 toey (cm)"):
-    """Full width half maxiumum calculation
-    Currently a work in progress
-    @param: motor_p_full_full: full length numpy array of selected motor
-    primitives
-
-    @return: mean_fwhm: Mean value for the width of the primitives
-    """
-
-    # Save
-    toey_values = input_dataframe[toey].values
-
-    for i in range(number_cycles):
-        current_primitive = motor_p_full[i * 200 : (i + 1) * 200, synergy_selection - 1]
-
-        # Find peaks
-        peaks, properties = sp.signal.find_peaks(
-            current_primitive, distance=40, width=2
-        )
-        max_ind = np.argmax(peaks)
-        # min_ind = np.argmin(mcurrent_primitive[0:max_ind])
-
-        # half_width_height = (mcurrent_primitive[max_ind] - mcurrent_primitive[min_ind]) / 2
-
-        # print("Manually Calculated", half_width_height)
-        max_width = properties["widths"][max_ind]
-        fwhl.append(max_width)
-        # fwhl_start = properties["left_ips"][max_ind]
-        # fwhl_stop = properties["right_ips"][max_ind]
-        # half_width_height = properties["width_heights"][max_ind]
-
-        print("Scipy calculated", properties["widths"][max_ind])
-        # print(peaks[max_ind])
-    fwhl = np.asarray(fwhl)
-
-    return fwhl
-
-
 def stance_duration(
     input_dataframe, swonset_channel="44 sw onset", swoffset_channel="45 sw offset"
 ):
@@ -340,7 +301,7 @@ def fir_filter(data, taps):
     return filtered
 
 
-# TODO: Need visit documentation to understand how to get slope
+# TODO: Need visit documentation to understand how to get slope same as spike2
 def spike_slope(input_dataframe, time_constant, comy="37 CoMy (cm)"):
 
     # Converting time constant to meaningful indices
