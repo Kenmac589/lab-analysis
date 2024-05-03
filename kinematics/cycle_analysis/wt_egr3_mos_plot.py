@@ -32,7 +32,7 @@ def condition_add(input_df, file_list, condition, limb, perturbation_state):
 
 wt_non_lmos = [
     "./wt_data/wt1non_lmos.csv",
-    "./wt_data/wt2non_lmos.csv",
+    # "./wt_data/wt2non_lmos.csv",
     "./wt_data/wt3non_lmos.csv",
     "./wt_data/wt4non_lmos.csv",
     "./wt_data/wt5non_lmos.csv",
@@ -40,23 +40,23 @@ wt_non_lmos = [
 
 wt_non_rmos = [
     "./wt_data/wt1non_rmos.csv",
-    "./wt_data/wt2non_rmos.csv",
+    # "./wt_data/wt2non_rmos.csv",
     "./wt_data/wt3non_rmos.csv",
     "./wt_data/wt4non_rmos.csv",
     "./wt_data/wt5non_rmos.csv",
 ]
 
 wt_per_lmos = [
-    "./wt_data/wt1per_lmos.csv",
-    "./wt_data/wt2per_lmos.csv",
+    # "./wt_data/wt1per_lmos.csv",
+    # "./wt_data/wt2per_lmos.csv",
     "./wt_data/wt3per_lmos.csv",
     "./wt_data/wt4per_lmos.csv",
     "./wt_data/wt5per_lmos.csv",
 ]
 
 wt_per_rmos = [
-    "./wt_data/wt1per_rmos.csv",
-    "./wt_data/wt2non_rmos.csv",
+    # "./wt_data/wt1per_rmos.csv",
+    # "./wt_data/wt2per_rmos.csv",
     "./wt_data/wt3per_rmos.csv",
     "./wt_data/wt4per_rmos.csv",
     "./wt_data/wt5per_rmos.csv",
@@ -64,14 +64,14 @@ wt_per_rmos = [
 
 wt_sin_lmos = [
     "./wt_data/wt1sin_lmos.csv",
-    "./wt_data/wt2sin_lmos.csv",
+    # "./wt_data/wt2sin_lmos.csv",
     "./wt_data/wt3sin_lmos.csv",
     "./wt_data/wt4sin_lmos.csv",
 ]
 
 wt_sin_rmos = [
     "./wt_data/wt1sin_rmos.csv",
-    "./wt_data/wt2sin_rmos.csv",
+    # "./wt_data/wt2sin_rmos.csv",
     "./wt_data/wt3sin_rmos.csv",
     "./wt_data/wt4sin_rmos.csv",
 ]
@@ -79,7 +79,7 @@ wt_sin_rmos = [
 # For Egr3
 egr3_non_lmos = [
     "./egr3_data/egr3_6non_lmos.csv",
-    "./egr3_data/egr3_7non_lmos.csv",
+    # "./egr3_data/egr3_7non_lmos.csv",
     "./egr3_data/egr3_8non_lmos.csv",
     "./egr3_data/egr3_9non_lmos.csv",
     "./egr3_data/egr3_10non_lmos.csv",
@@ -87,7 +87,7 @@ egr3_non_lmos = [
 
 egr3_non_rmos = [
     "./egr3_data/egr3_6non_rmos.csv",
-    "./egr3_data/egr3_7non_rmos.csv",
+    # "./egr3_data/egr3_7non_rmos.csv",
     "./egr3_data/egr3_8non_rmos.csv",
     "./egr3_data/egr3_9non_rmos.csv",
     "./egr3_data/egr3_10non_rmos.csv",
@@ -95,8 +95,8 @@ egr3_non_rmos = [
 
 egr3_per_lmos = [
     "./egr3_data/egr3_6per_lmos.csv",
-    "./egr3_data/egr3_7per_lmos.csv",
-    "./egr3_data/egr3_8per_lmos.csv",
+    # "./egr3_data/egr3_7per_lmos.csv",
+    # "./egr3_data/egr3_8per_lmos.csv",
     "./egr3_data/egr3_9per_lmos-1.csv",
     "./egr3_data/egr3_9per_lmos-2.csv",
     "./egr3_data/egr3_10per_lmos-1.csv",
@@ -105,8 +105,8 @@ egr3_per_lmos = [
 
 egr3_per_rmos = [
     "./egr3_data/egr3_6per_rmos.csv",
-    "./egr3_data/egr3_7per_rmos.csv",
-    "./egr3_data/egr3_8per_rmos.csv",
+    # "./egr3_data/egr3_7per_rmos.csv",
+    # "./egr3_data/egr3_8per_rmos.csv",
     "./egr3_data/egr3_9per_rmos-1.csv",
     "./egr3_data/egr3_9per_rmos-2.csv",
     "./egr3_data/egr3_10per_rmos-1.csv",
@@ -140,7 +140,6 @@ mos_df = condition_add(mos_df, wt_per_lmos, "WT", "Left", "Perturbation")
 mos_df = condition_add(mos_df, wt_per_rmos, "WT", "Right", "Perturbation")
 mos_df = condition_add(mos_df, wt_sin_lmos, "WT", "Left", "Sinusoidal")
 mos_df = condition_add(mos_df, wt_sin_rmos, "WT", "Right", "Sinusoidal")
-
 mos_df = condition_add(mos_df, egr3_non_lmos, "Egr3", "Left", "Non-Perturbation")
 mos_df = condition_add(mos_df, egr3_non_rmos, "Egr3", "Right", "Non-Perturbation")
 mos_df = condition_add(mos_df, egr3_per_lmos, "Egr3", "Left", "Perturbation")
@@ -159,12 +158,12 @@ sns.set(style="white", font_scale=1.5, rc=custom_params)
 
 fig, axs = plt.subplots(1, 2)
 
-limb_pairs = [
-    [("Left", "Non-Perturbation"), ("Left", "Perturbation")],
-    [("Left", "Non-Perturbation"), ("Left", "Sinusoidal")],
-    [("Right", "Non-Perturbation"), ("Right", "Perturbation")],
-    [("Right", "Non-Perturbation"), ("Right", "Sinusoidal")],
-]
+# limb_pairs = [
+#     [("Left", "Non-Perturbation"), ("Left", "Perturbation")],
+#     [("Left", "Non-Perturbation"), ("Left", "Sinusoidal")],
+#     [("Right", "Non-Perturbation"), ("Right", "Perturbation")],
+#     [("Right", "Non-Perturbation"), ("Right", "Sinusoidal")],
+# ]
 
 combo_pairs = [
     [("Non-Perturbation"), ("Perturbation")],
@@ -174,34 +173,38 @@ combo_legend = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
 perturbation_state_order = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
 
 # Plot for limb comparison
-limb_plot_params = {
-    "data": mos_df,
-    "x": "Limb",
-    "y": "MoS",
-    "hue": "Perturbation State",
-    "hue_order": perturbation_state_order,
-}
+# limb_plot_params = {
+#     "data": mos_df,
+#     "x": "Limb",
+#     "y": "MoS",
+#     "hue": "Perturbation State",
+#     "hue_order": perturbation_state_order,
+# }
 
-fig.suptitle(
-    "Margin of Lateral Dynamic Lateral Stability (MoS) between WT and Egr3 KO Mice"
-)
+fig.suptitle("Margin of Lateral Dynamic Stability (MoS) between WT and Egr3 KO Mice")
 
-axs[0].set_title("MoS for Egr3 by Limb")
-limb_comp = sns.violinplot(**limb_plot_params, ci=95, capsize=0.05, ax=axs[0])
+# axs[0].set_title("MoS for Egr3 by Limb")
+# limb_comp = sns.violinplot(**limb_plot_params, ci=95, capsize=0.05, ax=axs[0])
 # axs[0].legend(fontsize=12, bbox_to_anchor=(2.49, 0.7))
-axs[0].legend(fontsize=12, loc="best")
-annotator = Annotator(limb_comp, limb_pairs, **limb_plot_params)
-annotator.new_plot(limb_comp, limb_pairs, plot="violinplot", **limb_plot_params)
-annotator.configure(
-    hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside"
-)
-annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
+# axs[0].legend(fontsize=12, loc="best")
+# annotator = Annotator(limb_comp, limb_pairs, **limb_plot_params)
+# annotator.new_plot(limb_comp, limb_pairs, plot="violinplot", **limb_plot_params)
+# annotator.configure(
+#     hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside"
+# )
+# annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 
 # Intercondition Comparison
 condition_pairs = [
+    # Wildtype comparisons within
+    [("WT", "Non-Perturbation"), ("WT", "Sinusoidal")],
+    [("WT", "Non-Perturbation"), ("WT", "Perturbation")],
+    [("WT", "Perturbation"), ("WT", "Sinusoidal")],
+    # Egr to Wild type comparisons
     [("WT", "Non-Perturbation"), ("Egr3", "Non-Perturbation")],
     [("WT", "Perturbation"), ("Egr3", "Perturbation")],
     [("WT", "Sinusoidal"), ("Egr3", "Sinusoidal")],
+    # Egr3 comparisons within
     [("Egr3", "Non-Perturbation"), ("Egr3", "Perturbation")],
     [("Egr3", "Sinusoidal"), ("Egr3", "Perturbation")],
     [("Egr3", "Non-Perturbation"), ("Egr3", "Sinusoidal")],
@@ -215,6 +218,19 @@ cond_combo_plot_params = {
     "hue": "Perturbation State",
     "hue_order": perturbation_state_order,
 }
+
+axs[0].set_title("MoS between conditions")
+cond_combo_comp = sns.barplot(**cond_combo_plot_params, ci=95, capsize=0.05, ax=axs[0])
+axs[0].legend(loc="upper right", fontsize=12)
+annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
+annotator.new_plot(
+    cond_combo_comp, condition_pairs, plot="barplot", **cond_combo_plot_params
+)
+annotator.configure(
+    hide_non_significant=True, test="t-test_ind", text_format="star", loc="inside"
+)
+annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
+
 
 axs[1].set_title("MoS between conditions")
 cond_combo_comp = sns.violinplot(

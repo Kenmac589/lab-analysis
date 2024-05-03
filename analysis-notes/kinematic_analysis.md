@@ -8,6 +8,18 @@
 
 # Measurement of Dynamic Lateral Stability (MoS)
 
+NOTE: Really important information on certain data files that are problematic.
+- Review:
+    - wt-2-non
+    - wt-1-per
+    - wt-2-per
+    - wt-2-sin
+    - egr3-7-non
+    - egr3-7-per
+    - egr3-8-per
+- General trends seem to be the same
+
+
 ## Egr3 and WT sets
 
 - Mostly already done, however, I'm using extra channels to clean some stuff up.

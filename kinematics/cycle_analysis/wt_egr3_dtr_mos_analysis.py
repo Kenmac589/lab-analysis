@@ -203,7 +203,7 @@ con_mos_combo = mos_df.drop(columns=["Limb"])
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
 sns.set(style="white", font_scale=1.5, rc=custom_params)
 
-# fig, axs = plt.subplots(1, 2)
+fig, axs = plt.subplots(1, 2)
 
 # limb_pairs = [
 #     [("Left", "Non-Perturbation"), ("Left", "Perturbation")],
@@ -228,9 +228,7 @@ perturbation_state_order = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
 #     "hue_order": perturbation_state_order,
 # }
 #
-# fig.suptitle(
-#     "Margin of Lateral Dynamic Lateral Stability (MoS) between WT and Egr3 KO Mice"
-# )
+fig.suptitle("MoS between WT, Egr3 KO and Pre-DTX Mice")
 #
 # axs[0].set_title("MoS for Egr3 by Limb")
 # limb_comp = sns.violinplot(**limb_plot_params, ci=95, capsize=0.05, ax=axs[0])
@@ -245,15 +243,19 @@ perturbation_state_order = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
 
 # Intercondition Comparison
 condition_pairs = [
-    [("WT", "Non-Perturbation"), ("Pre-DTX", "Non-Perturbation")],
-    [("WT", "Sinusoidal"), ("Pre-DTX", "Sinusoidal")],
-    [("WT", "Perturbation"), ("Pre-DTX", "Perturbation")],
+    # Comparison within wildtype condition
     [("WT", "Non-Perturbation"), ("WT", "Perturbation")],
     [("WT", "Sinusoidal"), ("WT", "Perturbation")],
     [("WT", "Non-Perturbation"), ("WT", "Sinusoidal")],
+    # Comparison between Wildtype and Pre-DTX
+    [("WT", "Non-Perturbation"), ("Pre-DTX", "Non-Perturbation")],
+    [("WT", "Sinusoidal"), ("Pre-DTX", "Sinusoidal")],
+    [("WT", "Perturbation"), ("Pre-DTX", "Perturbation")],
+    # Comparison within Egr3 condition
     [("Egr3", "Non-Perturbation"), ("Egr3", "Perturbation")],
     [("Egr3", "Sinusoidal"), ("Egr3", "Perturbation")],
     [("Egr3", "Non-Perturbation"), ("Egr3", "Sinusoidal")],
+    # Comparison within Pre-DTX condition
     [("Pre-DTX", "Non-Perturbation"), ("Pre-DTX", "Perturbation")],
     [("Pre-DTX", "Sinusoidal"), ("Pre-DTX", "Perturbation")],
     [("Pre-DTX", "Non-Perturbation"), ("Pre-DTX", "Sinusoidal")],
@@ -268,9 +270,23 @@ cond_combo_plot_params = {
     "hue_order": perturbation_state_order,
 }
 
-plt.title("MoS between conditions")
-cond_combo_comp = sns.violinplot(**cond_combo_plot_params, ci=95, capsize=0.05)
-plt.legend(loc="upper right", fontsize=12)
+# axs[0].set_title("MoS between conditions")
+cond_combo_comp = sns.barplot(**cond_combo_plot_params, ci=95, capsize=0.05, ax=axs[0])
+axs[0].legend(loc="upper right", fontsize=12)
+annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
+annotator.new_plot(
+    cond_combo_comp, condition_pairs, plot="barplot", **cond_combo_plot_params
+)
+annotator.configure(
+    hide_non_significant=True, test="t-test_ind", text_format="star", loc="inside"
+)
+
+annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
+# axs[1].set_title("MoS between conditions")
+cond_combo_comp = sns.violinplot(
+    **cond_combo_plot_params, ci=95, capsize=0.05, ax=axs[1]
+)
+axs[1].legend(loc="upper right", fontsize=12)
 annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
 annotator.new_plot(
     cond_combo_comp, condition_pairs, plot="violinplot", **cond_combo_plot_params

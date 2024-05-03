@@ -395,6 +395,7 @@ def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual
     :param input_dataframe: spike file input as *.csv
     :param toey: spike channel with y coordinate for the toe
     :param hipy: spike channel with y coordinate for the hip
+    :param manual: (Boolean) whether to manually label regions where foot is on ground
 
     :return hip_height: returns hip height in meters (cm)
     """
@@ -630,114 +631,7 @@ def cycle_period_summary(directory_path):
 # Main Code Body
 def main():
 
-    # Test for speed of step width
-    # wt1nondf = pd.read_csv("./wt_1_non-perturbation.csv")
-    # wt2nondf = pd.read_csv("./wt-2-non-perturbation-all.txt", delimiter=",", header=0)
-    # wt2perdf = pd.read_csv("./wt-2-perturbation-all.txt", delimiter=",", header=0)
-    # wt4nondf = pd.read_csv("./wt_4_non-perturbation.csv")
-    # wt4perdf = pd.read_csv("./wt_4_perturbation.csv")
-    # wt5nondf = pd.read_csv("./wt-5-non-perturbation-all.txt", delimiter=",", header=0)
-    # wt5perdf = pd.read_csv("./wt-5-perturbation-all.txt", delimiter=",", header=0)
-
-    # For Egr3 KO's
-    egr3_6nondf = pd.read_csv(
-        "./egr3-6-non-perturbation-all.txt", delimiter=",", header=0
-    )
-    egr3_7nondf = pd.read_csv(
-        "./egr3-7-non-perturbation-all.txt", delimiter=",", header=0
-    )
-    egr3_8nondf = pd.read_csv(
-        "./egr3-8-non-perturbation-all.txt", delimiter=",", header=0
-    )
-    egr3_9nondf = pd.read_csv(
-        "./egr3-9-non-perturbation-all.txt", delimiter=",", header=0
-    )
-    egr3_10nondf = pd.read_csv(
-        "./egr3-10-non-perturbation-all.txt", delimiter=",", header=0
-    )
-    egr3_8perdf = pd.read_csv("./egr3-8-perturbation-all.txt", delimiter=",", header=0)
-    # wt1xcom = pd.read_csv("./wt-1_non-perturbation-cop.txt")
-    # spike_com = wt1xcom["37a CoMy (cm)"].values
-    # spike_xcom = wt1xcom["67 xCoM"].values
-    # Getting stance duration for all 4 limbs
-    # lhl_st_lengths, lhl_st_timings = stance_duration(
-    #     wt4nondf, swonset_channel="57 lHL swon", swoffset_channel="58 lHL swoff"
-    # )
-    # lfl_st_lengths, lfl_st_timings = stance_duration(
-    #     wt4nondf, swonset_channel="53 lFL swon", swoffset_channel="54 lFL swoff"
-    # )
-    # rhl_st_lengths, rhl_st_timings = stance_duration(
-    #     wt4nondf, swonset_channel="55 rHL swon", swoffset_channel="56 rHL swoff"
-    # )
-    # rfl_st_lengths, rfl_st_timings = stance_duration(wt4nondf)
-    # print(f"Right stance duration {rfl_st_lengths}\n")
-    # print(f"Right stance phase beginning {rfl_st_timings}\n")
-
-    # # For forelimb
-    # fl_step_widths = step_width(
-    #     wt4nondf, rfl_st_timings, lfl_st_timings, rl_y="35 FRy (cm)", ll_y="33 FLy (cm)"
-    # )
-    # print(fl_step_widths)
-    # hl_step_widths = step_width(
-    #     wt4nondf, rhl_st_timings, lhl_st_timings, rl_y="30 HRy (cm)", ll_y="28 HLy (cm)"
-    # )
-
-    # print(
-    #     copressure(
-    #         wt1nondf, ds_channel="59 Left DS", hl_channel="28 HLy", fl_channel="33 FLy"
-    #     )
-    # )
-
-    # Getting hip heights
-    # wt2non_hip_h = hip_height(wt2nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    # wt2per_hip_h = hip_height(wt2perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    # wt4non_hip_h = hip_height(wt4nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    # wt4non_hip_h = hip_height(wt4nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    # wt4per_hip_h = hip_height(wt4perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    # wt5non_hip_h = hip_height(wt5nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-    # wt5per_hip_h = hip_height(wt5perdf, toey="24 toey (cm)", hipy="16 Hipy (cm)")
-
-    # egr3_6non_hip_h = hip_height(
-    #     egr3_6nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=True
-    # )
-    # egr3_7non_hip_h = hip_height(
-    #     egr3_7nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=True
-    # )
-    egr3_8non_hip_h = hip_height(
-        egr3_8nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=False
-    )
-    # egr3_9non_hip_h = hip_height(
-    #     egr3_9nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=True
-    # )
-    egr3_8perdf_hip_h = hip_height(egr3_8perdf)
-    # egr3_10non_hip_h = hip_height(
-    #     egr3_10nondf, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=True
-    # )
-
-    # print(f"Egr3 M6  Hip manually {egr3_6non_hip_h}")
-    # print(f"Egr3 M7  Hip manually {egr3_7non_hip_h}")
-    print(f"Egr3 M8  Hip manually {egr3_8non_hip_h}")
-    print(f"Egr3 M8 Hip {egr3_8perdf_hip_h}")
-    # print(f"Egr3 M9  Hip manually {egr3_9non_hip_h}")
-    # print(f"Egr3 M10 Hip manually {egr3_10non_hip_h}")
-
-    # Working through xcom caluclation to be better
-    # com = wt1nondf["37 CoMy"].values
-    # func_test = slope(com, 1)
-    # vcom = weighted_slope(wt1nondf, 6, comy="37 CoMy")
-    # # xcom_wt1 = xcom(wt1nondf, hip_h, comy="37 CoMy")
-    #
-    # # print(vcom)
-    # fig, axs = plt.subplots(3)
-    # legend = ["CoMy", "xCoM"]
-    # axs[0].plot(com)
-    # # axs[0].plot(xcom_wt1)
-    # axs[0].legend(legend)
-    # axs[1].plot(spike_xcom)
-    # axs[1].plot(spike_com)
-    # axs[1].legend(legend)
-    # axs[2].plot(func_test)
-    # plt.show()
+    print("Currently no tests in main")
 
 
 if __name__ == "__main__":
