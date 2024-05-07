@@ -38,7 +38,7 @@ def main():
 
     wt_non_lmos = [
         "./wt_data/wt1non_lmos.csv",
-        "./wt_data/wt2non_lmos.csv",
+        # "./wt_data/wt2non_lmos.csv",
         "./wt_data/wt3non_lmos.csv",
         "./wt_data/wt4non_lmos.csv",
         "./wt_data/wt5non_lmos.csv",
@@ -46,23 +46,23 @@ def main():
 
     wt_non_rmos = [
         "./wt_data/wt1non_rmos.csv",
-        "./wt_data/wt2non_rmos.csv",
+        # "./wt_data/wt2non_rmos.csv",
         "./wt_data/wt3non_rmos.csv",
         "./wt_data/wt4non_rmos.csv",
         "./wt_data/wt5non_rmos.csv",
     ]
 
     wt_per_lmos = [
-        "./wt_data/wt1per_lmos.csv",
-        "./wt_data/wt2per_lmos.csv",
+        # "./wt_data/wt1per_lmos.csv",
+        # "./wt_data/wt2per_lmos.csv",
         "./wt_data/wt3per_lmos.csv",
         "./wt_data/wt4per_lmos.csv",
         "./wt_data/wt5per_lmos.csv",
     ]
 
     wt_per_rmos = [
-        "./wt_data/wt1per_rmos.csv",
-        "./wt_data/wt2non_rmos.csv",
+        # "./wt_data/wt1per_rmos.csv",
+        # "./wt_data/wt2non_rmos.csv",
         "./wt_data/wt3per_rmos.csv",
         "./wt_data/wt4per_rmos.csv",
         "./wt_data/wt5per_rmos.csv",
@@ -70,14 +70,14 @@ def main():
 
     wt_sin_lmos = [
         "./wt_data/wt1sin_lmos.csv",
-        "./wt_data/wt2sin_lmos.csv",
+        # "./wt_data/wt2sin_lmos.csv",
         "./wt_data/wt3sin_lmos.csv",
         "./wt_data/wt4sin_lmos.csv",
     ]
 
     wt_sin_rmos = [
         "./wt_data/wt1sin_rmos.csv",
-        "./wt_data/wt2sin_rmos.csv",
+        # "./wt_data/wt2sin_rmos.csv",
         "./wt_data/wt3sin_rmos.csv",
         "./wt_data/wt4sin_rmos.csv",
     ]
@@ -85,7 +85,7 @@ def main():
     # For Egr3
     egr3_non_lmos = [
         "./egr3_data/egr3_6non_lmos.csv",
-        "./egr3_data/egr3_7non_lmos.csv",
+        # "./egr3_data/egr3_7non_lmos.csv",
         "./egr3_data/egr3_8non_lmos.csv",
         "./egr3_data/egr3_9non_lmos.csv",
         "./egr3_data/egr3_10non_lmos.csv",
@@ -93,7 +93,7 @@ def main():
 
     egr3_non_rmos = [
         "./egr3_data/egr3_6non_rmos.csv",
-        "./egr3_data/egr3_7non_rmos.csv",
+        # "./egr3_data/egr3_7non_rmos.csv",
         "./egr3_data/egr3_8non_rmos.csv",
         "./egr3_data/egr3_9non_rmos.csv",
         "./egr3_data/egr3_10non_rmos.csv",
@@ -101,8 +101,8 @@ def main():
 
     egr3_per_lmos = [
         "./egr3_data/egr3_6per_lmos.csv",
-        "./egr3_data/egr3_7per_lmos.csv",
-        "./egr3_data/egr3_8per_lmos.csv",
+        # "./egr3_data/egr3_7per_lmos.csv",
+        # "./egr3_data/egr3_8per_lmos.csv",
         "./egr3_data/egr3_9per_lmos-1.csv",
         "./egr3_data/egr3_9per_lmos-2.csv",
         "./egr3_data/egr3_10per_lmos-1.csv",
@@ -111,8 +111,8 @@ def main():
 
     egr3_per_rmos = [
         "./egr3_data/egr3_6per_rmos.csv",
-        "./egr3_data/egr3_7per_rmos.csv",
-        "./egr3_data/egr3_8per_rmos.csv",
+        # "./egr3_data/egr3_7per_rmos.csv",
+        # "./egr3_data/egr3_8per_rmos.csv",
         "./egr3_data/egr3_9per_rmos-1.csv",
         "./egr3_data/egr3_9per_rmos-2.csv",
         "./egr3_data/egr3_10per_rmos-1.csv",

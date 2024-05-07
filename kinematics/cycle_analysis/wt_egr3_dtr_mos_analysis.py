@@ -131,6 +131,7 @@ egr3_sin_rmos = [
     "./egr3_data/egr3_10sin_rmos.csv",
 ]
 
+
 dtrpre_non_lmos = [
     "./dtr_data/predtx/predtx_2non_lmos.csv",
     "./dtr_data/predtx/predtx_3non_lmos.csv",
@@ -172,6 +173,30 @@ dtrpre_sin_rmos = [
     "./dtr_data/predtx/predtx_5sin_rmos.csv",
 ]
 
+dtrpost_non_lmos = [
+    "./dtr_data/postdtx/postdtx_2non_lmos.csv",
+]
+
+dtrpost_non_rmos = [
+    "./dtr_data/postdtx/postdtx_2non_rmos.csv",
+]
+
+dtrpost_per_lmos = [
+    "./dtr_data/postdtx/postdtx_2per_lmos.csv",
+]
+
+dtrpost_per_rmos = [
+    "./dtr_data/postdtx/postdtx_2per_rmos.csv",
+]
+
+dtrpost_sin_lmos = [
+    "./dtr_data/postdtx/postdtx_2sin_lmos.csv",
+]
+
+dtrpost_sin_rmos = [
+    "./dtr_data/postdtx/postdtx_2sin_rmos.csv",
+]
+
 mos_df = df(columns=["Condition", "Limb", "Perturbation State", "MoS"])
 
 mos_df = condition_add(mos_df, wt_non_lmos, "WT", "Left", "Non-Perturbation")
@@ -194,6 +219,15 @@ mos_df = condition_add(mos_df, dtrpre_per_lmos, "Pre-DTX", "Left", "Perturbation
 mos_df = condition_add(mos_df, dtrpre_per_rmos, "Pre-DTX", "Right", "Perturbation")
 mos_df = condition_add(mos_df, dtrpre_sin_lmos, "Pre-DTX", "Left", "Sinusoidal")
 mos_df = condition_add(mos_df, dtrpre_sin_rmos, "Pre-DTX", "Right", "Sinusoidal")
+
+mos_df = condition_add(mos_df, dtrpost_non_lmos, "Post-DTX", "Left", "Non-Perturbation")
+mos_df = condition_add(
+    mos_df, dtrpost_non_rmos, "Post-DTX", "Right", "Non-Perturbation"
+)
+mos_df = condition_add(mos_df, dtrpost_per_lmos, "Post-DTX", "Left", "Perturbation")
+mos_df = condition_add(mos_df, dtrpost_per_rmos, "Post-DTX", "Right", "Perturbation")
+mos_df = condition_add(mos_df, dtrpost_sin_lmos, "Post-DTX", "Left", "Sinusoidal")
+mos_df = condition_add(mos_df, dtrpost_sin_rmos, "Post-DTX", "Right", "Sinusoidal")
 
 # For just comparing between perturbation
 mos_combo = mos_df.drop(columns=["Limb"])

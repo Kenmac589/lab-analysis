@@ -548,7 +548,7 @@ def mos(
 ):
 
     # Remove periods where it is not present or not valid
-    left_band = np.percentile(xcom, q=50)
+    # left_band = np.percentile(xcom, q=50)
     rightcop = np.where(rightcop == 0.0, np.nan, rightcop)
     leftcop = np.where(leftcop == 0.0, np.nan, leftcop)
     # rightcop[rightcop < right_band] = np.nan

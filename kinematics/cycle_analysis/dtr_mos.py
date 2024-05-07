@@ -79,6 +79,8 @@ def cop_filter(input_dataframe, ds_timings, cop_channel):
 
 def main():
 
+    # Pre-DTX mice
+
     # Need to get hip heights for xcom
     # dtrpre_2non = pd.read_csv(
     #     "./dtr_data/predtx/dtr-pre-2-non-all.txt", delimiter=",", header=0
@@ -108,35 +110,46 @@ def main():
     # dtrpre_5per = pd.read_csv(
     #     "./dtr_data/predtx/dtr-pre-5-per-all-2.txt", delimiter=",", header=0
     # )
-    dtrpre_5sin = pd.read_csv(
-        "./dtr_data/predtx/dtr-pre-5-sin-all.txt", delimiter=",", header=0
-    )
+    # dtrpre_5sin = pd.read_csv(
+    #     "./dtr_data/predtx/dtr-pre-5-sin-all.txt", delimiter=",", header=0
+    # )
+
+    # Post-DTX mice
 
     # For MoS
+    # dtrpost_2non = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-2-non-xcom.txt", delimiter=",", header=0
+    # )
+    # dtrpost_2per = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-2-per-xcom.txt", delimiter=",", header=0
+    # )
+    dtrpost_2sin = pd.read_csv(
+        "./dtr_data/postdtx/dtr-post-2-sin-xcom.txt", delimiter=",", header=0
+    )
 
     # Some things to set for plotting/saving
     manual_analysis = False
-    save_auto = False
-    lmos_filename = "./dtr_data/predtx/predtx_5sin_lmos.csv"
-    rmos_filename = "./dtr_data/predtx/predtx_5sin_rmos.csv"
+    save_auto = True
+    lmos_filename = "./dtr_data/postdtx/postdtx_2sin_lmos.csv"
+    rmos_filename = "./dtr_data/postdtx/postdtx_2sin_rmos.csv"
     figure_title = (
-        "Measurement of Stability For DTR M5 with Sinusoidal Perturbation pre-DTX"
+        "Measurement of Stability For DTR M2 with Sinusoidal Perturbation post-DTX"
     )
 
     # Grabbing individual channels
-    xcom = dtrpre_5sin["v1 xCoM"].to_numpy(dtype=float)
-    leftcop = dtrpre_5sin["v3 L COP"].to_numpy(dtype=float)
-    rightcop = dtrpre_5sin["v2 R COP"].to_numpy(dtype=float)
-    left_DS = dtrpre_5sin["50 LDS cle"].to_numpy(dtype=float)
-    right_DS = dtrpre_5sin["49 RDS cle"].to_numpy(dtype=float)
+    xcom = dtrpost_2sin["v1 xCoM"].to_numpy(dtype=float)
+    leftcop = dtrpost_2sin["v3 L COP"].to_numpy(dtype=float)
+    rightcop = dtrpost_2sin["v2 R COP"].to_numpy(dtype=float)
+    left_DS = dtrpost_2sin["50 LDS cle"].to_numpy(dtype=float)
+    right_DS = dtrpost_2sin["49 RDS cle"].to_numpy(dtype=float)
 
     # Remove periods where it is not present or not valid
     # leftcop = np.where(leftcop == 0.0, np.nan, leftcop)
     rightcop = np.where(rightcop == 0.0, np.nan, rightcop)
-    left_band = np.percentile(xcom, q=50)
+    leftcop = np.where(leftcop == 0.0, np.nan, leftcop)
     # right_band = 2
     # rightcop[rightcop < right_band] = np.nan
-    leftcop[leftcop < left_band] = np.nan
+    # leftcop[leftcop < left_band] = np.nan
 
     lmos, rmos, xcom_peaks, xcom_troughs = ls.mos(
         xcom,

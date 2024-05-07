@@ -21,11 +21,11 @@
     - For the **right** side it will be 
         - `((Ch(30) + Ch(35)) / 2) * Ch(60)` for Egr3/WT
         - `((Ch(36) + Ch(40)) / 2) * Ch(51)` for DTR 2-3
-        - `((Ch(36) + Ch(40)) / 2) * Ch(49)` for DTR 5
+        - `((Ch(36) + Ch(40)) / 2) * Ch(49)` for DTR 5 pre
     - For the **left** side it would be
         - `((Ch(33) + Ch(28)) / 2) * Ch(59)` for Egr3/WT
         - `((Ch(38) + Ch(34)) / 2) * Ch(52)` for Egr3/WT
-        - `((Ch(38) + Ch(34)) / 2) * Ch(50)` for DTR 5
+        - `((Ch(38) + Ch(34)) / 2) * Ch(50)` for DTR 5 pre
     - These are based on the y coordinates for the respective limbs multiplied by the COP level marker 
 - For double support
     - Forelimb sw of to hindlimb swon
