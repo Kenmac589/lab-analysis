@@ -175,26 +175,40 @@ dtrpre_sin_rmos = [
 
 dtrpost_non_lmos = [
     "./dtr_data/postdtx/postdtx_2non_lmos.csv",
+    "./dtr_data/postdtx/postdtx_3non_lmos.csv",
+    "./dtr_data/postdtx/postdtx_5non_lmos.csv",
 ]
 
 dtrpost_non_rmos = [
     "./dtr_data/postdtx/postdtx_2non_rmos.csv",
+    "./dtr_data/postdtx/postdtx_3non_rmos.csv",
+    "./dtr_data/postdtx/postdtx_5non_rmos.csv",
 ]
 
 dtrpost_per_lmos = [
     "./dtr_data/postdtx/postdtx_2per_lmos.csv",
+    "./dtr_data/postdtx/postdtx_3per_lmos.csv",
+    "./dtr_data/postdtx/postdtx_5per_lmos-1.csv",
+    "./dtr_data/postdtx/postdtx_5per_lmos-2.csv",
 ]
 
 dtrpost_per_rmos = [
     "./dtr_data/postdtx/postdtx_2per_rmos.csv",
+    "./dtr_data/postdtx/postdtx_3per_rmos.csv",
+    "./dtr_data/postdtx/postdtx_5per_rmos-1.csv",
+    "./dtr_data/postdtx/postdtx_5per_rmos-2.csv",
 ]
 
 dtrpost_sin_lmos = [
     "./dtr_data/postdtx/postdtx_2sin_lmos.csv",
+    # "./dtr_data/postdtx/postdtx_3sin_lmos.csv",
+    "./dtr_data/postdtx/postdtx_5sin_lmos.csv",
 ]
 
 dtrpost_sin_rmos = [
     "./dtr_data/postdtx/postdtx_2sin_rmos.csv",
+    # "./dtr_data/postdtx/postdtx_3sin_rmos.csv",
+    "./dtr_data/postdtx/postdtx_5sin_rmos.csv",
 ]
 
 mos_df = df(columns=["Condition", "Limb", "Perturbation State", "MoS"])
@@ -237,7 +251,8 @@ con_mos_combo = mos_df.drop(columns=["Limb"])
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
 sns.set(style="white", font_scale=1.5, rc=custom_params)
 
-fig, axs = plt.subplots(1, 2)
+# Dual plot figure was nice until 4 conditions happened
+# fig, axs = plt.subplots(1, 2)
 
 # limb_pairs = [
 #     [("Left", "Non-Perturbation"), ("Left", "Perturbation")],
@@ -262,7 +277,7 @@ perturbation_state_order = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
 #     "hue_order": perturbation_state_order,
 # }
 #
-fig.suptitle("MoS between WT, Egr3 KO and Pre-DTX Mice")
+plt.title("MoS between WT, Egr3 KO, and DTX Mice Pre and Post Injection")
 #
 # axs[0].set_title("MoS for Egr3 by Limb")
 # limb_comp = sns.violinplot(**limb_plot_params, ci=95, capsize=0.05, ax=axs[0])
@@ -293,6 +308,10 @@ condition_pairs = [
     [("Pre-DTX", "Non-Perturbation"), ("Pre-DTX", "Perturbation")],
     [("Pre-DTX", "Sinusoidal"), ("Pre-DTX", "Perturbation")],
     [("Pre-DTX", "Non-Perturbation"), ("Pre-DTX", "Sinusoidal")],
+    # Comparison within Post-DTX condition
+    [("Post-DTX", "Non-Perturbation"), ("Post-DTX", "Perturbation")],
+    [("Post-DTX", "Sinusoidal"), ("Post-DTX", "Perturbation")],
+    [("Post-DTX", "Non-Perturbation"), ("Post-DTX", "Sinusoidal")],
 ]
 
 perturbation_state_order = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
@@ -305,29 +324,29 @@ cond_combo_plot_params = {
 }
 
 # axs[0].set_title("MoS between conditions")
-cond_combo_comp = sns.barplot(**cond_combo_plot_params, ci=95, capsize=0.05, ax=axs[0])
-axs[0].legend(loc="upper right", fontsize=12)
-annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
-annotator.new_plot(
-    cond_combo_comp, condition_pairs, plot="barplot", **cond_combo_plot_params
-)
-annotator.configure(
-    hide_non_significant=True, test="t-test_ind", text_format="star", loc="inside"
-)
-
-annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
-# axs[1].set_title("MoS between conditions")
-cond_combo_comp = sns.violinplot(
-    **cond_combo_plot_params, ci=95, capsize=0.05, ax=axs[1]
-)
-axs[1].legend(loc="upper right", fontsize=12)
+cond_combo_comp = sns.violinplot(**cond_combo_plot_params, ci=95, capsize=0.05)
+plt.legend(loc="upper right", fontsize=12)
 annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
 annotator.new_plot(
     cond_combo_comp, condition_pairs, plot="violinplot", **cond_combo_plot_params
 )
 annotator.configure(
-    hide_non_significant=True, test="t-test_ind", text_format="star", loc="inside"
+    hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside"
 )
+
 annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
+# axs[1].set_title("MoS between conditions")
+# cond_combo_comp = sns.violinplot(
+#     **cond_combo_plot_params, ci=95, capsize=0.05, ax=axs[1]
+# )
+# axs[1].legend(loc="upper right", fontsize=12)
+# annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
+# annotator.new_plot(
+#     cond_combo_comp, condition_pairs, plot="violinplot", **cond_combo_plot_params
+# )
+# annotator.configure(
+#     hide_non_significant=True, test="t-test_ind", text_format="star", loc="inside"
+# )
+# annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 
 plt.show()

@@ -47,9 +47,10 @@ df, bodyparts, scorer = dlck.load_data(
 config_path = "/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/1yr/1yrDTRnoRosa-preDTX-kenzie-2024-01-31_analyzed/config.yaml"
 
 # Interactive Visualizer
-# non_perturbation_input = "./1-6yrRAP-M1-preDTX_000000DLC_resnet50_1yrDTRnoRosa-preDTXJan31shuffle1_1030000.h5"
-# viz = Visualizer2D(config_path, non_perturbation_input)
-# viz.view(show_axes=True, show_grid=True)
+non_perturbation_input = "./1-6yrRAP-M1-preDTX_000000DLC_resnet50_1yrDTRnoRosa-preDTXJan31shuffle1_1030000.h5"
+viz = Visualizer2D(config_path, non_perturbation_input)
+viz.view(show_axes=True, show_grid=True)
+plt.show()
 
 # Compute for all bodyparts
 df_vel = dlck.compute_velocity(df, bodyparts=["all"], filter_window=3, order=1)

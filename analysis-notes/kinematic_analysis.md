@@ -46,21 +46,60 @@ NOTE: Really important information on certain data files that are problematic.
 - Seeing some weird stuff with the Egr3-7 mouse check videos
 - NOTE: WT M2 and Egr3 M7 are kind of looking sketchy imo.
 
-## For the DTR set
+# DTR Mice
 
 NOTE: For the sw on and offset channels are only cleaned for conditions I will be using. Don't just go ahead and think they are cleaned and can go to the server.
 
-### DTR-M1
+## DTR-M1
 
 - Not really useable as there is nothing for any perturbation for the preDTX.
 
-### DTR-M2
+## DTR-M2
 
+### DTR-M2-PreDTX
+
+- 
+ 
 - Even non-perturbation for DTR-M2 is shit but kind of salvageable.
 
-### DTR-M6-8
+### DTR-M2-PostDTX
 
-### Kinematics for DTR M6-M8
+NOTE: Post-DTX mice seem to be kicking out their feet quite a bit regardless of normal locomotion
+
+- No real signs for concern regarding the stomach touching the ground.
+- Trials selected for postdtx analysis (starting at 0)
+    - non-perturbation: video 2 
+    - perturbation: video 13
+        - movement is a little spastic with stomach drop maybe once but not chronic
+    - sinusoidal: video 19
+        - 
+
+## DTR-M3
+
+
+### DTR-M3-PostDTX
+
+- Trials selected for postdtx analysis (starting at 0)
+    - non-perturbation: video 0 
+        - [ ] Review with Turgay
+    - perturbation: video 9
+    - sinusoidal: video 14
+
+## DTR-M5
+
+### DTR-M5-PostDTX
+
+- Trials selected for postdtx analysis (starting at 0)
+    - non-perturbation: video 0 
+    - perturbation: video 7
+        - I split it up into 2 portions as there is a pause in the middle of the recording.
+        - It is otherwise the most clean I've found.
+        - Definitely all cautious walking.
+    - sinusoidal: video 14
+
+## DTR-M6-8
+
+## Kinematics for DTR M6-M8
 
 - M6-preDTX-000019 video is fairly poor, so keep that in mind in terms of the model performance.
     
@@ -85,3 +124,7 @@ NOTE: For the sw on and offset channels are only cleaned for conditions I will b
 - There are really no valid recordings for perturbation or sinusoidal conditions.
 
 
+
+## DTR-M8
+
+- Stomach seems to be dragging quite a bit in videos overall

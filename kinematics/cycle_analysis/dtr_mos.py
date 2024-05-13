@@ -123,25 +123,46 @@ def main():
     # dtrpost_2per = pd.read_csv(
     #     "./dtr_data/postdtx/dtr-post-2-per-xcom.txt", delimiter=",", header=0
     # )
-    dtrpost_2sin = pd.read_csv(
-        "./dtr_data/postdtx/dtr-post-2-sin-xcom.txt", delimiter=",", header=0
+    # dtrpost_2sin = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-2-sin-xcom.txt", delimiter=",", header=0
+    # )
+    # dtrpost_3non = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-3-non-xcom.txt", delimiter=",", header=0
+    # )
+    # dtrpost_3per = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-3-per-xcom.txt", delimiter=",", header=0
+    # )
+    # dtrpost_3sin = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-3-sin-xcom.txt", delimiter=",", header=0
+    # )
+    # dtrpost_5non = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-5-non-xcom.txt", delimiter=",", header=0
+    # )
+    # dtrpost_5per_1 = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-5-per-xcom-1.txt", delimiter=",", header=0
+    # )
+    # dtrpost_5per_2 = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-5-per-xcom-2.txt", delimiter=",", header=0
+    # )
+    dtrpost_5sin = pd.read_csv(
+        "./dtr_data/postdtx/dtr-post-5-sin-xcom.txt", delimiter=",", header=0
     )
 
     # Some things to set for plotting/saving
     manual_analysis = False
-    save_auto = True
-    lmos_filename = "./dtr_data/postdtx/postdtx_2sin_lmos.csv"
-    rmos_filename = "./dtr_data/postdtx/postdtx_2sin_rmos.csv"
+    save_auto = False
+    lmos_filename = "./dtr_data/postdtx/postdtx_5sin_lmos.csv"
+    rmos_filename = "./dtr_data/postdtx/postdtx_5sin_rmos.csv"
     figure_title = (
-        "Measurement of Stability For DTR M2 with Sinusoidal Perturbation post-DTX"
+        "Measurement of Stability For DTR M5 with Sinusoidal Perturbation post-DTX"
     )
 
     # Grabbing individual channels
-    xcom = dtrpost_2sin["v1 xCoM"].to_numpy(dtype=float)
-    leftcop = dtrpost_2sin["v3 L COP"].to_numpy(dtype=float)
-    rightcop = dtrpost_2sin["v2 R COP"].to_numpy(dtype=float)
-    left_DS = dtrpost_2sin["50 LDS cle"].to_numpy(dtype=float)
-    right_DS = dtrpost_2sin["49 RDS cle"].to_numpy(dtype=float)
+    xcom = dtrpost_5sin["v1 xCoM"].to_numpy(dtype=float)
+    leftcop = dtrpost_5sin["v3 L COP"].to_numpy(dtype=float)
+    rightcop = dtrpost_5sin["v2 R COP"].to_numpy(dtype=float)
+    left_DS = dtrpost_5sin["50 LDS cle"].to_numpy(dtype=float)
+    right_DS = dtrpost_5sin["49 RDS cle"].to_numpy(dtype=float)
 
     # Remove periods where it is not present or not valid
     # leftcop = np.where(leftcop == 0.0, np.nan, leftcop)

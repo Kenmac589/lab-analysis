@@ -11,7 +11,7 @@
 [spike_guidance](spike_guidance.md)
 [spike_configuration](spike_configuration.md)
 [com_project](com_project.md)
-[kinematic_results](../kinematics/cycle_analysis/kinematic_results.md)
+[kinematic_results](kinematic_results.md)
 
 
 # Wild-type Controls
@@ -128,7 +128,7 @@ videos_of_interest = [
             - [X] WT 5
 
 - Seeing some weird stuff with the Egr3-7 mouse check videos
-- NOTE: WT M2 and Egr3 M7 are kind of looking sketchy imo.
+- NOTE: WT M2 and Egr3 M7 are kind of looking sketchy imo (have since been taken out).
 
 ## For the DTR set
 
