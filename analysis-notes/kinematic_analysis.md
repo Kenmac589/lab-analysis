@@ -62,7 +62,7 @@ NOTE: For the sw on and offset channels are only cleaned for conditions I will b
  
 - Even non-perturbation for DTR-M2 is shit but kind of salvageable.
 
-### DTR-M2-PostDTX
+### DTR-M2-Post-DTX
 
 NOTE: Post-DTX mice seem to be kicking out their feet quite a bit regardless of normal locomotion
 
@@ -77,7 +77,7 @@ NOTE: Post-DTX mice seem to be kicking out their feet quite a bit regardless of 
 ## DTR-M3
 
 
-### DTR-M3-PostDTX
+### DTR-M3-Post-DTX
 
 - Trials selected for postdtx analysis (starting at 0)
     - non-perturbation: video 0 
@@ -87,7 +87,7 @@ NOTE: Post-DTX mice seem to be kicking out their feet quite a bit regardless of 
 
 ## DTR-M5
 
-### DTR-M5-PostDTX
+### DTR-M5-Post-DTX
 
 - Trials selected for postdtx analysis (starting at 0)
     - non-perturbation: video 0 
@@ -110,7 +110,7 @@ NOTE: Post-DTX mice seem to be kicking out their feet quite a bit regardless of 
     - M7:
         - Length of thigh: 1.2
         - Length of shank: 1.4
-- PostDTX
+- Post-DTX
     - M6:
         - Length of thigh: 1.4
         - Length of shank: 1.6
@@ -123,8 +123,37 @@ NOTE: Post-DTX mice seem to be kicking out their feet quite a bit regardless of 
 
 - There are really no valid recordings for perturbation or sinusoidal conditions.
 
+## DTR-M6
+
+- Both sets of recordings seem to be quite usable and clear.
+
+### DTR-M6 Pre-DTX
+
+
+### DTR-M6 Post-DTX
+
+
+
+## DTR-M7
+
+### DTR-M7 Pre-DTX
+
+
+### DTR-M7 Post-DTX
+
+- There is nothing really present for M7 Post-DTX, mouse was severely ataxic.
+
 
 
 ## DTR-M8
+
+### DTR-M8 Pre-DTX
+
+- There is no kinematic recordings done a 0.100 m/s for random perturbation.
+- There is for sinusoidal at least.
+
+
+
+### DTR-M8 Post-DTX
 
 - Stomach seems to be dragging quite a bit in videos overall

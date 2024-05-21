@@ -35,14 +35,44 @@ import latstability as ls
 # dtrpre_5sin = pd.read_csv(
 #     "./dtr_data/predtx/dtr-pre-5-sin-all.txt", delimiter=",", header=0
 # )
-
-
-# Post-DTX Mice
-dtr_post_non = pd.read_csv(
-    "./dtr_data/postdtx/hip_height_calcs/dtr-post-3-non-hip-data.txt",
+# dtrpre_6non = pd.read_csv(
+#     "./dtr_data/predtx/predtx_hip_height_calcs/dtr-pre-6-non-hip.txt",
+#     delimiter=",",
+#     header=0,
+# )
+# dtrpre_6per = pd.read_csv(
+#     "./dtr_data/predtx/predtx_hip_height_calcs/dtr-pre-6-per-hip.txt",
+#     delimiter=",",
+#     header=0,
+# )
+# dtrpre_6sin = pd.read_csv(
+#     "./dtr_data/predtx/predtx_hip_height_calcs/dtr-pre-6-sin-hip.txt",
+#     delimiter=",",
+#     header=0,
+# )
+dtrpre_7non = pd.read_csv(
+    "./dtr_data/predtx/predtx_hip_height_calcs/dtr-pre-7-non-hip.txt",
     delimiter=",",
     header=0,
 )
+dtrpre_7per = pd.read_csv(
+    "./dtr_data/predtx/predtx_hip_height_calcs/dtr-pre-7-per-hip.txt",
+    delimiter=",",
+    header=0,
+)
+dtrpre_7sin = pd.read_csv(
+    "./dtr_data/predtx/predtx_hip_height_calcs/dtr-pre-7-sin-hip.txt",
+    delimiter=",",
+    header=0,
+)
+
+
+# Post-DTX Mice
+# dtr_post_non = pd.read_csv(
+#     "./dtr_data/postdtx/postdtx_hip_height_calcs/dtr-post-3-non-hip-data.txt",
+#     delimiter=",",
+#     header=0,
+# )
 # dtr_post_per = pd.read_csv(
 #     "./dtr_data/postdtx/hip_height_calcs/dlc-post-5-per-hip-data.txt",
 #     delimiter=",",
@@ -54,17 +84,18 @@ dtr_post_non = pd.read_csv(
 #     header=0,
 # )
 
-# Hip height for postdtx
-dtr_post_non_hiph = ls.hip_height(
-    dtr_post_non, toey="25 toey (cm)", hipy="17 Hipy (cm)", manual=True
-)
-# dtr_post_per_hiph = ls.hip_height(
-#     dtr_post_per, toey="25 toey (cm)", hipy="17 Hipy (cm)", manual=False
-# )
-# dtr_post_sin_hiph = ls.hip_height(
-#     dtr_post_sin, toey="25 toey (cm)", hipy="17 Hipy (cm)", manual=True
-# )
 
-print(f"DTR M5 non Hip manually {dtr_post_non_hiph}")
-# print(f"DTR M5 per Hip automatically {dtr_post_per_hiph}")
-# print(f"DTR M5 sin Hip manually {dtr_post_sin_hiph}")
+# Hip height for postdtx
+dtr_pre_non_hiph = ls.hip_height(
+    dtrpre_7non, toey="25 toey (cm)", hipy="17 Hipy (cm)", manual=False
+)
+dtr_pre_per_hiph = ls.hip_height(
+    dtrpre_7per, toey="25 toey (cm)", hipy="17 Hipy (cm)", manual=False
+)
+dtr_pre_sin_hiph = ls.hip_height(
+    dtrpre_7sin, toey="25 toey (cm)", hipy="17 Hipy (cm)", manual=False
+)
+
+print(f"DTR M7 non Hip automatically {dtr_pre_non_hiph}")
+print(f"DTR M7 per Hip automatically {dtr_pre_per_hiph}")
+print(f"DTR M7 sin Hip automatically {dtr_pre_sin_hiph}")

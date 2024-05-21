@@ -147,6 +147,9 @@ def main():
     dtrpost_5sin = pd.read_csv(
         "./dtr_data/postdtx/dtr-post-5-sin-xcom.txt", delimiter=",", header=0
     )
+    # dtrpre_6non = pd.read_csv("./dtr_data/predtx/dtr-pre-6-non-xcom.txt", delimiter=",", header=0)
+    # dtrpre_6per = pd.read_csv("./dtr_data/predtx/dtr-pre-6-per-xcom.txt", delimiter=",", header=0)
+    # dtrpre_6sin = pd.read_csv("./dtr_data/predtx/dtr-pre-6-sin-xcom.txt", delimiter=",", header=0)
 
     # Some things to set for plotting/saving
     manual_analysis = False

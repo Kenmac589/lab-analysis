@@ -1,5 +1,7 @@
 # Relating to xCoM
 
+## xCoM
+
 - Based on Turgay's import script, you should have at least the following channels visible:
     - First three . . . duh
     - 37 CoMy
@@ -17,6 +19,8 @@
         - `Ch(37)` is just CoMy
         - `Ch(6002)` is a smoothened and sloped version of CoMy
         - `0.0214` is the hip_height
+## Center of Pressure
+
 - For centre of pressure
     - For the **right** side it will be 
         - `((Ch(30) + Ch(35)) / 2) * Ch(60)` for Egr3/WT
