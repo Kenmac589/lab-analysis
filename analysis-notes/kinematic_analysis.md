@@ -99,6 +99,8 @@ NOTE: Post-DTX mice seem to be kicking out their feet quite a bit regardless of 
 
 ## DTR-M6-8
 
+NOTE: Still definitely noticing some of the drift I mentioned previously with the com leaning towards the left side.
+
 ## Kinematics for DTR M6-M8
 
 - M6-preDTX-000019 video is fairly poor, so keep that in mind in terms of the model performance.
@@ -132,12 +134,14 @@ NOTE: Post-DTX mice seem to be kicking out their feet quite a bit regardless of 
 
 ### DTR-M6 Post-DTX
 
+- I used videos 3, 14, 18
 
 
 ## DTR-M7
 
 ### DTR-M7 Pre-DTX
 
+- For the perturbation recording, I am going with the auto data.
 
 ### DTR-M7 Post-DTX
 
@@ -157,3 +161,6 @@ NOTE: Post-DTX mice seem to be kicking out their feet quite a bit regardless of 
 ### DTR-M8 Post-DTX
 
 - Stomach seems to be dragging quite a bit in videos overall
+- Yeah confirming this again on 27/05/2024 and yeah most recordings aren't really usable.
+    - I checked video 0, 1, 3,  
+

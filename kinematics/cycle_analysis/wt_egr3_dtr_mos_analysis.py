@@ -136,12 +136,16 @@ dtrpre_non_lmos = [
     "./dtr_data/predtx/predtx_2non_lmos.csv",
     "./dtr_data/predtx/predtx_3non_lmos.csv",
     "./dtr_data/predtx/predtx_5non_lmos.csv",
+    "./dtr_data/predtx/predtx_6non_lmos.csv",
+    "./dtr_data/predtx/predtx_7non_lmos.csv",
 ]
 
 dtrpre_non_rmos = [
     "./dtr_data/predtx/predtx_2non_rmos.csv",
     "./dtr_data/predtx/predtx_3non_rmos.csv",
     "./dtr_data/predtx/predtx_5non_rmos.csv",
+    "./dtr_data/predtx/predtx_6non_rmos.csv",
+    "./dtr_data/predtx/predtx_7non_rmos.csv",
 ]
 
 
@@ -150,6 +154,8 @@ dtrpre_per_lmos = [
     "./dtr_data/predtx/predtx_3per_lmos.csv",
     "./dtr_data/predtx/predtx_5per_lmos-1.csv",
     "./dtr_data/predtx/predtx_5per_lmos-2.csv",
+    "./dtr_data/predtx/predtx_6per_lmos.csv",
+    "./dtr_data/predtx/predtx_7per_lmos.csv",
 ]
 
 dtrpre_per_rmos = [
@@ -157,6 +163,8 @@ dtrpre_per_rmos = [
     "./dtr_data/predtx/predtx_3per_rmos.csv",
     "./dtr_data/predtx/predtx_5per_rmos-1.csv",
     "./dtr_data/predtx/predtx_5per_rmos-2.csv",
+    "./dtr_data/predtx/predtx_6per_rmos.csv",
+    "./dtr_data/predtx/predtx_7per_rmos.csv",
 ]
 
 dtrpre_sin_lmos = [
@@ -164,6 +172,8 @@ dtrpre_sin_lmos = [
     "./dtr_data/predtx/predtx_3sin_lmos-1.csv",
     "./dtr_data/predtx/predtx_3sin_lmos-2.csv",
     "./dtr_data/predtx/predtx_5sin_lmos.csv",
+    "./dtr_data/predtx/predtx_6sin_lmos.csv",
+    "./dtr_data/predtx/predtx_7sin_lmos.csv",
 ]
 
 dtrpre_sin_rmos = [
@@ -171,18 +181,22 @@ dtrpre_sin_rmos = [
     "./dtr_data/predtx/predtx_3sin_rmos-1.csv",
     "./dtr_data/predtx/predtx_3sin_rmos-2.csv",
     "./dtr_data/predtx/predtx_5sin_rmos.csv",
+    "./dtr_data/predtx/predtx_6sin_rmos.csv",
+    "./dtr_data/predtx/predtx_7sin_rmos.csv",
 ]
 
 dtrpost_non_lmos = [
     "./dtr_data/postdtx/postdtx_2non_lmos.csv",
     "./dtr_data/postdtx/postdtx_3non_lmos.csv",
     "./dtr_data/postdtx/postdtx_5non_lmos.csv",
+    "./dtr_data/postdtx/postdtx_6non_lmos.csv",
 ]
 
 dtrpost_non_rmos = [
     "./dtr_data/postdtx/postdtx_2non_rmos.csv",
     "./dtr_data/postdtx/postdtx_3non_rmos.csv",
     "./dtr_data/postdtx/postdtx_5non_rmos.csv",
+    "./dtr_data/postdtx/postdtx_6non_rmos.csv",
 ]
 
 dtrpost_per_lmos = [
@@ -190,6 +204,7 @@ dtrpost_per_lmos = [
     "./dtr_data/postdtx/postdtx_3per_lmos.csv",
     "./dtr_data/postdtx/postdtx_5per_lmos-1.csv",
     "./dtr_data/postdtx/postdtx_5per_lmos-2.csv",
+    "./dtr_data/postdtx/postdtx_6per_lmos-auto.csv",
 ]
 
 dtrpost_per_rmos = [
@@ -197,18 +212,21 @@ dtrpost_per_rmos = [
     "./dtr_data/postdtx/postdtx_3per_rmos.csv",
     "./dtr_data/postdtx/postdtx_5per_rmos-1.csv",
     "./dtr_data/postdtx/postdtx_5per_rmos-2.csv",
+    "./dtr_data/postdtx/postdtx_6per_rmos-auto.csv",
 ]
 
 dtrpost_sin_lmos = [
     "./dtr_data/postdtx/postdtx_2sin_lmos.csv",
     # "./dtr_data/postdtx/postdtx_3sin_lmos.csv",
     "./dtr_data/postdtx/postdtx_5sin_lmos.csv",
+    "./dtr_data/postdtx/postdtx_6sin_lmos-man.csv",
 ]
 
 dtrpost_sin_rmos = [
     "./dtr_data/postdtx/postdtx_2sin_rmos.csv",
     # "./dtr_data/postdtx/postdtx_3sin_rmos.csv",
     "./dtr_data/postdtx/postdtx_5sin_rmos.csv",
+    "./dtr_data/postdtx/postdtx_6sin_rmos-man.csv",
 ]
 
 mos_df = df(columns=["Condition", "Limb", "Perturbation State", "MoS"])
@@ -246,6 +264,9 @@ mos_df = condition_add(mos_df, dtrpost_sin_rmos, "Post-DTX", "Right", "Sinusoida
 # For just comparing between perturbation
 mos_combo = mos_df.drop(columns=["Limb"])
 con_mos_combo = mos_df.drop(columns=["Limb"])
+
+print(mos_df["Condition"].value_counts())
+# print(mos_df.columns)
 
 # Plotting
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
@@ -321,6 +342,7 @@ cond_combo_plot_params = {
     "y": "MoS",
     "hue": "Perturbation State",
     "hue_order": perturbation_state_order,
+    "inner": "point",
 }
 
 # axs[0].set_title("MoS between conditions")
@@ -331,7 +353,7 @@ annotator.new_plot(
     cond_combo_comp, condition_pairs, plot="violinplot", **cond_combo_plot_params
 )
 annotator.configure(
-    hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside"
+    hide_non_significant=True, test="t-test_ind", text_format="star", loc="inside"
 )
 
 annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)

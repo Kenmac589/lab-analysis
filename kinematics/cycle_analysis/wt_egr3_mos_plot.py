@@ -152,6 +152,7 @@ mos_df = condition_add(mos_df, egr3_sin_rmos, "Egr3", "Right", "Sinusoidal")
 mos_combo = mos_df.drop(columns=["Limb"])
 con_mos_combo = mos_df.drop(columns=["Limb"])
 
+
 # Plotting
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
 sns.set(style="white", font_scale=1.5, rc=custom_params)
@@ -246,4 +247,4 @@ annotator.configure(
 )
 annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 
-plt.show()
+# plt.show()

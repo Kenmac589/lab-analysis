@@ -113,6 +113,16 @@ def main():
     # dtrpre_5sin = pd.read_csv(
     #     "./dtr_data/predtx/dtr-pre-5-sin-all.txt", delimiter=",", header=0
     # )
+    # dtrpre_6non = pd.read_csv(
+    #     "./dtr_data/predtx/dtr-pre-6-non-xcom.txt", delimiter=",", header=0
+    # )
+    # dtrpre_6per = pd.read_csv(
+    #     "./dtr_data/predtx/dtr-pre-6-per-xcom.txt", delimiter=",", header=0
+    # )
+    # dtrpre_6sin = pd.read_csv("./dtr_data/predtx/dtr-pre-6-sin-xcom.txt", delimiter=",", header=0)
+    # dtrpre_7non = pd.read_csv("./dtr_data/predtx/dtr-pre-7-non-xcom.txt", delimiter=",", header=0)
+    # dtrpre_7per = pd.read_csv("./dtr_data/predtx/dtr-pre-7-per-xcom.txt", delimiter=",", header=0)
+    # dtrpre_7sin = pd.read_csv("./dtr_data/predtx/dtr-pre-7-sin-xcom.txt", delimiter=",", header=0)
 
     # Post-DTX mice
 
@@ -144,28 +154,34 @@ def main():
     # dtrpost_5per_2 = pd.read_csv(
     #     "./dtr_data/postdtx/dtr-post-5-per-xcom-2.txt", delimiter=",", header=0
     # )
-    dtrpost_5sin = pd.read_csv(
-        "./dtr_data/postdtx/dtr-post-5-sin-xcom.txt", delimiter=",", header=0
+    # dtrpost_5sin = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-5-sin-xcom.txt", delimiter=",", header=0
+    # )
+    # dtrpost_6non = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-6-non-xcom.txt", delimiter=",", header=0
+    # )
+    # dtrpost_6per = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-6-per-xcom.txt", delimiter=",", header=0
+    # )
+    dtrpost_6sin = pd.read_csv(
+        "./dtr_data/postdtx/dtr-post-6-sin-xcom.txt", delimiter=",", header=0
     )
-    # dtrpre_6non = pd.read_csv("./dtr_data/predtx/dtr-pre-6-non-xcom.txt", delimiter=",", header=0)
-    # dtrpre_6per = pd.read_csv("./dtr_data/predtx/dtr-pre-6-per-xcom.txt", delimiter=",", header=0)
-    # dtrpre_6sin = pd.read_csv("./dtr_data/predtx/dtr-pre-6-sin-xcom.txt", delimiter=",", header=0)
 
     # Some things to set for plotting/saving
     manual_analysis = False
     save_auto = False
-    lmos_filename = "./dtr_data/postdtx/postdtx_5sin_lmos.csv"
-    rmos_filename = "./dtr_data/postdtx/postdtx_5sin_rmos.csv"
+    lmos_filename = "./dtr_data/postdtx/postdtx_6sin_lmos.csv"
+    rmos_filename = "./dtr_data/postdtx/postdtx_6sin_rmos.csv"
     figure_title = (
-        "Measurement of Stability For DTR M5 with Sinusoidal Perturbation post-DTX"
+        "Measurement of Stability For DTR M6 with Sinusoidal Perturbation post-DTX"
     )
 
     # Grabbing individual channels
-    xcom = dtrpost_5sin["v1 xCoM"].to_numpy(dtype=float)
-    leftcop = dtrpost_5sin["v3 L COP"].to_numpy(dtype=float)
-    rightcop = dtrpost_5sin["v2 R COP"].to_numpy(dtype=float)
-    left_DS = dtrpost_5sin["50 LDS cle"].to_numpy(dtype=float)
-    right_DS = dtrpost_5sin["49 RDS cle"].to_numpy(dtype=float)
+    xcom = dtrpost_6sin["v1 xCoM"].to_numpy(dtype=float)
+    leftcop = dtrpost_6sin["v3 L COP"].to_numpy(dtype=float)
+    rightcop = dtrpost_6sin["v2 R COP"].to_numpy(dtype=float)
+    left_DS = dtrpost_6sin["48 LDS cle"].to_numpy(dtype=float)
+    right_DS = dtrpost_6sin["47 RDS cle"].to_numpy(dtype=float)
 
     # Remove periods where it is not present or not valid
     # leftcop = np.where(leftcop == 0.0, np.nan, leftcop)
