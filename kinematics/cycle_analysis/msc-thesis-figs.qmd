@@ -1,0 +1,14 @@
+---
+title: "Master's Thesis Figures"
+author: "Kenzie MacKinnon"
+date: "30/05/2024"
+format:
+    html:
+        code-fold: false
+---
+
+```{r}
+
+
+
+```

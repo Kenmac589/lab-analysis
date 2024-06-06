@@ -175,13 +175,14 @@ combo_plot_params = {
     "data": mos_combo,
     "x": "Perturbation State",
     "y": "MoS",
+    "inner": "point",
 }
 
 axs[1].set_title(by_condition_title)
-combo_comp = sns.barplot(**combo_plot_params, ci=95, capsize=0.05, ax=axs[1])
+combo_comp = sns.violinplot(**combo_plot_params, ci=95, capsize=0.05, ax=axs[1])
 # axs[1].legend(combo_legend, loc="upper left", fontsize=12)
 annotator = Annotator(combo_comp, combo_pairs, **combo_plot_params)
-annotator.new_plot(combo_comp, combo_pairs, plot="barplot", **combo_plot_params)
+annotator.new_plot(combo_comp, combo_pairs, plot="violinplot", **combo_plot_params)
 annotator.configure(
     hide_non_significant=False, test="t-test_welch", text_format="star", loc="inside"
 )

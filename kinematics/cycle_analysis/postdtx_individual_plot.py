@@ -70,8 +70,8 @@ sin_lmos = [
 sin_rmos = [
     # "./dtr_data/postdtx/postdtx_2sin_rmos.csv",
     # # "./dtr_data/postdtx/postdtx_3sin_rmos.csv",
-    # "./dtr_data/postdtx/postdtx_5sin_rmos.csv",
-    "./dtr_data/postdtx/postdtx_6sin_rmos-man.csv",
+    "./dtr_data/postdtx/postdtx_5sin_rmos.csv",
+    # "./dtr_data/postdtx/postdtx_6sin_rmos-man.csv",
 ]
 
 mos_df = df(columns=["Limb", "Perturbation State", "MoS"])

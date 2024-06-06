@@ -265,8 +265,7 @@ mos_df = condition_add(mos_df, dtrpost_sin_rmos, "Post-DTX", "Right", "Sinusoida
 mos_combo = mos_df.drop(columns=["Limb"])
 con_mos_combo = mos_df.drop(columns=["Limb"])
 
-print(mos_df["Condition"].value_counts())
-# print(mos_df.columns)
+con_mos_combo.to_csv("./mos_limbs_combined_all.csv")
 
 # Plotting
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}

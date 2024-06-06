@@ -64,6 +64,7 @@ NOTE: For the sw on and offset channels are only cleaned for conditions I will b
 
 ### DTR-M2-Post-DTX
 
+**Videos used:** 2, 13, 19
 NOTE: Post-DTX mice seem to be kicking out their feet quite a bit regardless of normal locomotion
 
 - No real signs for concern regarding the stomach touching the ground.
@@ -79,6 +80,7 @@ NOTE: Post-DTX mice seem to be kicking out their feet quite a bit regardless of 
 
 ### DTR-M3-Post-DTX
 
+**Videos used:** 0, 9, 14
 - Trials selected for postdtx analysis (starting at 0)
     - non-perturbation: video 0 
         - [ ] Review with Turgay
@@ -89,6 +91,7 @@ NOTE: Post-DTX mice seem to be kicking out their feet quite a bit regardless of 
 
 ### DTR-M5-Post-DTX
 
+**Videos used:** 0, 7, 14
 - Trials selected for postdtx analysis (starting at 0)
     - non-perturbation: video 0 
     - perturbation: video 7
