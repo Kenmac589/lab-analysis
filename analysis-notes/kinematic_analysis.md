@@ -46,6 +46,21 @@ NOTE: Really important information on certain data files that are problematic.
 - Seeing some weird stuff with the Egr3-7 mouse check videos
 - NOTE: WT M2 and Egr3 M7 are kind of looking sketchy imo.
 
+### Egr3-M9
+
+- Added a second perturbation recording under cursors 7 to 8
+    - related export is the first of the perturbation ones
+    - other is between 3-4
+- After reviewing plots of the files, for the sinusoidal trial
+    - File 1 `./egr3_data/egr3-9-sinus-xcom-redo-1.txt` is from cursor **5-6**
+    - File 2 `./egr3_data/egr3-9-sinus-xcom-redo-2.txt` is from cursor **9-0**
+
+### Egr3-10
+
+- For the perturbation trial, the file with `pt1` is from cursor 3-7 and `pt2` is from 7-4. However, 
+    - NOTE: That cursor 7 was moved to filter out region of inactivity.
+    - And the *full* file is just from 3-4
+
 # DTR Mice
 
 NOTE: For the sw on and offset channels are only cleaned for conditions I will be using. Don't just go ahead and think they are cleaned and can go to the server.

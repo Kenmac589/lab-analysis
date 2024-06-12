@@ -15,7 +15,8 @@
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import mplcatppuccin
+
+# import mplcatppuccin
 import numpy as np
 
 # %%
@@ -26,8 +27,9 @@ import scipy as sp
 # mpl.style.use(["ggplot", "mocha"])
 # Comparing primitives
 
-data_path = "./wt_M1-non-perturbation-mos.csv"
-data_input = pd.read_csv(data_path, header=0)
+data_path_1 = "./egr3_data/egr3-10-per-xcom-redo-pt1.txt"
+data_path_2 = "./egr3_data/egr3-10-per-xcom-redo-pt2.txt"
+data_input = pd.read_csv(data_path_1, header=0)
 data_input.plot(subplots=True)
 
 plt.show()

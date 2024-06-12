@@ -19,4 +19,13 @@ anova_mos <- mos_violin + stat_anova_test(aes(group = Condition),
 )
 
 
-ggexport(anova_mos, filename = "./anova_mos.png", width = 1920, height = 1080, res = 150)
+anova_ <- mos_violin + stat_anova_test(aes(group = Condition),
+  label = "Anova, italic(p) = {custom_p_format(p)}{p.signif}"
+)
+
+ggexport(anova_mos,
+  filename = "./anova_mos.png",
+  width = 1920,
+  height = 1080,
+  res = 150
+)

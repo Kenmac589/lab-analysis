@@ -4,15 +4,15 @@ This program is supposed to find the average
 
 """
 
-import os
 import csv
+import os
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy.stats import f_oneway, ttest_ind
 from statannotations.Annotator import Annotator
-from scipy.stats import ttest_ind
-from scipy.stats import f_oneway
 
 
 def read_all_csv(directory_path):
@@ -29,6 +29,7 @@ def read_all_csv(directory_path):
             data_dict[filename] = data
 
     return data_dict
+
 
 def step_duration(input_dataframe):
 
@@ -77,6 +78,7 @@ def step_duration(input_dataframe):
 
     return adjusted_time_differences, adjusted_treadmill_speeds
 
+
 def cycle_periods(input_dataframe):
 
     # Define the value and column to search for
@@ -124,6 +126,7 @@ def cycle_periods(input_dataframe):
 
     return adjusted_time_differences
 
+
 def cycle_period_summary(directory_path):
 
     trial_list = read_all_csv(directory_path)
@@ -138,19 +141,20 @@ def cycle_period_summary(directory_path):
         cycle_results[filename] = np.mean(step_duration_array), np.mean(treadmill_speed)
 
     # Saving results to csv
-    cycle_results_csv = 'cycle_analysis.csv'
+    cycle_results_csv = "cycle_analysis.csv"
 
-    with open(cycle_results_csv, 'w', newline='') as file:
+    with open(cycle_results_csv, "w", newline="") as file:
         writer = csv.writer(file)
 
         # Write the header row (optional)
-        writer.writerow(['Data Point', 'Mean', 'Standard Deviation'])
+        writer.writerow(["Data Point", "Mean", "Standard Deviation"])
 
         # Write data from the dictionary
         for key, (mean, std_dev) in cycle_results.items():
             writer.writerow([key, mean, std_dev])
 
-    print(f'Data has been saved to {cycle_results_csv}')
+    print(f"Data has been saved to {cycle_results_csv}")
+
 
 # Main Code Body
 def main():
@@ -160,12 +164,24 @@ def main():
 
     # )
     data_dict = {}  # Initialize an empty dictionary to store the data
-    data_dict['WT-M1 Non-Perturbation'] = pd.read_csv('./CoM-M1/WT-M1 without Perturbation.txt')
-    data_dict['WT-M1 Perturbation'] = pd.read_csv('./CoM-M1/WT-M1 with Perturbation.txt')
-    data_dict['WT-M2 Non-Perturbation'] = pd.read_csv('./CoM-M2/CoM-M2 without Perturbation.txt')
-    data_dict['WT-M2 Perturbation'] = pd.read_csv('./CoM-M2/CoM-M2 with Perturbation.txt')
-    data_dict['WT-M3 Non-Perturbation'] = pd.read_csv('./CoM-M3/WT-M3 without Peturbation.txt')
-    data_dict['WT-M3 Perturbation'] = pd.read_csv('./CoM-M3/WT-M3 with Perturbation.txt')
+    data_dict["WT-M1 Non-Perturbation"] = pd.read_csv(
+        "./CoM-M1/WT-M1 without Perturbation.txt"
+    )
+    data_dict["WT-M1 Perturbation"] = pd.read_csv(
+        "./CoM-M1/WT-M1 with Perturbation.txt"
+    )
+    data_dict["WT-M2 Non-Perturbation"] = pd.read_csv(
+        "./CoM-M2/CoM-M2 without Perturbation.txt"
+    )
+    data_dict["WT-M2 Perturbation"] = pd.read_csv(
+        "./CoM-M2/CoM-M2 with Perturbation.txt"
+    )
+    data_dict["WT-M3 Non-Perturbation"] = pd.read_csv(
+        "./CoM-M3/WT-M3 without Peturbation.txt"
+    )
+    data_dict["WT-M3 Perturbation"] = pd.read_csv(
+        "./CoM-M3/WT-M3 with Perturbation.txt"
+    )
     # data_dict['PreDTX Non-Perturbation'] = pd.read_csv('./M5/PreDTX Without Perturbation.csv')
     # data_dict['PreDTX Perturbation'] = pd.read_csv('./M5/PreDTX With Perturbation.csv')
     # data_dict['PostDTX Non-Perturbation'] = pd.read_csv('./M5/PostDTX Without Perturbation.csv')
@@ -194,7 +210,9 @@ def main():
         cycle_results[filename] = step_duration_array
 
     # Convert Dictionary of Results to Dataframe
-    cycle_results_df = pd.DataFrame(dict([(key, pd.Series(value)) for key, value in cycle_results.items()]))
+    cycle_results_df = pd.DataFrame(
+        dict([(key, pd.Series(value)) for key, value in cycle_results.items()])
+    )
 
     cycle_results_df.to_csv("./cycle_comparisons.csv")
     # pairs = [
@@ -210,7 +228,9 @@ def main():
     #     ('PostDTX Non-Perturbation', 'PostDTX Perturbation'),
     # ]
 
-    non_per = cycle_results_df.loc[:, [col for col in cycle_results_df.columns if 'Non-Perturbation' in col]]
+    non_per = cycle_results_df.loc[
+        :, [col for col in cycle_results_df.columns if "Non-Perturbation" in col]
+    ]
     # per = cycle_results_df.loc[:, [col for col in cycle_results_df.columns if 'Perturbation' in col]]
     # Plotting
     custom_params = {"axes.spines.right": False, "axes.spines.top": False}
@@ -218,17 +238,23 @@ def main():
 
     plt.title("Step Cycle Durations WT vs DTR M5")
     plt_cyc = sns.barplot(
+        x=non_per.columns, y=non_per.mean(), order=non_per.columns, zorder=2
+    )
+    plt_cyc.errorbar(
         x=non_per.columns,
         y=non_per.mean(),
-        order=non_per.columns,
-        zorder=2
+        yerr=non_per.std(),
+        capsize=3,
+        fmt="none",
+        c="k",
+        zorder=1,
     )
-    plt_cyc.errorbar(x=non_per.columns, y=non_per.mean(), yerr=non_per.std(), capsize=3, fmt="none", c="k", zorder=1)
     # annotator = Annotator(plt_cyc, pairs, data=cycle_results_df)
     # annotator.configure(hide_non_significant=True, test='t-test_welch', text_format='simple')
     # annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
     # annotator.apply_and_annotate()
     plt.show()
+
 
 if __name__ == "__main__":
     main()
