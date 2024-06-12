@@ -32,27 +32,21 @@ def step_width_batch(inputdf, event_channels, y_channels):
     :return hl_step_widths: array of step width values for the hindlimb
     """
 
-    lhl_st_lengths, lhl_st_timings = ls.stance_duration(
-        inputdf, swonset_channel=event_channels[0], swoffset_channel=event_channels[1]
-    )
-    lfl_st_lengths, lfl_st_timings = ls.stance_duration(
-        inputdf, swonset_channel=event_channels[2], swoffset_channel=event_channels[3]
-    )
-    rhl_st_lengths, rhl_st_timings = ls.stance_duration(
-        inputdf, swonset_channel=event_channels[4], swoffset_channel=event_channels[5]
-    )
-    rfl_st_lengths, rfl_st_timings = ls.stance_duration(
-        inputdf, swonset_channel=event_channels[6], swoffset_channel=event_channels[7]
-    )
-
     # For forelimb
     fl_step_widths = ls.step_width(
-        inputdf, rfl_st_timings, lfl_st_timings, rl_y=y_channels[0], ll_y=y_channels[1]
+        inputdf,
+        rl_swon=event_channels[6],
+        ll_swon=event_channels[2],
+        rl_y="35 FRy (cm)",
+        ll_y="33 FLy (cm)",
     )
     hl_step_widths = ls.step_width(
-        inputdf, rhl_st_timings, lhl_st_timings, rl_y=y_channels[2], ll_y=y_channels[3]
+        inputdf,
+        rl_swon=event_channels[4],
+        ll_swon=event_channels[0],
+        rl_y="30 HRy (cm)",
+        ll_y="28 HLy (cm)",
     )
-
     return fl_step_widths, hl_step_widths
 
 def condition_add(input_df, file_list, condition, limb, perturbation_state):
@@ -79,21 +73,21 @@ def condition_add(input_df, file_list, condition, limb, perturbation_state):
 
 # Introduction
 
-For most terrestrial mammals, locomotion is essential for basic survival and gene propagation. Therefore, understanding the neural mechanisms that govern locomotion has been a field of interest with many advancements over the years @Frigon2021. In the central nervous system (CNS) there are two main regions; the brain and spinal cord. 
-
+For most terrestrial mammals, locomotion is essential for basic survival and gene propagation. Therefore, understanding the neural mechanisms that govern locomotion has been a field of interest with many advancements over the years @Frigon2021. In the central nervous system (CNS) there are two main regions; the brain and spinal cord.
 
 # Methods
+
 <!--- Check to see if we included mice that never make in into data --->
 
-Our study included 18 adult mice C57BL/6 (aged ) 
+Our study included 18 adult mice C57BL/6 (aged )
 
 ## EMG Implantation Surgeries
 
-While any data pertaining to EMG activity is not presented in this thesis, it should be noted all mice underwent EMG implantation surgeries. This included the implantation of eight bipolar electrodes [@Pearson2005] in the following muscles; Gluteus Maximus (GM), Iliopsoas (Ip), Biceps Femoris (BF), Vastus Lateralis (VL), Semitendinosus (St), Tibialis Anterior (TA), Gastrocnemius (Gs), Gracilis (Gr). Before the implantation mice were given analgesics Buprenorphine Slow Release (SR) and Meloxicam at 0.1 mg/kg and were anaesthetized with isofluorane at a concentration between 2-3% throughout the procedure. 
+While any data pertaining to EMG activity is not presented in this thesis, it should be noted all mice underwent EMG implantation surgeries. This included the implantation of eight bipolar electrodes [@Pearson2005] in the following muscles; Gluteus Maximus (GM), Iliopsoas (Ip), Biceps Femoris (BF), Vastus Lateralis (VL), Semitendinosus (St), Tibialis Anterior (TA), Gastrocnemius (Gs), Gracilis (Gr). Before the implantation mice were given analgesics Buprenorphine Slow Release (SR) and Meloxicam at 0.1 mg/kg and were anaesthetized with isofluorane at a concentration between 2-3% throughout the procedure.
 
 ## Kinematic Recordings
 
-Kinematic recordings were taken on a high-speed camera at a resolution of 1280 $\times$ 800 at 500 fps (IL3; Fastec Imaging, San Diego, CA, USA). To track limb movement as well as CoM position we used the markerless tracking software DeepLabCut, v2.9.0 [@Mathis2018]. To record both a sagittal and horizontal  view of mouse we used a custom treadmill with transparent tread and mirror showing the belly.
+Kinematic recordings were taken on a high-speed camera at a resolution of 1280 $\times$ 800 at 500 fps (IL3; Fastec Imaging, San Diego, CA, USA). To track limb movement as well as CoM position we used the markerless tracking software DeepLabCut, v2.9.0 [@Mathis2018]. To record both a sagittal and horizontal view of mouse we used a custom treadmill with transparent tread and mirror showing the belly.
 
 ## Diphtheria Toxin (DTX) Administration
 
@@ -103,9 +97,8 @@ For the 8 *PV^Cre^::Avil^iDTR^::Rosa^EGFP^* mice we performed intraperitoneal in
 
 ## Fig 1: Hip Height and Step width are determinate of stability and regulated by proprioceptive feedback
 
-- This will show how to the ground the CoM is for each condition. Lower hip height in proprioceptive loss may indicate the use of lowering center of gravity as a compensatory mechanism to offset the lack of feedback?
-- Looking at step width comparison could give some insight to the large scale of variability seen in the post-DTX mice. This could suggest something regarding the role of GTO's in signaling limb position for the purpose of coordination. 
-
+-   This will show how to the ground the CoM is for each condition. Lower hip height in proprioceptive loss may indicate the use of lowering center of gravity as a compensatory mechanism to offset the lack of feedback?
+-   Looking at step width comparison could give some insight to the large scale of variability seen in the post-DTX mice. This could suggest something regarding the role of GTO's in signaling limb position for the purpose of coordination.
 
 ```{python}
 # Wild type data
@@ -331,14 +324,12 @@ egr3_y_channels = ["35 FRy (cm)", "33 FLy (cm)", "30 HRy (cm)", "28 HLy (cm)"]
 
 ```
 
-## Postural stability in the Wild-type mouse
+## Fig 2: Postural stability in the Wild-type mouse
 
-### Step width and hip height in Wild-type mouse
+## Fig 3: Role of Muscle Spindles in Postural Stability
 
-## Role of Muscle Spindles in Postural Stability
+## Fig 4: Role of Golgi Tendon Organs in Postural Stability
 
-## Role of Golgi Tendon Organs in Postural Stability
- 
 ```{python}
 wt_non_lmos = [
     "./wt_data/wt1non_lmos.csv",
@@ -685,23 +676,23 @@ annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 # plt.show()
 ```
 
-## Proprioception is Necessary for Maintenance of Postural Stability
+## Fig 5: Proprioception is Necessary for Maintenance of Postural Stability
 
-While lower MoS implies a less stable gait, 
+While lower MoS implies a less stable gait,
 
 # Discussion
 
+```{=html}
 <!--- 
 - So what? 
 - Did we address the 
 --->
-
+```
 We showed interestingly that in the case of selective muscle spindles ablation, we see an interesting trend where MoS is not changing regardless of perturbation being applied indicating a general perturbed state. This corroborates previous findings in EMG from [@Santuz2022b]
-
 
 \pagebreak{}
 
 # References
 
-:::{#refs}
+::: {#refs}
 :::

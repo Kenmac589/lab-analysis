@@ -24,13 +24,16 @@ def read_all_csv(directory_path):
     return data_dict
 
 
-def step_duration(input_dataframe):
-    """
-    @param: inpo
+def step_duration(input_dataframe, swonset_ch):
+    """Calculates step duration based on swing onsets
+    :param input_dataframe: Exported channels from spike most importantly swing onset
+
+    :return adjusted_time_differences:
+    :return adjusted_treadmill_speeds:
     """
     # Define the value and column to search for
     value_to_find = 1
-    column_to_search = "45 sw onset"
+    column_to_search = swonset_ch
     column_for_time = "Time"
     column_for_treadmill = "2 Trdml"
 
@@ -70,6 +73,7 @@ def step_duration(input_dataframe):
 
     # Finding average step cylce for this length
     average_step_difference = np.mean(adjusted_time_differences)
+    print(f" Average step cycle duration for this trial: {average_step_difference}")
 
     return adjusted_time_differences, adjusted_treadmill_speeds
 
@@ -348,28 +352,38 @@ def copressure(input_dataframe, ds_channel, hl_channel, fl_channel):
 
 def step_width(
     input_dataframe: pd.DataFrame,
-    rl_stance: Union[np.ndarray, list],
-    ll_stance: Union[np.ndarray, list],
+    rl_swon: str,
+    ll_swon: str,
     rl_y: str,
     ll_y: str,
 ) -> np.array:
     """Step width during step cycle
     :param input_dataframe: spike file input as *.csv
-    :param rl_stance: when stance begins for the right limb
-    :param ll_stance: when stance begins for the left limb
+    :param rl_swon: channel containing swonset events
+    :param ll_swon: channel containing swonset events
     :param rl_y: spike channel with y coordinate for the right limb
     :param ll_y: spike channel with y coordinate for the right limb
 
-    :return step_widths: array of step width values for each step cycle
+    :return step_widths: numpy array of step width values for each step cycle
     """
+    value_to_find = 1
 
     # Filtering whole dataframe down to values we are considering
-    input_dataframe_subset = input_dataframe.loc[:, ["Time", rl_y, ll_y]]
+    input_dataframe_subset = input_dataframe.loc[
+        :, ["Time", rl_swon, ll_swon, rl_y, ll_y]
+    ]
     input_dataframe_subset = input_dataframe_subset.set_index("Time")
 
-    # Grabbing analogous values from
-    ll_step_placement = input_dataframe_subset.loc[ll_stance, :][ll_y].values
-    rl_step_placement = input_dataframe_subset.loc[rl_stance, :][rl_y].values
+    rl_swon_marks = input_dataframe_subset.loc[
+        input_dataframe_subset[rl_swon] == value_to_find
+    ].index.tolist()
+    ll_swon_marks = input_dataframe_subset.loc[
+        input_dataframe_subset[ll_swon] == value_to_find
+    ].index.tolist()
+
+    # Testing with swon method
+    rl_step_placement = input_dataframe_subset.loc[rl_swon_marks, :][rl_y].values
+    ll_step_placement = input_dataframe_subset.loc[ll_swon_marks, :][ll_y].values
 
     # Dealing with possible unequal amount of recorded swoffsets for each limb
     comparable_steps = 0
@@ -630,8 +644,48 @@ def cycle_period_summary(directory_path):
 
 # Main Code Body
 def main():
+    # print("Currently no tests in main")
 
-    print("Currently no tests in main")
+    print("Step Width for M1 without Perturbation")
+
+    wt1nondf = pd.read_csv("./wt_data/wt-1-non-all.txt")
+
+    # Getting stance duration for all 4 limbs
+    lhl_st_lengths, lhl_st_timings = stance_duration(
+        wt1nondf, swonset_channel="51 HLl Sw on", swoffset_channel="52 HLl Sw of"
+    )
+    lfl_st_lengths, lfl_st_timings = stance_duration(
+        wt1nondf, swonset_channel="55 FLl Sw on", swoffset_channel="56 FLl Sw of"
+    )
+    rhl_st_lengths, rhl_st_timings = stance_duration(
+        wt1nondf, swonset_channel="53 HLr Sw on", swoffset_channel="54 HLr Sw of"
+    )
+    rfl_st_lengths, rfl_st_timings = stance_duration(
+        wt1nondf, swonset_channel="57 FLr Sw on", swoffset_channel="58 FLr Sw of"
+    )
+
+    # For forelimb
+    wt1_fl_step_widths = step_width(
+        wt1nondf,
+        rfl_st_timings,
+        lfl_st_timings,
+        rl_swon="57 FLr Sw on",
+        ll_swon="55 FLl Sw on",
+        rl_y="35 FRy (cm)",
+        ll_y="33 FLy (cm)",
+    )
+    wt1_hl_step_widths = step_width(
+        wt1nondf,
+        rhl_st_timings,
+        lhl_st_timings,
+        rl_swon="53 HLr Sw on",
+        ll_swon="51 HLl Sw on",
+        rl_y="30 HRy (cm)",
+        ll_y="28 HLy (cm)",
+    )
+
+    print(wt1_fl_step_widths)
+    print(wt1_hl_step_widths)
 
 
 if __name__ == "__main__":

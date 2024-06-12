@@ -19,47 +19,55 @@ def step_width_batch(inputdf, event_channels, y_channels):
     :return hl_step_widths: array of step width values for the hindlimb
     """
 
-    lhl_st_lengths, lhl_st_timings = ls.stance_duration(
-        inputdf, swonset_channel=event_channels[0], swoffset_channel=event_channels[1]
-    )
-    lfl_st_lengths, lfl_st_timings = ls.stance_duration(
-        inputdf, swonset_channel=event_channels[2], swoffset_channel=event_channels[3]
-    )
-    rhl_st_lengths, rhl_st_timings = ls.stance_duration(
-        inputdf, swonset_channel=event_channels[4], swoffset_channel=event_channels[5]
-    )
-    rfl_st_lengths, rfl_st_timings = ls.stance_duration(
-        inputdf, swonset_channel=event_channels[6], swoffset_channel=event_channels[7]
-    )
+    # lhl_st_lengths, lhl_st_timings = ls.stance_duration(
+    #     inputdf, swonset_channel=event_channels[0], swoffset_channel=event_channels[1]
+    # )
+    #
+    # lfl_st_lengths, lfl_st_timings = ls.stance_duration(
+    #     inputdf, swonset_channel=event_channels[2], swoffset_channel=event_channels[3]
+    # )
+    # rhl_st_lengths, rhl_st_timings = ls.stance_duration(
+    #     inputdf, swonset_channel=event_channels[4], swoffset_channel=event_channels[5]
+    # )
+    # rfl_st_lengths, rfl_st_timings = ls.stance_duration(
+    #     inputdf, swonset_channel=event_channels[6], swoffset_channel=event_channels[7]
+    # )
 
     # For forelimb
     fl_step_widths = ls.step_width(
-        inputdf, rfl_st_timings, lfl_st_timings, rl_y="35 FRy (cm)", ll_y="33 FLy (cm)"
+        inputdf,
+        rl_swon=event_channels[6],
+        ll_swon=event_channels[2],
+        rl_y="35 FRy (cm)",
+        ll_y="33 FLy (cm)",
     )
     hl_step_widths = ls.step_width(
-        inputdf, rhl_st_timings, lhl_st_timings, rl_y="30 HRy (cm)", ll_y="28 HLy (cm)"
+        inputdf,
+        rl_swon=event_channels[4],
+        ll_swon=event_channels[0],
+        rl_y="30 HRy (cm)",
+        ll_y="28 HLy (cm)",
     )
 
     return fl_step_widths, hl_step_widths
 
 
 def sw_condition_add(input_df, step_width_values, condition, limb, perturbation_state):
-    for i in range(len(step_width_values)):
-        limb = limb
-        perturbation_state = perturbation_state
-        step_width_values = np.array(step_width_values, dtype=float)
-        # step_width_values = step_width_values.ravel()
-        for j in range(len(step_width_values)):
-            entry = step_width_values[j]
-            step_width_entry = [[condition, limb, perturbation_state, entry]]
+    limb = limb
+    perturbation_state = perturbation_state
+    step_width_values = np.array(step_width_values, dtype=float)
+    # step_width_values = step_width_values.ravel()
+    for j in range(len(step_width_values)):
+        entry = step_width_values[j]
+        step_width_entry = [[condition, limb, perturbation_state, entry]]
 
-            input_df = input_df._append(
-                pd.DataFrame(
-                    step_width_entry,
-                    columns=["Condition", "Limb", "Perturbation State", "Step Width"],
-                ),
-                ignore_index=True,
-            )
+        input_df = input_df._append(
+            pd.DataFrame(
+                step_width_entry,
+                columns=["Condition", "Limb", "Perturbation State", "Step Width"],
+            ),
+            ignore_index=True,
+        )
 
     return input_df
 
@@ -160,7 +168,7 @@ conditions = [
 for i in wt_raw:
     print(f"mouse being considered is {i}")
     mouse_data = wt_raw[i]
-    # print(wt_event_channels[i])
+    print(wt_event_channels[i])
     for j in range(len(mouse_data)):
         event_channels = wt_event_channels[i]  # getting channel names
         current_condtion = conditions[j]  # simply to keep track
@@ -187,18 +195,26 @@ for i in wt_raw:
 wt_5_non_fl, wt_5_non_hl = step_width_batch(
     wt5nondf, wt_event_channels["wt_5"], wt_y_channels
 )
-print(wt_5_non_fl)
-print(wt_5_non_hl)
-
+step_width_df = sw_condition_add(
+    step_width_df, wt_5_non_fl, "WT", "Forelimb", "Non-Perturbation"
+)
+step_width_df = sw_condition_add(
+    step_width_df, wt_5_non_hl, "WT", "Hindlimb", "Non-Perturbation"
+)
 # Perturbation
 wt_5_per_fl, wt_5_per_hl = step_width_batch(
     wt5perdf, wt_event_channels["wt_5"], wt_y_channels
 )
-
-print(wt_5_per_fl)
-print(wt_5_per_hl)
+step_width_df = sw_condition_add(
+    step_width_df, wt_5_per_fl, "WT", "Forelimb", "Perturbation"
+)
+step_width_df = sw_condition_add(
+    step_width_df, wt_5_per_hl, "WT", "Hindlimb", "Perturbation"
+)
 
 print(step_width_df)
+step_width_df.to_csv("./wt_step_widths.csv")
+
 # # Egr3 Mice
 # egr3_event_channels = {
 #     "egr3_6": [
