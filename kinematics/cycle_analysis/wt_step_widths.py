@@ -19,32 +19,18 @@ def step_width_batch(inputdf, event_channels, y_channels):
     :return hl_step_widths: array of step width values for the hindlimb
     """
 
-    # lhl_st_lengths, lhl_st_timings = ls.stance_duration(
-    #     inputdf, swonset_channel=event_channels[0], swoffset_channel=event_channels[1]
-    # )
-    #
-    # lfl_st_lengths, lfl_st_timings = ls.stance_duration(
-    #     inputdf, swonset_channel=event_channels[2], swoffset_channel=event_channels[3]
-    # )
-    # rhl_st_lengths, rhl_st_timings = ls.stance_duration(
-    #     inputdf, swonset_channel=event_channels[4], swoffset_channel=event_channels[5]
-    # )
-    # rfl_st_lengths, rfl_st_timings = ls.stance_duration(
-    #     inputdf, swonset_channel=event_channels[6], swoffset_channel=event_channels[7]
-    # )
-
     # For forelimb
     fl_step_widths = ls.step_width(
         inputdf,
-        rl_swon=event_channels[6],
-        ll_swon=event_channels[2],
+        rl_swoff=event_channels[7],
+        ll_swoff=event_channels[3],
         rl_y="35 FRy (cm)",
         ll_y="33 FLy (cm)",
     )
     hl_step_widths = ls.step_width(
         inputdf,
-        rl_swon=event_channels[4],
-        ll_swon=event_channels[0],
+        rl_swoff=event_channels[5],
+        ll_swoff=event_channels[1],
         rl_y="30 HRy (cm)",
         ll_y="28 HLy (cm)",
     )

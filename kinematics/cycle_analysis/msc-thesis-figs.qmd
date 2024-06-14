@@ -35,15 +35,15 @@ def step_width_batch(inputdf, event_channels, y_channels):
     # For forelimb
     fl_step_widths = ls.step_width(
         inputdf,
-        rl_swon=event_channels[6],
-        ll_swon=event_channels[2],
+        rl_swoff=event_channels[7],
+        ll_swoff=event_channels[3],
         rl_y="35 FRy (cm)",
         ll_y="33 FLy (cm)",
     )
     hl_step_widths = ls.step_width(
         inputdf,
-        rl_swon=event_channels[4],
-        ll_swon=event_channels[0],
+        rl_swoff=event_channels[5],
+        ll_swoff=event_channels[1],
         rl_y="30 HRy (cm)",
         ll_y="28 HLy (cm)",
     )
@@ -67,6 +67,29 @@ def condition_add(input_df, file_list, condition, limb, perturbation_state):
                 ),
                 ignore_index=True,
             )
+
+    return input_df
+
+def sw_condition_add(input_df, step_width_values, condition, limb, perturbation_state):
+    """Adds recordings to broader dataframe with all conditions
+
+    """
+
+    limb = limb
+    perturbation_state = perturbation_state
+    step_width_values = np.array(step_width_values, dtype=float)
+    # step_width_values = step_width_values.ravel()
+    for j in range(len(step_width_values)):
+        entry = step_width_values[j]
+        step_width_entry = [[condition, limb, perturbation_state, entry]]
+
+        input_df = input_df._append(
+            pd.DataFrame(
+                step_width_entry,
+                columns=["Condition", "Limb", "Perturbation State", "Step Width"],
+            ),
+            ignore_index=True,
+        )
 
     return input_df
 ```
@@ -101,6 +124,7 @@ For the 8 *PV^Cre^::Avil^iDTR^::Rosa^EGFP^* mice we performed intraperitoneal in
 -   Looking at step width comparison could give some insight to the large scale of variability seen in the post-DTX mice. This could suggest something regarding the role of GTO's in signaling limb position for the purpose of coordination.
 
 ```{python}
+step_width_df = df(columns=["Conditions", "Limb", "Perturbation State", "Step Width"])
 # Wild type data
 wt_event_channels = {
     "wt_1": [
@@ -193,7 +217,7 @@ conditions = [
 ]
 
 for i in wt_raw:
-    print(f"mouse being considered is {i}")
+    # print(f"mouse being considered is {i}")
     mouse_data = wt_raw[i]
     # print(wt_event_channels[i])
     for j in range(len(mouse_data)):
@@ -204,26 +228,35 @@ for i in wt_raw:
         fl_stepw, hl_stepw = step_width_batch(
             trial_spike, event_channels=event_channels, y_channels=wt_y_channels
         )
-        print(f"forelimb step width for {current_condtion} is {fl_stepw}")
-        print(f"hindlimb step width for {current_condtion} is {hl_stepw}")
+        # print(f"forelimb step width for {current_condtion} is {fl_stepw}")
+        # print(f"hindlimb step width for {current_condtion} is {hl_stepw}")
 
-    print()
+    # print()
 
 # M5 Does not have a sinusoidal recording so
 # Non-Perturbation
 wt_5_non_fl, wt_5_non_hl = step_width_batch(
     wt5nondf, wt_event_channels["wt_5"], wt_y_channels
 )
-print(wt_5_non_fl)
-print(wt_5_non_hl)
-
+step_width_df = sw_condition_add(
+    step_width_df, wt_5_non_fl, "WT", "Forelimb", "Non-Perturbation"
+)
+step_width_df = sw_condition_add(
+    step_width_df, wt_5_non_hl, "WT", "Hindlimb", "Non-Perturbation"
+)
 # Perturbation
 wt_5_per_fl, wt_5_per_hl = step_width_batch(
     wt5perdf, wt_event_channels["wt_5"], wt_y_channels
 )
+step_width_df = sw_condition_add(
+    step_width_df, wt_5_per_fl, "WT", "Forelimb", "Perturbation"
+)
+step_width_df = sw_condition_add(
+    step_width_df, wt_5_per_hl, "WT", "Hindlimb", "Perturbation"
+)
 
-print(wt_5_per_fl)
-print(wt_5_per_hl)
+print(step_width_df)
+step_width_df.to_csv("./wt_step_widths.csv")
 
 # Egr3 Mice
 egr3_event_channels = {
@@ -304,6 +337,7 @@ egr3_raw = {
 
 
 egr3_y_channels = ["35 FRy (cm)", "33 FLy (cm)", "30 HRy (cm)", "28 HLy (cm)"]
+
 
 # for i in egr3_raw:
 #     print(f"mouse being considered is {i}")

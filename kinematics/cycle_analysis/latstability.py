@@ -78,6 +78,47 @@ def step_duration(input_dataframe, swonset_ch):
     return adjusted_time_differences, adjusted_treadmill_speeds
 
 
+def swing_estimation(input_dataframe, x_channel, width_threshold=40):
+    """This approximates swing onset and offset from kinematic data
+    :param input_dataframe: Exported channels from spike most importantly the x values for a channel
+
+    :return swing_onset: A list of indices where swing onset occurs
+    :return swing_offset: A list of indices where swing offet occurs
+    """
+
+    foot_cord = input_dataframe[x_channel].to_numpy(dtype=float)
+
+    swing_offset, _ = sp.signal.find_peaks(foot_cord, width=width_threshold)
+    swing_onset, _ = sp.signal.find_peaks(-foot_cord, width=width_threshold)
+
+    return swing_onset, swing_offset
+
+
+def step_cycle_est(input_dataframe, x_channel, width_threshold=40):
+    """This approximates swing onset and offset from kinematic data
+    :param input_dataframe: Exported channels from spike most importantly the x values for a channel
+
+    :return cycle_durations: A numpy array with the duration of each cycle
+    :return average_step: A list of indices where swing offet occurs
+    """
+
+    time = input_dataframe["Time"].to_numpy(dtype=float)
+
+    swing_onset, _ = swing_estimation(
+        input_dataframe=input_dataframe, x_channel=x_channel
+    )
+    onset_timing = time[swing_onset]
+
+    cycle_durations = np.array([])
+    for i in range(len(onset_timing) - 1):
+        time_diff = onset_timing[i + 1] - onset_timing[i]
+        cycle_durations = np.append(cycle_durations, time_diff)
+
+    avg_cycle_period = np.mean(cycle_durations)
+
+    return cycle_durations, avg_cycle_period
+
+
 def manual_marks(related_trace, title="Select Points"):
     """Manually annotate points of interest on a given trace
     :param related_trace: Trace you want to annotate
@@ -352,15 +393,15 @@ def copressure(input_dataframe, ds_channel, hl_channel, fl_channel):
 
 def step_width(
     input_dataframe: pd.DataFrame,
-    rl_swon: str,
-    ll_swon: str,
+    rl_swoff: str,
+    ll_swoff: str,
     rl_y: str,
     ll_y: str,
 ) -> np.array:
     """Step width during step cycle
     :param input_dataframe: spike file input as *.csv
-    :param rl_swon: channel containing swonset events
-    :param ll_swon: channel containing swonset events
+    :param rl_swoff: channel containing swoffset events
+    :param ll_swon: channel containing swoffset events
     :param rl_y: spike channel with y coordinate for the right limb
     :param ll_y: spike channel with y coordinate for the right limb
 
@@ -370,20 +411,20 @@ def step_width(
 
     # Filtering whole dataframe down to values we are considering
     input_dataframe_subset = input_dataframe.loc[
-        :, ["Time", rl_swon, ll_swon, rl_y, ll_y]
+        :, ["Time", rl_swoff, ll_swoff, rl_y, ll_y]
     ]
     input_dataframe_subset = input_dataframe_subset.set_index("Time")
 
-    rl_swon_marks = input_dataframe_subset.loc[
-        input_dataframe_subset[rl_swon] == value_to_find
+    rl_swoff_marks = input_dataframe_subset.loc[
+        input_dataframe_subset[rl_swoff] == value_to_find
     ].index.tolist()
-    ll_swon_marks = input_dataframe_subset.loc[
-        input_dataframe_subset[ll_swon] == value_to_find
+    ll_swoff_marks = input_dataframe_subset.loc[
+        input_dataframe_subset[ll_swoff] == value_to_find
     ].index.tolist()
 
     # Testing with swon method
-    rl_step_placement = input_dataframe_subset.loc[rl_swon_marks, :][rl_y].values
-    ll_step_placement = input_dataframe_subset.loc[ll_swon_marks, :][ll_y].values
+    rl_step_placement = input_dataframe_subset.loc[rl_swoff_marks, :][rl_y].values
+    ll_step_placement = input_dataframe_subset.loc[ll_swoff_marks, :][ll_y].values
 
     # Dealing with possible unequal amount of recorded swoffsets for each limb
     comparable_steps = 0
@@ -557,6 +598,38 @@ def mos_marks(related_trace, leftcop, rightcop, title="Select Points"):
     return manual_marks_x, manual_marks_y
 
 
+def double_support_est(
+    input_dataframe, fl_channel, hl_channel, manual_peaks=False, width_threshold=40
+):
+    """Calculates double support phases from step cycle estimations
+    :param input_dataframe: Exported channels from spike most importantly x coordinates of limbs
+    :param fl_channel: Channel for x coordinate for the forelimb
+    :param hl_channel: Channel for x coordinate for the hindlimb
+    :param manual_peaks: Label peaks manual or by swing_extimation function
+    :param width_threshold: Width threshold used by automatic estimation
+
+    :return double_support: Region where both limb are on the ground
+    """
+
+    fl_cord = input_dataframe[fl_channel].to_numpy(dtype=float)
+    hl_cord = input_dataframe[hl_channel].to_numpy(dtype=float)
+
+    fl_swoff, _ = swing_estimation(
+        input_dataframe=input_dataframe, x_channel=fl_channel
+    )
+    _, hl_swon = swing_estimation(input_dataframe=input_dataframe, x_channel=hl_channel)
+
+    # Making sure to start from correct spot in case there's hl_swon before
+    first_index = fl_swoff[0]
+
+    print(fl_swoff)
+    print(hl_swon)
+    mask = hl_swon > first_index
+    hl_swon = hl_swon[mask]
+    print(hl_swon)
+
+def ql_events(channel, peaks, troughs):
+    
 def mos(
     xcom, leftcop, rightcop, leftds, rightds, manual_peaks=False, width_threshold=40
 ):
@@ -667,25 +740,28 @@ def main():
     # For forelimb
     wt1_fl_step_widths = step_width(
         wt1nondf,
-        rfl_st_timings,
-        lfl_st_timings,
-        rl_swon="57 FLr Sw on",
-        ll_swon="55 FLl Sw on",
+        rl_swoff="58 FLr Sw of",
+        ll_swoff="56 FLl Sw of",
         rl_y="35 FRy (cm)",
         ll_y="33 FLy (cm)",
     )
     wt1_hl_step_widths = step_width(
         wt1nondf,
-        rhl_st_timings,
-        lhl_st_timings,
-        rl_swon="53 HLr Sw on",
-        ll_swon="51 HLl Sw on",
+        rl_swoff="54 HLr Sw of",
+        ll_swoff="52 HLl Sw of",
         rl_y="30 HRy (cm)",
         ll_y="28 HLy (cm)",
     )
 
-    print(wt1_fl_step_widths)
-    print(wt1_hl_step_widths)
+    wt1_cycle_dur, wt1_avg_cycle_period = step_cycle_est(
+        wt1nondf, x_channel="32 FLx (cm)"
+    )
+
+    print(f"Cycle period estimation average {wt1_avg_cycle_period}")
+
+    right_ds = double_support_est(
+        wt1nondf, fl_channel="34 FRx (cm)", hl_channel="29 HRx (cm)", manual_peaks=False
+    )
 
 
 if __name__ == "__main__":

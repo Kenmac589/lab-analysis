@@ -104,6 +104,10 @@ NOTE: Post-DTX mice seem to be kicking out their feet quite a bit regardless of 
 
 ## DTR-M5
 
+### DTR-M5-Pre-DTX
+
+- There are two perturbation recordings at cursors 3-4, 5-6
+
 ### DTR-M5-Post-DTX
 
 **Videos used:** 0, 7, 14
