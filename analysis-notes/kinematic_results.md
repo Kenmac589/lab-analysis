@@ -5,13 +5,6 @@
 - This is between the WT, Egr3, and the first 3 DTX mice post and pre.
 - This is the relating test that are show in the violin and bar plots.
 
-p-value annotation legend:
-      ns: 5.00e-02 < p <= 1.00e+00
-       *: 1.00e-02 < p <= 5.00e-02
-      **: 1.00e-03 < p <= 1.00e-02
-     ***: 1.00e-04 < p <= 1.00e-03
-    ****: p <= 1.00e-04
-
 Egr3_Perturbation vs. Egr3_Sinusoidal: t-test independent samples, P_val:2.940e-02 t=2.198e+00
 Pre-DTX_Non-Perturbation vs. Pre-DTX_Perturbation: t-test independent samples, P_val:8.979e-01 t=-1.286
 Pre-DTX_Perturbation vs. Pre-DTX_Sinusoidal: t-test independent samples, P_val:2.450e-02 t=2.287e+00

@@ -1,3 +1,4 @@
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -54,4 +55,7 @@ plt.bar(conditions[1], egr3_fall_count)
 plt.bar(conditions[2], predtx_fall_count)
 plt.bar(conditions[3], postdtx_fall_count)
 plt.legend(conditions)
-plt.show()
+
+fig = mpl.pyplot.gcf()
+fig.set_size_inches(19.8, 10.8)
+plt.savefig("./combined_figures/falls_no_title.png", dpi=300)

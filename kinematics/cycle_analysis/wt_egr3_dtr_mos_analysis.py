@@ -1,3 +1,4 @@
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -357,4 +358,7 @@ annotator.configure(
 
 annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 
-plt.show()
+fig = mpl.pyplot.gcf()
+fig.set_size_inches(19.8, 10.80)
+plt.savefig("./combined_figures/mos_all_violin_inner.png", dpi=300)
+# plt.show()

@@ -16,8 +16,8 @@
 # %% [markdown]
 # # This is the analysis for Center of Mass Project
 #
-# The goal of this is notebook is to bring together the general guidance on using DeepLabCut, while making the analysis executable in context with the associated directions. The first step will be to activate the relevant `conda` environment, which contains DeepLabCut. 
-# - In the case of the GPU computer, this will be done by launching the *anaconda prompt (anaconda powershell prompt is also fine)* in administator mode and typing `conda activate dlc-windowsGPU-2023'` 
+# The goal of this is notebook is to bring together the general guidance on using DeepLabCut, while making the analysis executable in context with the associated directions. The first step will be to activate the relevant `conda` environment, which contains DeepLabCut.
+# - In the case of the GPU computer, this will be done by launching the *anaconda prompt (anaconda powershell prompt is also fine)* in administator mode and typing `conda activate dlc-windowsGPU-2023'`
 # - If you are using you're own PC, then the command would be `conda activate DEEPLABCUT`.
 #
 #
@@ -67,6 +67,7 @@ import platform
 from datetime import datetime
 from pathlib import Path
 
+
 # Functions
 def filePathList(dir_path):
     file_paths = []
@@ -75,12 +76,14 @@ def filePathList(dir_path):
             file_paths.append(os.path.join(root, file))
     return file_paths
 
+
 def pathconvUnixToDos(paths):
     dos_paths = []
     for path in paths:
-        dos_path = path.replace('/', '\\')
+        dos_path = path.replace("/", "\\")
         dos_paths.append(dos_path)
     return dos_paths
+
 
 def directoryPresent(targetPath, projName):
     path = os.path.join(projName, targetPath)
@@ -154,7 +157,13 @@ if directoryPresent(newProjectName, targetForProject):
     print(f"Directory {newProjectName} already exists in {targetForProject}.")
 else:
     print(f"Directory {newProjectName} does not exist in {targetForProject}.")
-    config_path = deeplabcut.create_new_project(projectName, experimenterName, file_paths, working_directory=(targetForProject), copy_videos=True)
+    config_path = deeplabcut.create_new_project(
+        projectName,
+        experimenterName,
+        file_paths,
+        working_directory=(targetForProject),
+        copy_videos=True,
+    )
 
 # # %% Extract frames from videos
 # deeplabcut.extract_frames(config_path, mode='automatic', userfeedback=False)
@@ -247,17 +256,19 @@ else:
 
 # %%
 config_path = "/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/1yr/1yrDTRnoRosa-preDTX-kenzie-2024-01-31/config.yaml"
-videofile_path = '/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/1yr/1yrDTRnoRosa-preDTX-kenzie-2024-01-31/videos/'
-VideoType = 'avi'
+videofile_path = "/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/1yr/1yrDTRnoRosa-preDTX-kenzie-2024-01-31/videos/"
+VideoType = "avi"
 
 # %% [markdown]
 # On unix server config path
 
 # %%
-config_path = '/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc-dtr/DTR-M5/test_output-kenzie-2024-01-04/config.yaml'
+config_path = "/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc-dtr/DTR-M5/test_output-kenzie-2024-01-04/config.yaml"
 
 # %%
-deeplabcut.extract_frames(config_path, mode='automatic', algo='kmeans', userfeedback=False, crop=True)
+deeplabcut.extract_frames(
+    config_path, mode="automatic", algo="kmeans", userfeedback=False, crop=True
+)
 
 # %%
 deeplabcut.label_frames(config_path)
@@ -274,7 +285,7 @@ deeplabcut.check_labels(config_path, visualizeindividuals=False)
 # Only run this step where you are going to train the network. If you label on your laptop but move your project folder to Google Colab or AWS, lab server, etc, then run the step below on that platform! If you labeled on a Windows machine but train on Linux, this is fine as of 2.0.4 onwards it will be done automatically (it saves file sets as both Linux and Windows for you).
 
 # %%
-deeplabcut.create_training_dataset(config_path, augmenter_type='imgaug')
+deeplabcut.create_training_dataset(config_path, augmenter_type="imgaug")
 
 # %% [markdown]
 # ### Network Training
@@ -300,7 +311,7 @@ deeplabcut.analyze_videos(config_path, videofile_path, videotype=VideoType)
 # # Plot the Trajectory
 
 # %%
-deeplabcut.plot_trajectories(config_path,videofile_path, videotype=VideoType)
+deeplabcut.plot_trajectories(config_path, videofile_path, videotype=VideoType)
 
 # %%
 deeplabcut.create_labeled_video(config_path, videofile_path, videotype=VideoType)
@@ -313,9 +324,9 @@ deeplabcut.create_labeled_video(config_path, videofile_path, videotype=VideoType
 # %%
 
 max_dist = 100
-df = pd.read_hdf('path_to_your_labeled_data_file')
-bpt1 = df.xs('head', level='bodyparts', axis=1).to_numpy()
-bpt2 = df.xs('tail', level='bodyparts', axis=1).to_numpy()
+df = pd.read_hdf("path_to_your_labeled_data_file")
+bpt1 = df.xs("head", level="bodyparts", axis=1).to_numpy()
+bpt2 = df.xs("tail", level="bodyparts", axis=1).to_numpy()
 # We calculate the vectors from a point to the other
 # and group them per frame and per animal.
 try:
