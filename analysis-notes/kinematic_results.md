@@ -27,3 +27,13 @@ WT_Non-Perturbation vs. WT_Sinusoidal: t-test independent samples, P_val:2.715e-
 WT_Non-Perturbation vs. Pre-DTX_Non-Perturbation: t-test independent samples, P_val:1.382e-01 t=-1.488e+00
 WT_Sinusoidal vs. Pre-DTX_Sinusoidal: t-test independent samples, P_val:1.585e-01 t=-1.424e+00
 WT_Perturbation vs. Pre-DTX_Perturbation: t-test independent samples, P_val:1.710e-02 t=-2.406e+00
+
+## Step Width
+
+Pre-DTX_Perturbation vs. Pre-DTX_Sinusoidal: t-test independent samples, P_val:8.895e-03 t=-2.641e+00
+Post-DTX_Perturbation vs. Post-DTX_Sinusoidal: t-test independent samples, P_val:2.621e-04 t=-3.711e+00
+WT_Non-Perturbation vs. WT_Perturbation: t-test independent samples, P_val:9.757e-03 t=2.600e+00
+WT_Perturbation vs. WT_Sinusoidal: t-test independent samples, P_val:3.494e-04 t=-3.631e+00
+Pre-DTX_Non-Perturbation vs. Pre-DTX_Sinusoidal: t-test independent samples, P_val:1.055e-03 t=-3.320e+00
+WT_Non-Perturbation vs. WT_Sinusoidal: t-test independent samples, P_val:4.244e-02 t=-2.041e+00
+WT_Perturbation vs. Pre-DTX_Perturbation: t-test independent samples, P_val:2.191e-03 t=-3.091e+00

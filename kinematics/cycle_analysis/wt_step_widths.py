@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import scipy as sp
 from pandas import DataFrame as df
 from statannotations import Annotator
 
@@ -33,6 +34,35 @@ def step_width_batch(inputdf, event_channels, y_channels):
         ll_swoff=event_channels[1],
         rl_y="30 HRy (cm)",
         ll_y="28 HLy (cm)",
+    )
+
+    return fl_step_widths, hl_step_widths
+
+def step_width_batch_est(inputdf, event_channels, y_channels):
+    """Doing step width calculation in one go
+    :param inputdf: A spike file input as *.csv or formatted as such
+    :param event_channels: A list with all the proper channel names for the event channels
+    :param y_channels: A list with all the proper channel names for the channels from DLC
+    :note: The proper order for event channels goes lhl, lfl, rhl, rfl with swonset first.
+
+    :return fl_step_widths: array of step width values for the forelimb
+    :return hl_step_widths: array of step width values for the hindlimb
+    """
+
+    # For forelimb
+    fl_step_widths = ls.step_width_est(
+        inputdf,
+        rl_x=wt_x_channels[0],
+        ll_x=wt_x_channels[1],
+        rl_y=wt_y_channels[0],
+        ll_y=wt_y_channels[1],
+    )
+    hl_step_widths = ls.step_width_est(
+        inputdf,
+        rl_x=wt_x_channels[2],
+        ll_x=wt_x_channels[3],
+        rl_y=wt_y_channels[2],
+        ll_y=wt_y_channels[3],
     )
 
     return fl_step_widths, hl_step_widths
@@ -139,6 +169,7 @@ wt_raw = {
 
 
 wt_y_channels = ["35 FRy (cm)", "33 FLy (cm)", "30 HRy (cm)", "28 HLy (cm)"]
+wt_x_channels = ["34 FRx (cm)", "32 FLx (cm)", "29 HRx (cm)", "27 HLx (cm)"]
 
 wt5nondf = pd.read_csv("./wt_data/wt-5-non-all.txt", delimiter=",", header=0)
 wt5perdf = pd.read_csv("./wt_data/wt-5-per-all.txt", delimiter=",", header=0)
@@ -151,6 +182,31 @@ conditions = [
     "Sinusoidal",
 ]
 
+# for i in wt_raw:
+#     print(f"mouse being considered is {i}")
+#     mouse_data = wt_raw[i]
+#     print(wt_event_channels[i])
+#     for j in range(len(mouse_data)):
+#         event_channels = wt_event_channels[i]  # getting channel names
+#         current_condtion = conditions[j]  # simply to keep track
+#         data_path = mouse_data[j]  # file from spike for condition
+#         trial_spike = pd.read_csv(data_path, delimiter=",", header=0)
+#
+#         fl_stepw, hl_stepw = step_width_batch(
+#             trial_spike, event_channels=event_channels, y_channels=wt_y_channels
+#         )
+#         step_width_df = sw_condition_add(
+#             step_width_df, fl_stepw, "WT", "Forelimb", current_condtion
+#         )
+#         step_width_df = sw_condition_add(
+#             step_width_df, hl_stepw, "WT", "Hindlimb", current_condtion
+#         )
+#
+#         print(f"forelimb step width for {current_condtion} is {fl_stepw}")
+#         print(f"hindlimb step width for {current_condtion} is {hl_stepw}")
+#
+#     print()
+
 for i in wt_raw:
     print(f"mouse being considered is {i}")
     mouse_data = wt_raw[i]
@@ -161,7 +217,7 @@ for i in wt_raw:
         data_path = mouse_data[j]  # file from spike for condition
         trial_spike = pd.read_csv(data_path, delimiter=",", header=0)
 
-        fl_stepw, hl_stepw = step_width_batch(
+        fl_stepw, hl_stepw = step_width_batch_est(
             trial_spike, event_channels=event_channels, y_channels=wt_y_channels
         )
         step_width_df = sw_condition_add(
@@ -175,6 +231,9 @@ for i in wt_raw:
         print(f"hindlimb step width for {current_condtion} is {hl_stepw}")
 
     print()
+
+
+
 
 # M5 Does not have a sinusoidal recording so
 # Non-Perturbation

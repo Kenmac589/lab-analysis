@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scipy as sp
+import seaborn as sns
 
 
 def read_all_csv(directory_path):
@@ -88,7 +89,7 @@ def swing_estimation(input_dataframe, x_channel, width_threshold=40):
 
     foot_cord = input_dataframe[x_channel].to_numpy(dtype=float)
 
-    swing_offset, _ = sp.signal.find_peaks(foot_cord, width=width_threshold)
+    swing_offset, _ = sp.signal.find_peaks(foot_cord, distance=width_threshold)
     swing_onset, _ = sp.signal.find_peaks(-foot_cord, width=width_threshold)
 
     return swing_onset, swing_offset
@@ -444,6 +445,52 @@ def step_width(
 
     return step_widths
 
+def step_width_est(
+    input_dataframe: pd.DataFrame,
+    rl_x: str,
+    ll_x: str,
+    rl_y: str,
+    ll_y: str,
+) -> np.array:
+    """Step width during step cycle
+    :param input_dataframe: spike file input as *.csv
+    :param rl_swoff: channel containing swoffset events
+    :param ll_swon: channel containing swoffset events
+    :param rl_y: spike channel with y coordinate for the right limb
+    :param ll_y: spike channel with y coordinate for the right limb
+
+    :return step_widths: numpy array of step width values for each step cycle
+    """
+
+    # Filtering whole dataframe down to values we are considering
+    rl_y_cords = input_dataframe[rl_y].to_numpy(dtype=float)
+    ll_y_cords = input_dataframe[ll_y].to_numpy(dtype=float)
+
+    _, rl_swoff = swing_estimation(input_dataframe, rl_x)
+    _, ll_swoff = swing_estimation(input_dataframe, ll_x)
+
+    rl_step_placement = rl_y_cords[rl_swoff]
+    ll_step_placement = ll_y_cords[ll_swoff]
+
+    # Dealing with possible unequal amount of recorded swoffsets for each limb
+    comparable_steps = 0
+    if rl_step_placement.shape[0] >= ll_step_placement.shape[0]:
+        comparable_steps = ll_step_placement.shape[0]
+    else:
+        comparable_steps = rl_step_placement.shape[0]
+
+    step_widths = []
+
+    # Compare step widths for each step
+    for i in range(comparable_steps):
+        new_width = np.abs(rl_step_placement[i] - ll_step_placement[i])
+        step_widths.append(new_width)
+
+    step_widths = np.asarray(step_widths)
+
+    return step_widths
+
+
 
 def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=False):
     """Approximates Hip Height
@@ -614,6 +661,9 @@ def double_support_est(
     fl_cord = input_dataframe[fl_channel].to_numpy(dtype=float)
     hl_cord = input_dataframe[hl_channel].to_numpy(dtype=float)
 
+    time = input_dataframe["Time"].to_numpy(dtype=float)
+
+    # Important here are fl_swoff and hl_swon
     fl_swoff, _ = swing_estimation(
         input_dataframe=input_dataframe, x_channel=fl_channel
     )
@@ -622,14 +672,27 @@ def double_support_est(
     # Making sure to start from correct spot in case there's hl_swon before
     first_index = fl_swoff[0]
 
-    print(fl_swoff)
-    print(hl_swon)
     mask = hl_swon > first_index
     hl_swon = hl_swon[mask]
-    print(hl_swon)
 
-def ql_events(channel, peaks, troughs):
-    
+    fl_swoff_timings = time[fl_swoff]
+    hl_swon_timings = time[hl_swon]
+    ds_timings = np.array([])
+
+    if len(fl_swoff) < len(hl_swon):
+        for i in range(len(fl_swoff)):
+            ds_timings = np.append(ds_timings, fl_swoff_timings[i])
+            ds_timings = np.append(ds_timings, hl_swon_timings[i])
+    else:
+        for i in range(len(hl_swon)):
+            ds_timings = np.append(ds_timings, fl_swoff_timings[i])
+            ds_timings = np.append(ds_timings, hl_swon_timings[i])
+
+    double_support = ds_timings
+
+    return double_support
+
+
 def mos(
     xcom, leftcop, rightcop, leftds, rightds, manual_peaks=False, width_threshold=40
 ):
@@ -719,9 +782,10 @@ def cycle_period_summary(directory_path):
 def main():
     # print("Currently no tests in main")
 
-    print("Step Width for M1 without Perturbation")
+    # print("Step Width for M1 without Perturbation")
 
     wt1nondf = pd.read_csv("./wt_data/wt-1-non-all.txt")
+    wt5nondf = pd.read_csv("./wt_data/wt-5-non-all.txt")
 
     # Getting stance duration for all 4 limbs
     lhl_st_lengths, lhl_st_timings = stance_duration(
@@ -745,23 +809,74 @@ def main():
         rl_y="35 FRy (cm)",
         ll_y="33 FLy (cm)",
     )
-    wt1_hl_step_widths = step_width(
+
+    print(f"Manually done step width {len(wt1_fl_step_widths)}")
+    # wt1_hl_step_widths = step_width(
+    #     wt1nondf,
+    #     rl_swoff="54 HLr Sw of",
+    #     ll_swoff="52 HLl Sw of",
+    #     rl_y="30 HRy (cm)",
+    #     ll_y="28 HLy (cm)",
+    # )
+
+    # wt1_swingon, wt1_swingoff = swing_estimation(wt1nondf, x_channel="34 FRx (cm)")
+    # wt1_cycle_dur, wt1_avg_cycle_period = step_cycle_est(
+    #     wt1nondf, x_channel="34 FRx (cm)"
+    # )
+
+    wt1_fl_stwi_est = step_width_est(
         wt1nondf,
-        rl_swoff="54 HLr Sw of",
-        ll_swoff="52 HLl Sw of",
-        rl_y="30 HRy (cm)",
-        ll_y="28 HLy (cm)",
+        rl_x="34 FRx (cm)",
+        ll_x="32 FLx (cm)",
+        rl_y="35 FRy (cm)",
+        ll_y="33 FLy (cm)",
     )
+    print(f"Estimated step width {len(wt1_fl_stwi_est)}")
 
-    wt1_cycle_dur, wt1_avg_cycle_period = step_cycle_est(
-        wt1nondf, x_channel="32 FLx (cm)"
+
+    wt5_fl_stwi_est = step_width_est(
+        wt5nondf,
+        rl_x="34 FRx (cm)",
+        ll_x="32 FLx (cm)",
+        rl_y="35 FRy (cm)",
+        ll_y="33 FLy (cm)",
     )
+    print(f"Estimated step width {len(wt5_fl_stwi_est)}")
 
-    print(f"Cycle period estimation average {wt1_avg_cycle_period}")
+    # right_ds = double_support_est(
+    #     wt1nondf, fl_channel="34 FRx (cm)", hl_channel="29 HRx (cm)", manual_peaks=False
+    # )
 
-    right_ds = double_support_est(
-        wt1nondf, fl_channel="34 FRx (cm)", hl_channel="29 HRx (cm)", manual_peaks=False
-    )
+    # print(len(wt1_cycle_dur))
+    #
+    # print(len(right_ds))
+
+    # x_cord = wt1nondf["34 FRx (cm)"].to_numpy(dtype=float)
+    #
+    # custom_params = {"axes.spines.right": False, "axes.spines.top": False}
+    # sns.set(style="white", font_scale=1.0, rc=custom_params)
+    #
+    # swing_legend = [
+    #     "Limb X cord",
+    #     "Swing offset",
+    #     "Swing onset",
+    # ]
+    #
+    # # For plotting figure demonstrating how calculation was done
+    # plt.title("Swing Estimation")
+    # plt.plot(x_cord)
+    # plt.plot(wt1_swingoff, x_cord[wt1_swingoff], "^")
+    # plt.plot(wt1_swingon, x_cord[wt1_swingon], "v")
+    # plt.legend(swing_legend, bbox_to_anchor=(1, 0.7))
+    #
+    # # Looking at result
+    # # axs[1].set_title("MoS Result")
+    # # axs[1].bar(0, np.mean(lmos), yerr=np.std(lmos), capsize=5)
+    # # axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
+    # # axs[1].legend(mos_legend, bbox_to_anchor=(1, 0.7))
+    #
+    # plt.tight_layout()
+    # plt.show()
 
 
 if __name__ == "__main__":

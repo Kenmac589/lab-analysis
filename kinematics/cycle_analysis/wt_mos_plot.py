@@ -88,7 +88,7 @@ mos_combo = mos_df.drop(columns=["Limb"])
 
 # Plotting
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
-sns.set(style="white", font="Arial", font_scale=1.5, rc=custom_params)
+sns.set(style="white", font="Helvetica", font_scale=1.7, rc=custom_params)
 
 fig, axs = plt.subplots(1, 2)
 
@@ -117,16 +117,16 @@ limb_plot_params = {
     "hue_order": perturbation_state_order,
 }
 
-fig.suptitle("Margin of Lateral Dynamic Lateral Stability (MoS) in WT")
+# fig.suptitle("Margin of Lateral Dynamic Lateral Stability (MoS) in WT")
 
 axs[0].set_title("MoS for WT by Limb")
-limb_comp = sns.violinplot(**limb_plot_params, ci=95, capsize=0.05, ax=axs[0])
+limb_comp = sns.barplot(**limb_plot_params, ci=95, capsize=0.05, ax=axs[0])
 # axs[0].legend(fontsize=12, bbox_to_anchor=(2.49, 0.7))
 axs[0].legend(fontsize=12, loc="best")
 annotator = Annotator(limb_comp, limb_pairs, **limb_plot_params)
-annotator.new_plot(limb_comp, limb_pairs, plot="violinplot", **limb_plot_params)
+annotator.new_plot(limb_comp, limb_pairs, plot="barplot", **limb_plot_params)
 annotator.configure(
-    hide_non_significant=False, test="t-test_welch", text_format="star", loc="inside"
+    hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside"
 )
 annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 
@@ -138,13 +138,14 @@ combo_plot_params = {
 }
 
 axs[1].set_title("MoS for WT by Pertubation State")
-combo_comp = sns.violinplot(**combo_plot_params, ci=95, capsize=0.05, ax=axs[1])
+combo_comp = sns.barplot(**combo_plot_params, ci=95, capsize=0.05, ax=axs[1])
 # axs[1].legend(combo_legend, loc="upper left", fontsize=12)
 annotator = Annotator(combo_comp, combo_pairs, **combo_plot_params)
-annotator.new_plot(combo_comp, combo_pairs, plot="violinplot", **combo_plot_params)
+annotator.new_plot(combo_comp, combo_pairs, plot="barplot", **combo_plot_params)
 annotator.configure(
-    hide_non_significant=False, test="t-test_welch", text_format="star", loc="inside"
+    hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside"
 )
 annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
+
 
 plt.show()

@@ -15,6 +15,9 @@ wt1nondf = pd.read_csv("./wt_data/wt-1-non-all.txt")
 # Getting stance duration for all 4 limbs
 
 wt1_swingon, wt1_swingoff = ls.swing_estimation(wt1nondf, x_channel="32 FLx (cm)")
+wt1_right_ds = ls.double_support_est(
+    wt1nondf, fl_channel="34 FRx (cm)", hl_channel="29 HRx (cm)", manual_peaks=False
+)
 
 x_cord = wt1nondf["32 FLx (cm)"].to_numpy(dtype=float)
 
