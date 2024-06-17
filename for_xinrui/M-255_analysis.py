@@ -1,11 +1,59 @@
 import dlc2kinematics as dlck
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 from dlc2kinematics import Visualizer2D
 from scipy import signal
 
 import latstability as ls
+
+
+def frame_to_time(frame_index):
+    # Convert to miliseconds
+    frame_mili = frame_index * 2
+    # Convert to seconds
+    time_seconds = frame_mili / 1000
+
+    return time_seconds
+
+
+def swing_estimation(foot_cord, width_threshold=40):
+    """This approximates swing onset and offset from kinematic data
+    :param : Exported channels from spike most importantly the x values for a channel
+
+    :return swing_onset: A list of indices where swing onset occurs
+    :return swing_offset: A list of indices where swing offet occurs
+    """
+
+    swing_offset, _ = signal.find_peaks(foot_cord, distance=width_threshold)
+    swing_onset, _ = signal.find_peaks(-foot_cord, width=width_threshold)
+
+    return swing_onset, swing_offset
+
+
+def step_cycle_est(foot_cord, width_threshold=40):
+    """This approximates swing onset and offset from kinematic data
+    :param input_dataframe: Exported channels from spike most importantly the x values for a channel
+
+    :return cycle_durations: A numpy array with the duration of each cycle
+    :return average_step: A list of indices where swing offet occurs
+    """
+
+    # Calculating swing estimations
+    swing_onset, _ = swing_estimation(foot_cord)
+
+    # Converting Output to time in seconds
+    time_conversion = np.vectorize(frame_to_time)
+    onset_timing = time_conversion(swing_onset)
+
+    cycle_durations = np.array([])
+    for i in range(len(onset_timing) - 1):
+        time_diff = onset_timing[i + 1] - onset_timing[i]
+        cycle_durations = np.append(cycle_durations, time_diff)
+
+    return cycle_durations
 
 
 # Custom median filter from
@@ -33,63 +81,90 @@ def median_filter(arr, k):
     return np.array(result)
 
 
-def apply_fir(data, coeff):
-    """applies a simple moving average to your data array.
-       The coefficients define the weights for each sample in the input sequence. In this case, they are [0.5, 0.5], which
-    means that the output is calculated as the weighted average of the last two samples (in this case, `data[n]*coeff[0] + data[n-1]*coeff[1]`).
-    """
-    filtered = signal.lfilter(coeff, 1, data)
-    return filtered
+def step_cycle_trial(input_h5, fig_filename, fig_title, cycle_filename):
+
+    # Loading in a dataset
+    df, bodyparts, scorer = dlck.load_data(input_h5)
+
+    # Grabbing toe marker data
+    toe = df[scorer]["toe"]
+
+    # Converting to numpy array
+    toe_np = pd.array(toe["x"])
+
+    # Filtering to clean up traces like you would in spike
+    toe_filtered = median_filter(toe_np, 9)
+    toe_roi_selection = toe_np[0:2550]  # Just to compare to original
+
+    # Cleaning up selection to region before mouse moves back
+    toe_roi_selection_fil = toe_filtered[0:2550]
+
+    # Calling function for swing estimation
+    swing_onset, swing_offset = swing_estimation(toe_filtered)
+
+    step_cyc_durations = step_cycle_est(toe_filtered)
+
+    # Saving values
+    np.savetxt(cycle_filename, step_cyc_durations, delimiter=",")
+
+    # Calling function for step cycle calculation
+
+    # Some of my default plotting parameters I like
+    custom_params = {"axes.spines.right": False, "axes.spines.top": False}
+    sns.set(style="white", font_scale=1.5, rc=custom_params)
+
+    # Plot Legend
+    swing_legend = [
+        "Limb X cord",
+        "Swing offset",
+        "Swing onset",
+    ]
+
+    fig, axs = plt.subplots(2)
+    fig.suptitle(fig_title)
+
+    # For plotting figure demonstrating how swing estimation was done
+    axs[0].set_title("Swing Estimation")
+    axs[0].plot(toe_filtered)
+    axs[0].plot(swing_offset, toe_filtered[swing_offset], "^")
+    axs[0].plot(swing_onset, toe_filtered[swing_onset], "v")
+    axs[0].legend(swing_legend, loc="best")
+
+    # Showing results for step cycle timing
+    axs[1].set_title("Step Cycle Result")
+    axs[1].bar(
+        0, np.mean(step_cyc_durations), yerr=np.std(step_cyc_durations), capsize=5
+    )
+
+    # Saving Figure in same folder
+    fig = mpl.pyplot.gcf()
+    fig.set_size_inches(19.8, 10.80)
+    plt.savefig(fig_filename, dpi=300)
 
 
-# Loading in a dataset
-df, bodyparts, scorer = dlck.load_data(
-    "./xinrui_M-255/2024-06-13_000000DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000.h5"
-)
-config_path = "/Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc-dtr/dtr_update_predtx-kenzie-2024-04-08/config.yaml"
+def main():
 
-print(bodyparts)
+    step_cycle_trial(
+        "./xinrui_M-255/2024-06-13_000000DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5",
+        fig_filename="./test_kinematics-2024-06-13_000000.png",
+        fig_title="Step Cycle for Video 2024-06-13_000000",
+        cycle_filename="./step_cycles-2024-06-13_000000.csv",
+    )
 
-bodyparts_to_check = [
-    "toe",
-    "mirror_lhl",
-    "mirror_rhl",
-    "mirror_lfl",
-    "mirror_rfl",
-    "mirror_com",
-]
+    step_cycle_trial(
+        "./xinrui_M-255/ts3_000000DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5",
+        fig_filename="./test_kinematics-ts3_000000.png",
+        fig_title="Step Cycle for Video ts_000000",
+        cycle_filename="./step_cycles-ts3_000000.csv",
+    )
 
-toe = df[scorer]["toe"]
-lhl = df[scorer]["mirror_lhl"]
-rhl = df[scorer]["mirror_rhl"]
-lfl = df[scorer]["mirror_lfl"]
-rfl = df[scorer]["mirror_rfl"]
-com = df[scorer]["mirror_com"]
+    step_cycle_trial(
+        "./xinrui_M-255/ts3_000001DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000.h5",
+        fig_filename="./test_kinematics-ts3_000001.png",
+        fig_title="Step Cycle for Video ts_000001",
+        cycle_filename="./step_cycles-ts3_000001.csv",
+    )
 
-# Converting to numpy array test
-toe_np = pd.array(toe["x"])
-# lhl_np = pd.array(lhl["x"])
-# rhl_np = pd.array(rhl["x"])
-# lfl_np = pd.array(lfl["x"])
-# rfl_np = pd.array(rfl["x"])
-# com_np = pd.array(com["y"])
 
-# Simply coefficient example
-coeff = np.array([0.1, 0.2, 0.7])
-coeff = np.array([0.1, 0.2, 0.7])
-# fir_lhl = apply_fir(lhl_np, coeff)
-# fir_rhl = apply_fir(rhl_np, coeff)
-# fir_lfl = apply_fir(lfl_np, coeff)
-# fir_rfl = apply_fir(rfl_np, coeff)
-
-# Filtering to clean up traces like you would in spike
-toe_filtered = median_filter(toe_np, 9)
-# lhl_filtered = median_filter(lhl_np, 9)
-# rhl_filtered = median_filter(rhl_np, 9)
-# lfl_filtered = median_filter(lfl_np, 9)
-# rfl_filtered = median_filter(rfl_np, 9)
-# com_filtered = median_filter(com_np, 9)
-plt.plot(toe_filtered)
-
-# plt.legend(bodyparts_to_check)
-plt.show()
+if __name__ == "__main__":
+    main()

@@ -445,6 +445,7 @@ def step_width(
 
     return step_widths
 
+
 def step_width_est(
     input_dataframe: pd.DataFrame,
     rl_x: str,
@@ -489,7 +490,6 @@ def step_width_est(
     step_widths = np.asarray(step_widths)
 
     return step_widths
-
 
 
 def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=False):
@@ -833,7 +833,6 @@ def main():
     )
     print(f"Estimated step width {len(wt1_fl_stwi_est)}")
 
-
     wt5_fl_stwi_est = step_width_est(
         wt5nondf,
         rl_x="34 FRx (cm)",
@@ -843,9 +842,9 @@ def main():
     )
     print(f"Estimated step width {len(wt5_fl_stwi_est)}")
 
-    # right_ds = double_support_est(
-    #     wt1nondf, fl_channel="34 FRx (cm)", hl_channel="29 HRx (cm)", manual_peaks=False
-    # )
+    right_ds = double_support_est(
+        wt1nondf, fl_channel="34 FRx (cm)", hl_channel="29 HRx (cm)", manual_peaks=False
+    )
 
     # print(len(wt1_cycle_dur))
     #
