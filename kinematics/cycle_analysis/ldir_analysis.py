@@ -91,9 +91,18 @@ step_cycles_filename = "./lr-walking/step_cycles-lwalk-M1.csv"
 
 # Grabbing toe marker data
 toe = df[scorer]["toe"]
+lhl = df[scorer]["Mirror lHL"]
+rhl = df[scorer]["Mirror rHL"]
+lfl = df[scorer]["Mirror lFL"]
+rfl = df[scorer]["Mirror rFL"]
 
 # Converting to numpy array
 toe_np = pd.array(toe["x"])
+lhl_np = pd.array(lhl["x"])
+rhl_np = pd.array(rhl["x"])
+lfl_np = pd.array(lfl["x"])
+rfl_np = pd.array(rfl["x"])
+com_np = pd.array(com["y"])
 
 # Filtering to clean up traces like you would in spike
 toe_filtered = median_filter(toe_np, 9)
