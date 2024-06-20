@@ -81,6 +81,10 @@ def median_filter(arr, k):
     return np.array(result)
 
 
+def cop(fl_y, hl_y):
+    return (fl_y + hl_y) / 2
+
+
 # Loading in a dataset
 df, bodyparts, scorer = dlck.load_data(
     "./lr-walking/ldir/M1_01mps_L_walking_tmDLC_resnet_50_CoM-treadmill_to_leftMar2shuffle1_1030000.h5"
@@ -98,18 +102,25 @@ rfl = df[scorer]["Mirror rFL"]
 
 # Converting to numpy array
 toe_np = pd.array(toe["x"])
-lhl_np = pd.array(lhl["x"])
-rhl_np = pd.array(rhl["x"])
-lfl_np = pd.array(lfl["x"])
-rfl_np = pd.array(rfl["x"])
-com_np = pd.array(com["y"])
+rfl_np = pd.array(rfl["y"])
+rhl_np = pd.array(rhl["y"])
+lfl_np = pd.array(lfl["y"])
+lhl_np = pd.array(lhl["y"])
+# com_np = pd.array(com["y"])
 
 # Filtering to clean up traces like you would in spike
 toe_filtered = median_filter(toe_np, 9)
-toe_roi_selection = toe_np[0:2550]  # Just to compare to original
+rfl_filtered = median_filter(rfl_np, 9)
+rhl_filtered = median_filter(rhl_np, 9)
+lfl_filtered = median_filter(lfl_np, 9)
+lhl_filtered = median_filter(lhl_np, 9)
 
 # Cleaning up selection to region before mouse moves back
-toe_roi_selection_fil = toe_filtered[0:2550]
+# toe_roi_selection_fil = toe_filtered[0:2550]
+
+# Center of pressures
+rcop = cop(rfl_filtered, rhl_filtered)
+lcop = cop(lfl_filtered, lhl_filtered)
 
 # Calling function for swing estimation
 swing_onset, swing_offset = swing_estimation(toe_filtered)
@@ -142,7 +153,8 @@ axs[0].plot(swing_onset, toe_filtered[swing_onset], "v")
 axs[0].legend(swing_legend, loc="best")
 
 # Showing results for step cycle timing
-axs[1].set_title("Step Cycle Result")
+axs[1].set_title("xCoM and CoP")
+
 axs[1].bar(0, np.mean(step_cyc_durations), yerr=np.std(step_cyc_durations), capsize=5)
 
 
