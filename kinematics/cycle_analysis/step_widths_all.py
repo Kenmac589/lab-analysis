@@ -431,7 +431,7 @@ sw_combo = step_width_df.drop(columns=["Limb"])
 con_sw_combo = step_width_df.drop(columns=["Limb"])
 
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
-sns.set(style="white", font_scale=1.7, rc=custom_params)
+sns.set(style="white", font="serif", font_scale=1.7, palette="colorblind", rc=custom_params)
 
 combo_pairs = [
     [("Non-Perturbation"), ("Perturbation")],
@@ -476,7 +476,7 @@ cond_combo_plot_params = {
 
 # axs[0].set_title("MoS between conditions")
 cond_combo_comp = sns.barplot(**cond_combo_plot_params, ci=95, capsize=0.05)
-plt.legend(loc="upper right", fontsize=12)
+plt.legend(loc="upper right", fontsize=16)
 annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
 annotator.new_plot(
     cond_combo_comp, condition_pairs, plot="barplot", **cond_combo_plot_params
@@ -489,5 +489,6 @@ annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(19.8, 10.80)
+fig.tight_layout()
 plt.savefig("./combined_figures/step_widths_all.png", dpi=300)
 # plt.show()

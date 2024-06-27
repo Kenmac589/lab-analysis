@@ -45,8 +45,11 @@ predtx_non_fall = (rows_with_falls["Condition"] == "Pre-DTX") & (
 predtx_non_fall = rows_with_falls[~predtx_non_fall]
 print(predtx_non_fall)
 
+
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
-sns.set(style="white", font_scale=1.7, rc=custom_params)
+sns.set(
+    style="white", font="serif", font_scale=1.7, palette="colorblind", rc=custom_params
+)
 
 # plt.title("Theoretical Falls by Condition")
 plt.ylabel("# of Falls")
@@ -59,3 +62,4 @@ plt.legend(conditions)
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(19.8, 10.8)
 plt.savefig("./combined_figures/falls_no_title.png", dpi=300)
+# plt.show()

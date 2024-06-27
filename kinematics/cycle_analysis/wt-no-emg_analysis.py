@@ -2,8 +2,8 @@ import dlc2kinematics as dlck
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-import scipy as sp
 import pandas as pd
+import scipy as sp
 import seaborn as sns
 from dlc2kinematics import Visualizer2D
 from scipy import signal
@@ -198,9 +198,11 @@ def spike_slope(comy, p):
 
     return slope
 
+
 # def calc_slope(x):
 #     slope = np.polyfit(range(len(x)), x, 1)[0]
 #     return slope
+
 
 def hip_height(toey_values, hipy_values, manual=False):
     """Approximates Hip Height
@@ -269,6 +271,7 @@ def xcom(comy, vcom, hip_height):
 def cop(fl_y, hl_y):
     return (fl_y + hl_y) / 2
 
+
 def mos_marks(related_trace, leftcop, rightcop, title="Select Points"):
     """Manually annotate points of interest on a given trace
     :param related_trace: Trace you want to annotate
@@ -307,6 +310,7 @@ def mos_marks(related_trace, leftcop, rightcop, title="Select Points"):
 
     return manual_marks_x, manual_marks_y
 
+
 def mos(
     xcom, leftcop, rightcop, leftds, rightds, manual_peaks=False, width_threshold=40
 ):
@@ -343,7 +347,7 @@ def mos(
         # Getting non-nan values from region
 
         # Making sure we are actually grabbing the last meaningful region of center of pressure
-        lmos = cop_point - xcom[xcom_index]
+        lmos = xcom[xcom_index] - cop_point
         # print(f"L COP {cop_point}")
         # print(f"xCoM {xcom[xcom_index]}")
         lmos_values = np.append(lmos_values, lmos)
@@ -354,42 +358,43 @@ def mos(
         cop_point = rcop_points[i]
 
         # Getting non-nan values from region
-        rmos = xcom[xcom_index] - cop_point
+        rmos = cop_point - xcom[xcom_index]
         # print(f"R COP {cop_point}")
         # print(f"xCoM {xcom[xcom_index]}")
         rmos_values = np.append(rmos_values, rmos)
 
     return lmos_values, rmos_values, xcom_peaks, xcom_troughs
 
+
 def main():
 
     # Loading in a dataset
     df, bodyparts, scorer = dlck.load_data(
-        "./lr-walking/ldir/M5_01mps_L_walking_tmDLC_resnet_50_CoM-treadmill_to_leftMar2shuffle1_1030000.h5"
+        "./wt-no-emg/wt-no-emg-m1/wt-no-emg-m1-pre/WT-No-EMG-M1-pre_000004DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
     )
 
-    mouse_number = 5
+    mouse_number = 1
     manual_analysis = False
-    save_auto = True
-    filter_k = 9
+    save_auto = False
+    filter_k = 11
 
     # Settings before running initial workup from DeepLabCut
-    figure_title = f"Step Cycle for Video lwalk-M{mouse_number}"
-    figure_filename = f"./lr-walking/file_string_test/lwalk-{mouse_number}.svg"
-    step_cycles_filename = f"./lr-walking/file_string_test/lwalk-{mouse_number}-step-cycles.csv"
+    figure_title = f"Step Cycles for wt-no-emg-M{mouse_number}-pre"
+    figure_filename = f"./wt-no-emg/wt-no-emg-m1/wt-no-emg-m1-pre/wt-no-emg-m{mouse_number}-non-pre.svg"
+    step_cycles_filename = f"./wt-no-emg/wt-no-emg-m1/wt-no-emg-m1-pre/wt-no-emg-m{mouse_number}-non-step-cycles.csv"
 
     # Some things to set for plotting/saving
-    lmos_filename = f"./lr-walking/file_string_test/lwalk-{mouse_number}-lmos.csv"
-    rmos_filename = f"./lr-walking/file_string_test/lwalk-{mouse_number}-rmos.csv"
-    mos_figure_title = f"Measurement of Stability For LR Walking WT {mouse_number}"
-    mos_figure_filename = f"./lr-walking/file_string_test/lwalk-{mouse_number}.svg"
+    lmos_filename = f"./wt-no-emg/wt-no-emg-m1/wt-no-emg-m1-pre/wt-no-emg-m{mouse_number}-non-pre-lmos.csv"
+    rmos_filename = f"./wt-no-emg/wt-no-emg-m1/wt-no-emg-m1-pre/wt-no-emg-m{mouse_number}-non-pre-rmos.csv"
+    mos_figure_title = f"Measurement of Stability For WT EMG Control M{mouse_number}"
+    mos_figure_filename = f"./wt-no-emg/wt-no-emg-m1/wt-no-emg-m1-pre/wt-no-emg-m{mouse_number}-non-pre-mos.svg"
     calib_markers = [
-        "calib 1",
-        "calib 2",
-        "calib 3",
-        "calib 4",
-        "calib 5",
-        "calib 6",
+        "calib_1",
+        "calib_2",
+        "calib_3",
+        "calib_4",
+        "calib_5",
+        "calib_6",
     ]
 
     # For visualizing skeleton
@@ -404,11 +409,11 @@ def main():
     # Grabbing toe marker data
     toe = df[scorer]["toe"]
     hip = df[scorer]["hip"]
-    lhl = df[scorer]["Mirror lHL"]
-    rhl = df[scorer]["Mirror rHL"]
-    lfl = df[scorer]["Mirror lFL"]
-    rfl = df[scorer]["Mirror rFL"]
-    com = df[scorer]["Mirror CoM"]
+    lhl = df[scorer]["mirror_lhl"]
+    rhl = df[scorer]["mirror_rhl"]
+    lfl = df[scorer]["mirror_lfl"]
+    rfl = df[scorer]["mirror_rfl"]
+    com = df[scorer]["mirror_com"]
 
     # Converting to numpy array
     toe_np = pd.array(toe["x"])
@@ -602,6 +607,7 @@ def main():
         print("Mos results not saved")
 
     plt.show()
+
 
 if __name__ == "__main__":
     main()

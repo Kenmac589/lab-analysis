@@ -81,7 +81,7 @@ def mos(
         # Getting non-nan values from region
 
         # Making sure we are actually grabbing the last meaningful region of center of pressure
-        lmos = xcom[xcom_index] - cop_point
+        lmos = cop_point - xcom[xcom_index]
         # print(f"L COP {cop_point}")
         # print(f"xCoM {xcom[xcom_index]}")
         lmos_values = np.append(lmos_values, lmos)
@@ -92,7 +92,7 @@ def mos(
         cop_point = rcop_points[i]
 
         # Getting non-nan values from region
-        rmos = cop_point - xcom[xcom_index]
+        rmos = xcom[xcom_index] - cop_point
         # print(f"R COP {cop_point}")
         # print(f"xCoM {xcom[xcom_index]}")
         rmos_values = np.append(rmos_values, rmos)
@@ -103,25 +103,26 @@ def mos(
 def main():
 
     mouse_number = 5
-    ldir = pd.read_csv(
-        f"./lr-walking/ldir/lwalk-{mouse_number}.txt", delimiter=",", header=0
+    print(f"Analysis for mouse {mouse_number}")
+    rdir = pd.read_csv(
+        f"./lr-walking/rdir/rwalk-{mouse_number}.txt", delimiter=",", header=0
     )
     # print(ldir.head(5))
 
     # Some things to set for plotting/saving
     manual_analysis = False
     save_auto = True
-    lmos_filename = f"./lr-walking/ldir/lwalk-{mouse_number}-lmos.csv"
-    rmos_filename = f"./lr-walking/ldir/lwalk-{mouse_number}-rmos.csv"
-    figure_title = f"Measurement of Stability For LR Walking WT {mouse_number}"
-    figure_filename = f"./lr-walking/ldir/lwalk-{mouse_number}.svg"
+    lmos_filename = f"./lr-walking/file_string_test/rwalk-{mouse_number}-lmos.csv"
+    rmos_filename = f"./lr-walking/file_string_test/rwalk-{mouse_number}-rmos.csv"
+    figure_title = f"Measurement of Stability For LR Walking R-WT {mouse_number}"
+    figure_filename = f"./lr-walking/file_string_test/rwalk-{mouse_number}.svg"
 
     # Grabbing individual channels
-    xcom = ldir["v1 xCoMy"].to_numpy(dtype=float)
-    leftcop = ldir["v3 Left CoP"].to_numpy(dtype=float)
-    rightcop = ldir["v2 Right CoP"].to_numpy(dtype=float)
-    left_DS = ldir["v3 Left CoP"].to_numpy(dtype=float)
-    right_DS = ldir["v2 Right CoP"].to_numpy(dtype=float)
+    xcom = rdir["v1 xCoMy"].to_numpy(dtype=float)
+    leftcop = rdir["v3 Left CoP"].to_numpy(dtype=float)
+    rightcop = rdir["v2 Right CoP"].to_numpy(dtype=float)
+    left_DS = rdir["v3 Left CoP"].to_numpy(dtype=float)
+    right_DS = rdir["v2 Right CoP"].to_numpy(dtype=float)
 
     # Remove periods where it is not present or not valid
     # leftcop = np.where(leftcop == 0.0, np.nan, leftcop)

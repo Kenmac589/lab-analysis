@@ -269,18 +269,12 @@ con_mos_combo = mos_df.drop(columns=["Limb"])
 con_mos_combo.to_csv("./mos_limbs_combined_all.csv")
 
 # Plotting
-custom_params = {"axes.spines.right": False, "axes.spines.top": False}
-sns.set(style="white", font_scale=1.5, rc=custom_params)
+custom_params = {
+    "axes.spines.right": False,
+    "axes.spines.top": False
+}
+sns.set(style="white", font="serif", font_scale=1.8, palette="colorblind", rc=custom_params)
 
-# Dual plot figure was nice until 4 conditions happened
-# fig, axs = plt.subplots(1, 2)
-
-# limb_pairs = [
-#     [("Left", "Non-Perturbation"), ("Left", "Perturbation")],
-#     [("Left", "Non-Perturbation"), ("Left", "Sinusoidal")],
-#     [("Right", "Non-Perturbation"), ("Right", "Perturbation")],
-#     [("Right", "Non-Perturbation"), ("Right", "Sinusoidal")],
-# ]
 
 combo_pairs = [
     [("Non-Perturbation"), ("Perturbation")],
@@ -289,27 +283,7 @@ combo_legend = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
 
 perturbation_state_order = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
 
-# # Plot for limb comparison
-# limb_plot_params = {
-#     "data": mos_df,
-#     "x": "Limb",
-#     "y": "MoS",
-#     "hue": "Perturbation State",
-#     "hue_order": perturbation_state_order,
-# }
-#
-plt.title("MoS between WT, Egr3 KO, and DTX Mice Pre and Post Injection")
-#
-# axs[0].set_title("MoS for Egr3 by Limb")
-# limb_comp = sns.violinplot(**limb_plot_params, ci=95, capsize=0.05, ax=axs[0])
-# # axs[0].legend(fontsize=12, bbox_to_anchor=(2.49, 0.7))
-# axs[0].legend(fontsize=12, loc="best")
-# annotator = Annotator(limb_comp, limb_pairs, **limb_plot_params)
-# annotator.new_plot(limb_comp, limb_pairs, plot="violinplot", **limb_plot_params)
-# annotator.configure(
-#     hide_non_significant=False, test="t-test_ind", text_format="star", loc="inside"
-# )
-# annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
+# plt.title("MoS between WT, Egr3 KO, and DTX Mice Pre and Post Injection")
 
 # Intercondition Comparison
 condition_pairs = [
@@ -343,11 +317,12 @@ cond_combo_plot_params = {
     "hue": "Perturbation State",
     "hue_order": perturbation_state_order,
     "inner": "point",
+
 }
 
 # axs[0].set_title("MoS between conditions")
 cond_combo_comp = sns.violinplot(**cond_combo_plot_params, ci=95, capsize=0.05)
-plt.legend(loc="upper right", fontsize=12)
+plt.legend(loc="upper left", fontsize=16)
 annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
 annotator.new_plot(
     cond_combo_comp, condition_pairs, plot="violinplot", **cond_combo_plot_params
@@ -360,5 +335,6 @@ annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(19.8, 10.80)
-plt.savefig("./combined_figures/mos_all_violin_inner.png", dpi=300)
+fig.tight_layout()
 # plt.show()
+plt.savefig("./combined_figures/mos_all_violin_inner.png", dpi=300)

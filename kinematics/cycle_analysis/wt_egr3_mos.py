@@ -22,7 +22,7 @@ def condition_add(input_df, file_list, condition, limb, perturbation_state):
             input_df = input_df._append(
                 pd.DataFrame(
                     mos_entry,
-                    columns=["Condition", "Limb", "Perturbation State", "MoS"],
+                    columns=["Condition", "Limb", "Perturbation State", "MoS (cm)"],
                 ),
                 ignore_index=True,
             )
@@ -132,7 +132,7 @@ egr3_sin_rmos = [
 ]
 
 
-mos_df = df(columns=["Condition", "Limb", "Perturbation State", "MoS"])
+mos_df = df(columns=["Condition", "Limb", "Perturbation State", "MoS (cm)"])
 
 mos_df = condition_add(mos_df, wt_non_lmos, "WT", "Left", "Non-Perturbation")
 mos_df = condition_add(mos_df, wt_non_rmos, "WT", "Right", "Non-Perturbation")
@@ -156,10 +156,10 @@ con_mos_combo.to_csv("./mos_limbs_combined_egr3.csv")
 
 # Plotting
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
-sns.set(style="white", font_scale=1.5, rc=custom_params)
+sns.set(style="white", font="serif", font_scale=2.0, palette="colorblind", rc=custom_params)
 
 # Dual plot figure was nice until 4 conditions happened
-# fig, axs = plt.subplots(1, 2)
+fig, axs = plt.subplots(1, 2)
 
 # limb_pairs = [
 #     [("Left", "Non-Perturbation"), ("Left", "Perturbation")],
@@ -213,15 +213,36 @@ perturbation_state_order = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
 cond_combo_plot_params = {
     "data": con_mos_combo,
     "x": "Condition",
-    "y": "MoS",
+    "y": "MoS (cm)",
+    "hue": "Perturbation State",
+    "hue_order": perturbation_state_order,
+}
+
+# Barplot view
+cond_combo_comp = sns.barplot(**cond_combo_plot_params, ci=95, capsize=0.05, ax=axs[0])
+axs[0].legend(loc="upper right", fontsize=16)
+annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
+annotator.new_plot(
+    cond_combo_comp, condition_pairs, plot="barplot", **cond_combo_plot_params
+)
+annotator.configure(
+    hide_non_significant=True, test="t-test_ind", text_format="star", loc="inside"
+)
+
+annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
+
+cond_combo_plot_params = {
+    "data": con_mos_combo,
+    "x": "Condition",
+    "y": "MoS (cm)",
     "hue": "Perturbation State",
     "hue_order": perturbation_state_order,
     "inner": "point",
 }
 
-# axs[0].set_title("MoS between conditions")
-cond_combo_comp = sns.violinplot(**cond_combo_plot_params, ci=95, capsize=0.05)
-plt.legend(loc="upper right", fontsize=12)
+# Violnplot view
+cond_combo_comp = sns.violinplot(**cond_combo_plot_params, ci=95, capsize=0.05, ax=axs[1])
+axs[1].legend(loc="upper right", fontsize=16)
 annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
 annotator.new_plot(
     cond_combo_comp, condition_pairs, plot="violinplot", **cond_combo_plot_params
@@ -232,4 +253,8 @@ annotator.configure(
 
 annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 
-plt.show()
+fig = plt.gcf()
+fig.set_size_inches(19.8, 10.8)
+fig.tight_layout()
+# plt.show()
+plt.savefig("./combined_figures/egr3_and_wt_only.png", dpi=300)
