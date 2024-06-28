@@ -370,17 +370,18 @@ def main():
 
     # Loading in a dataset
     df, bodyparts, scorer = dlck.load_data(
-        "./lr-walking/rdir/M5_01mps_R_walking_tmDLC_resnet_50_CoM-treadmill_to_right 2Mar2shuffle1_600000.h5"
+        "./lr-walking/rdir/M1_01mps_R_walking_tmDLC_resnet_50_CoM-treadmill_to_rightFeb27shuffle1_1030000.h5"
     )
 
-    mouse_number = 5
+    # NOTE: Very important this is checked before running
+    mouse_number = 1
     manual_analysis = False
-    save_auto = True
+    save_auto = False
     filter_k = 9
 
     # Settings before running initial workup from DeepLabCut
     figure_title = f"Step Cycle for Video rwalk-M{mouse_number}"
-    figure_filename = f"./lr-walking/file_string_test/rwalk-{mouse_number}.svg"
+    figure_filename = f"./lr-walking/file_string_test/rwalk-{mouse_number}-steps.svg"
     step_cycles_filename = (
         f"./lr-walking/file_string_test/rwalk-{mouse_number}-step-cycles.csv"
     )
@@ -389,7 +390,7 @@ def main():
     lmos_filename = f"./lr-walking/file_string_test/rwalk-{mouse_number}-lmos.csv"
     rmos_filename = f"./lr-walking/file_string_test/rwalk-{mouse_number}-rmos.csv"
     mos_figure_title = f"Measurement of Stability For LR Walking WT {mouse_number}"
-    mos_figure_filename = f"./lr-walking/file_string_test/rwalk-{mouse_number}.svg"
+    mos_figure_filename = f"./lr-walking/file_string_test/rwalk-{mouse_number}-mos.svg"
     calib_markers = [
         "calib 1",
         "calib 2",
@@ -441,26 +442,26 @@ def main():
     lhl_np = lhl_np / calib_factor
 
     # Filtering to clean up traces like you would in spike
-    toe_med = median_filter(toe_np, filter_k)
+    toe_smooth = sp.signal.savgol_filter(toe_np, 20, 3)
     toey_med = median_filter(toey_np, filter_k)
     hipy_med = median_filter(hipy_np, filter_k)
-    com_med = median_filter(comy_np, filter_k)
+    com_med = sp.signal.savgol_filter(comy_np, 20, 3)
 
-    rfl_med = median_filter(rfl_np, filter_k)
-    rhl_med = median_filter(rhl_np, filter_k)
-    lfl_med = median_filter(lfl_np, filter_k)
-    lhl_med = median_filter(lhl_np, filter_k)
+    rfl_med = sp.signal.savgol_filter(rfl_np, 20, 3)
+    rhl_med = sp.signal.savgol_filter(rhl_np, 20, 3)
+    lfl_med = sp.signal.savgol_filter(lfl_np, 20, 3)
+    lhl_med = sp.signal.savgol_filter(lhl_np, 20, 3)
 
     # Cleaning up selection to region before mouse moves back
     # toe_roi_selection_fil = toe_filtered[0:2550]
 
-    rfl_med = rfl_med[1000:4000]
-    rhl_med = rhl_med[1000:4000]
-    lfl_med = lfl_med[1000:4000]
-    lhl_med = lhl_med[1000:4000]
-    time_trimmed = time[1000:4000]
-    comy_trimmed = comy_np[1000:4000]
-    com_trimmed = com_med[1000:4000]
+    # rfl_med = rfl_med[1000:4000]
+    # rhl_med = rhl_med[1000:4000]
+    # lfl_med = lfl_med[1000:4000]
+    # lhl_med = lhl_med[1000:4000]
+    time_trimmed = time
+    # comy_trimmed = comy_np[1000:4000]
+    com_trimmed = com_med
 
     # Center of pressures
     com_slope = spike_slope(com_trimmed, 40)
@@ -474,8 +475,8 @@ def main():
     left_DS = leftcop
 
     # Calling function for swing estimation
-    swing_onset, swing_offset = swing_estimation(toe_med)
-    step_cyc_durations = step_cycle_est(toe_med)
+    swing_onset, swing_offset = swing_estimation(toe_smooth)
+    step_cyc_durations = step_cycle_est(toe_smooth)
 
     # Calling function for step cycle calculation
 
@@ -496,13 +497,10 @@ def main():
         "Swing onset",
     ]
     filtest_legend = [
-        # "Original",
-        # "Median",
         "xCoM",
         "CoMy",
         "L CoP",
         "R CoP",
-        # "Slope",
     ]
 
     fig, axs = plt.subplots(2)
@@ -510,21 +508,17 @@ def main():
 
     # Showing results for step cycle timing
     axs[0].set_title("Filter test")
-    # axs[0].plot(comy_np)
-    # axs[0].plot(com_med)
     axs[0].plot(time_trimmed, xcom_trimmed)
     axs[0].plot(time_trimmed, com_trimmed)
     axs[0].plot(time_trimmed, leftcop)
     axs[0].plot(time_trimmed, rightcop)
-    # axs[0].plot(time_trimmed, com_slope)
     axs[0].legend(filtest_legend, loc="best")
-    # axs[0].bar(0, np.mean(step_cyc_durations), yerr=np.std(step_cyc_durations), capsize=5)
 
     # For plotting figure demonstrating how swing estimation was done
     axs[1].set_title("Swing Estimation")
-    axs[1].plot(toe_med)
-    axs[1].plot(swing_offset, toe_med[swing_offset], "^")
-    axs[1].plot(swing_onset, toe_med[swing_onset], "v")
+    axs[1].plot(toe_smooth)
+    axs[1].plot(swing_offset, toe_smooth[swing_offset], "^")
+    axs[1].plot(swing_onset, toe_smooth[swing_onset], "v")
     axs[1].legend(swing_legend, loc="best")
 
     # Saving Figure in same folder
@@ -557,11 +551,26 @@ def main():
         width_threshold=60,
     )
 
-    # Plotting
-    custom_params = {"axes.spines.right": False, "axes.spines.top": False}
-    sns.set(style="white", font_scale=1.0, rc=custom_params)
+    mos_comb = pd.DataFrame(columns=["Limb", "MoS (cm)"])
+    for i in range(len(lmos)):
+        condition = "Left"
+        fixed_array = lmos.ravel()
+        mos_entry = [[condition, fixed_array[i]]]
+        mos_comb = mos_comb._append(
+            pd.DataFrame(mos_entry, columns=["Limb", "MoS (cm)"]),
+            ignore_index=True,
+        )
 
-    # Figure for M4 perturbation
+    for i in range(len(rmos)):
+        condition = "Right"
+        fixed_array = rmos.ravel()
+        mos_entry = [[condition, fixed_array[i]]]
+        mos_comb = mos_comb._append(
+            pd.DataFrame(mos_entry, columns=["Limb", "MoS (cm)"]),
+            ignore_index=True,
+        )
+    # Plotting
+
     xcom_legend = [
         "xCoM",
         "xCoM peaks",
@@ -584,9 +593,7 @@ def main():
 
     # Looking at result
     axs[1].set_title("MoS Result")
-    axs[1].bar(0, np.mean(lmos), yerr=np.std(lmos), capsize=5)
-    axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
-    axs[1].legend(mos_legend, bbox_to_anchor=(1, 0.7))
+    sns.violinplot(data=mos_comb, x="Limb", y="MoS (cm)", inner="point", ax=axs[1])
 
     # plt.tight_layout()
     fig = plt.gcf()

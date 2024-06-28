@@ -2,8 +2,8 @@ import dlc2kinematics as dlck
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-import scipy as sp
 import pandas as pd
+import scipy as sp
 import seaborn as sns
 from dlc2kinematics import Visualizer2D
 from scipy import signal
@@ -198,9 +198,11 @@ def spike_slope(comy, p):
 
     return slope
 
+
 # def calc_slope(x):
 #     slope = np.polyfit(range(len(x)), x, 1)[0]
 #     return slope
+
 
 def hip_height(toey_values, hipy_values, manual=False):
     """Approximates Hip Height
@@ -269,6 +271,7 @@ def xcom(comy, vcom, hip_height):
 def cop(fl_y, hl_y):
     return (fl_y + hl_y) / 2
 
+
 def mos_marks(related_trace, leftcop, rightcop, title="Select Points"):
     """Manually annotate points of interest on a given trace
     :param related_trace: Trace you want to annotate
@@ -306,6 +309,7 @@ def mos_marks(related_trace, leftcop, rightcop, title="Select Points"):
     plt.show()
 
     return manual_marks_x, manual_marks_y
+
 
 def mos(
     xcom, leftcop, rightcop, leftds, rightds, manual_peaks=False, width_threshold=40
@@ -361,6 +365,7 @@ def mos(
 
     return lmos_values, rmos_values, xcom_peaks, xcom_troughs
 
+
 def main():
 
     # Loading in a dataset
@@ -370,13 +375,15 @@ def main():
 
     mouse_number = 5
     manual_analysis = False
-    save_auto = True
+    save_auto = False
     filter_k = 9
 
     # Settings before running initial workup from DeepLabCut
     figure_title = f"Step Cycle for Video lwalk-M{mouse_number}"
     figure_filename = f"./lr-walking/file_string_test/lwalk-{mouse_number}.svg"
-    step_cycles_filename = f"./lr-walking/file_string_test/lwalk-{mouse_number}-step-cycles.csv"
+    step_cycles_filename = (
+        f"./lr-walking/file_string_test/lwalk-{mouse_number}-step-cycles.csv"
+    )
 
     # Some things to set for plotting/saving
     lmos_filename = f"./lr-walking/file_string_test/lwalk-{mouse_number}-lmos.csv"
@@ -549,10 +556,28 @@ def main():
         manual_peaks=manual_analysis,
         width_threshold=60,
     )
+    mos_comb = pd.DataFrame(columns=["Limb", "MoS (cm)"])
+    for i in range(len(lmos)):
+        condition = "Left"
+        fixed_array = lmos.ravel()
+        mos_entry = [[condition, fixed_array[i]]]
+        mos_comb = mos_comb._append(
+            pd.DataFrame(mos_entry, columns=["Limb", "MoS (cm)"]),
+            ignore_index=True,
+        )
+
+    for i in range(len(rmos)):
+        condition = "Right"
+        fixed_array = rmos.ravel()
+        mos_entry = [[condition, fixed_array[i]]]
+        mos_comb = mos_comb._append(
+            pd.DataFrame(mos_entry, columns=["Limb", "MoS (cm)"]),
+            ignore_index=True,
+        )
+
+    print(mos_comb)
 
     # Plotting
-    custom_params = {"axes.spines.right": False, "axes.spines.top": False}
-    sns.set(style="white", font_scale=1.0, rc=custom_params)
 
     # Figure for M4 perturbation
     xcom_legend = [
@@ -577,9 +602,10 @@ def main():
 
     # Looking at result
     axs[1].set_title("MoS Result")
-    axs[1].bar(0, np.mean(lmos), yerr=np.std(lmos), capsize=5)
-    axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
-    axs[1].legend(mos_legend, bbox_to_anchor=(1, 0.7))
+    sns.violinplot(data=mos_comb, x="Limb", y="MoS (cm)", inner="point", ax=axs[1])
+    # axs[1].bar(0, np.mean(lmos), yerr=np.std(lmos), capsize=5)
+    # axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
+    # axs[1].legend(mos_legend, bbox_to_anchor=(1, 0.7))
 
     # plt.tight_layout()
     fig = plt.gcf()
@@ -602,6 +628,7 @@ def main():
         print("Mos results not saved")
 
     plt.show()
+
 
 if __name__ == "__main__":
     main()

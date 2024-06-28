@@ -157,7 +157,7 @@ for col in range(chosen_synergies):
 
     # Add vertical lines at the halfway point in each subplot
     axs[0, col].axvline(x=100, color='black')
-   
+
     # Begin Presenting Motor Modules
 
     # Get the data for the current column
@@ -165,7 +165,7 @@ for col in range(chosen_synergies):
 
     # Set the x-axis values for the bar graph
     x_values = np.arange(len(motor_module_column_data))
-    
+
     # Plot the bar graph for the current column in the corresponding subplot
     axs[1, col].bar(x_values, motor_module_column_data)
 
@@ -178,7 +178,7 @@ for col in range(chosen_synergies):
     # Remove labels on x and y axes
     axs[1, col].set_xticklabels([])
     axs[0, col].set_yticklabels([])
- 
+
     # Remove x and y axis labels and ticks from the avg_trace subplot
     axs[0, col].set_xticks([])
     axs[0, col].set_yticks([])
