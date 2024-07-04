@@ -95,7 +95,12 @@ def sw_condition_add(
             input_df = input_df._append(
                 pd.DataFrame(
                     step_width_entry,
-                    columns=["Condition", "Limb", "Perturbation State", "Step Width"],
+                    columns=[
+                        "Condition",
+                        "Limb",
+                        "Perturbation State",
+                        "Step Width (cm)",
+                    ],
                 ),
                 ignore_index=True,
             )
@@ -103,7 +108,36 @@ def sw_condition_add(
     return input_df
 
 
-step_width_df = df(columns=["Condition", "Limb", "Perturbation State", "Step Width"])
+def hiph_condition_add(
+    input_df, file_list, hhy_channels, condition, perturbation_state
+):
+    for i in range(len(file_list)):
+        current_file = pd.read_csv(file_list[i])
+        hip_height = ls.hip_height(
+            current_file,
+            toey=hhy_channels[0],
+            hipy=hhy_channels[1],
+        )
+        perturbation_state = perturbation_state
+        entry = hip_height
+
+        hiph_entry = [[condition, perturbation_state, entry]]
+
+        input_df = input_df._append(
+            pd.DataFrame(
+                hiph_entry,
+                columns=["Condition", "Perturbation State", "Hip Height (cm)"],
+            ),
+            ignore_index=True,
+        )
+
+    return input_df
+
+
+step_width_df = df(
+    columns=["Condition", "Limb", "Perturbation State", "Step Width (cm)"]
+)
+hiph_df = df(columns=["Condition", "Perturbation State", "Hip Height (cm)"])
 
 conditions = [
     "Non-Perturbation",
@@ -111,18 +145,24 @@ conditions = [
     "Sinusoidal",
 ]
 
+# NOTE: WT channel names also work for Egr3
 wt_y_channels = ["35 FRy (cm)", "33 FLy (cm)", "30 HRy (cm)", "28 HLy (cm)"]
 wt_x_channels = ["34 FRx (cm)", "32 FLx (cm)", "29 HRx (cm)", "27 HLx (cm)"]
+
 
 wt_fl_x_channels = ["34 FRx (cm)", "32 FLx (cm)"]
 wt_fl_y_channels = ["35 FRy (cm)", "33 FLy (cm)"]
 wt_hl_x_channels = ["29 HRx (cm)", "27 HLx (cm)"]
 wt_hl_y_channels = ["30 HRy (cm)", "28 HLy (cm)"]
 
+wt_hh_channels = ["24 toey (cm)", "16 Hipy (cm)"]
+
 dtr_fl_x_channels = ["39 FRx (cm)", "37 FLx (cm)"]
 dtr_fl_y_channels = ["40 FRy (cm)", "38 FLy (cm)"]
 dtr_hl_x_channels = ["35 HRx (cm)", "33 HLx (cm)"]
 dtr_hl_y_channels = ["36 HRy (cm)", "34 HLy (cm)"]
+
+dtr_hh_channels = ["25 toey (cm)", "17 Hipy (cm)"]
 
 wt_non = [
     "./wt_data/wt-1-non-all.txt",
@@ -427,11 +467,53 @@ step_width_df = sw_condition_add(
     "Sinusoidal",
 )
 
+# Now doing Hip Height
+
+# WT
+hiph_df = hiph_condition_add(hiph_df, wt_non, wt_hh_channels, "WT", "Non-Perturbation")
+hiph_df = hiph_condition_add(hiph_df, wt_per, wt_hh_channels, "WT", "Perturbation")
+hiph_df = hiph_condition_add(hiph_df, wt_sin, wt_hh_channels, "WT", "Sinusoidal")
+
+# Egr3
+hiph_df = hiph_condition_add(
+    hiph_df, egr3_non, wt_hh_channels, "Egr3", "Non-Perturbation"
+)
+hiph_df = hiph_condition_add(hiph_df, egr3_per, wt_hh_channels, "Egr3", "Perturbation")
+hiph_df = hiph_condition_add(hiph_df, egr3_sin, wt_hh_channels, "Egr3", "Sinusoidal")
+
+# Pre-DTX
+hiph_df = hiph_condition_add(
+    hiph_df, dtrpre_non, dtr_hh_channels, "Pre-DTX", "Non-Perturbation"
+)
+hiph_df = hiph_condition_add(
+    hiph_df, dtrpre_per, dtr_hh_channels, "Pre-DTX", "Perturbation"
+)
+hiph_df = hiph_condition_add(
+    hiph_df, dtrpre_sin, dtr_hh_channels, "Pre-DTX", "Sinusoidal"
+)
+
+# Post-DTX
+hiph_df = hiph_condition_add(
+    hiph_df, dtrpost_non, dtr_hh_channels, "Post-DTX", "Non-Perturbation"
+)
+hiph_df = hiph_condition_add(
+    hiph_df, dtrpost_per, dtr_hh_channels, "Post-DTX", "Perturbation"
+)
+hiph_df = hiph_condition_add(
+    hiph_df, dtrpost_sin, dtr_hh_channels, "Post-DTX", "Sinusoidal"
+)
+
+# print(hiph_df)
+
 sw_combo = step_width_df.drop(columns=["Limb"])
 con_sw_combo = step_width_df.drop(columns=["Limb"])
 
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
-sns.set(style="white", font="serif", font_scale=1.7, palette="colorblind", rc=custom_params)
+sns.set(
+    style="white", font="serif", font_scale=1.7, palette="colorblind", rc=custom_params
+)
+
+fig, axs = plt.subplots(1, 2)
 
 combo_pairs = [
     [("Non-Perturbation"), ("Perturbation")],
@@ -462,33 +544,61 @@ condition_pairs = [
     [("Post-DTX", "Non-Perturbation"), ("Post-DTX", "Perturbation")],
     [("Post-DTX", "Sinusoidal"), ("Post-DTX", "Perturbation")],
     [("Post-DTX", "Non-Perturbation"), ("Post-DTX", "Sinusoidal")],
+    # Comparison Between DTX conditions
+    [("Pre-DTX", "Non-Perturbation"), ("Post-DTX", "Non-Perturbation")],
+    [("Pre-DTX", "Sinusoidal"), ("Post-DTX", "Sinusoidal")],
+    [("Pre-DTX", "Perturbation"), ("Post-DTX", "Perturbation")],
 ]
 
 perturbation_state_order = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
-cond_combo_plot_params = {
+
+sw_plot_params = {
     "data": con_sw_combo,
     "x": "Condition",
-    "y": "Step Width",
+    "y": "Step Width (cm)",
     "hue": "Perturbation State",
     "hue_order": perturbation_state_order,
     # "inner": "point",
 }
 
-# axs[0].set_title("MoS between conditions")
-cond_combo_comp = sns.barplot(**cond_combo_plot_params, ci=95, capsize=0.05)
-plt.legend(loc="upper right", fontsize=16)
-annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
-annotator.new_plot(
-    cond_combo_comp, condition_pairs, plot="barplot", **cond_combo_plot_params
+hiph_plot_params = {
+    "data": hiph_df,
+    "x": "Condition",
+    "y": "Hip Height (cm)",
+    "hue": "Perturbation State",
+    "hue_order": perturbation_state_order,
+}
+
+
+# Step Width Plot
+print("\nStep Width Stats\n")
+axs[0].set_title("Step Width between conditions")
+sw_plot = sns.barplot(**sw_plot_params, ci=95, capsize=0.05, ax=axs[0])
+axs[0].legend(loc="best", fontsize=16)
+annotator = Annotator(sw_plot, condition_pairs, **sw_plot_params)
+annotator.new_plot(sw_plot, condition_pairs, plot="barplot", **sw_plot_params)
+annotator.configure(
+    hide_non_significant=True, test="t-test_ind", text_format="star", loc="inside"
 )
+annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
+
+
+# Hip Height Plot
+print("\nHip Height Stats\n")
+axs[1].set_title("Hip Height Between Conditions")
+hiph_plot = sns.barplot(**hiph_plot_params, ci=95, capsize=0.05, ax=axs[1])
+axs[1].legend(loc="best", fontsize=16)
+annotator = Annotator(hiph_plot, condition_pairs, **hiph_plot_params)
+annotator.new_plot(hiph_plot, condition_pairs, plot="barplot", **hiph_plot_params)
 annotator.configure(
     hide_non_significant=True, test="t-test_ind", text_format="star", loc="inside"
 )
 
 annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 
+
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(19.8, 10.80)
 fig.tight_layout()
-plt.savefig("./combined_figures/step_widths_all.png", dpi=300)
+plt.savefig("./combined_figures/sw_and_hiph_all.svg", dpi=300)
 # plt.show()

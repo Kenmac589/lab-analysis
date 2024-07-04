@@ -1,0 +1,25 @@
+mouse ID: 91-1-4 (68)
+weight: 21.6
+Crest -> Hip   (/): 
+Hip   -> Knee  (\):
+Knee  -> Ankle (/):
+Ankle -> Paw   (\):
+Paw   -> Digit (-):
+
+[  ] 0.100 m/s non-perturbation
+
+Videos:
+
+vid 0: 0.05 non level
+vid 1: 0.05 non level
+vid 2: 0.1 non level
+vid 3: 0.1 non level
+vid 4: 0.1 non level
+----------------------
+vid 5: 0.1 non unlevel
+vid 6: 0.1 non unlevel
+
+
+Notes:
+
+- 

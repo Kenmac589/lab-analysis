@@ -561,6 +561,24 @@ def main():
         manual_peaks=manual_analysis,
         width_threshold=40,
     )
+    mos_comb = pd.DataFrame(columns=["Limb", "MoS (cm)"])
+    for i in range(len(lmos)):
+        condition = "Left"
+        fixed_array = lmos.ravel()
+        mos_entry = [[condition, fixed_array[i]]]
+        mos_comb = mos_comb._append(
+            pd.DataFrame(mos_entry, columns=["Limb", "MoS (cm)"]),
+            ignore_index=True,
+        )
+
+    for i in range(len(rmos)):
+        condition = "Right"
+        fixed_array = rmos.ravel()
+        mos_entry = [[condition, fixed_array[i]]]
+        mos_comb = mos_comb._append(
+            pd.DataFrame(mos_entry, columns=["Limb", "MoS (cm)"]),
+            ignore_index=True,
+        )
 
     xcom_legend = [
         "xCoM",
@@ -584,9 +602,10 @@ def main():
 
     # Looking at result
     axs[1].set_title("MoS Result")
-    axs[1].bar(0, np.mean(lmos), yerr=np.std(lmos), capsize=5)
-    axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
-    axs[1].legend(mos_legend, bbox_to_anchor=(1, 0.7))
+    sns.barplot(data=mos_comb, x="Limb", y="MoS (cm)", inner="point", ci=95, ax=axs[1])
+    # axs[1].bar(0, np.mean(lmos), yerr=np.std(lmos), capsize=5)
+    # axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
+    # axs[1].legend(mos_legend, bbox_to_anchor=(1, 0.7))
 
     fig = plt.gcf()
     fig.set_size_inches(8.5, 11)

@@ -2,6 +2,7 @@ import csv
 import os
 from typing import Union
 
+import dlc2kinematics as dlck
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -308,21 +309,31 @@ def median_filter(arr, k):
     return filtarr
 
 
-def slope(data, p):
-    slopes = []
+def spike_slope(comy, p):
+    """
+    :param comy: numpy array of the y coordinate of the center of mass
+    :param p: How many values you want in either direction to be included
 
-    # Iterate through each element of the data (except last 'p' elements)
-    for i in range(len(data) - p - 1):
-        # Calculating means using equal weighting
-        mean_before = sum(data[i : i + p]) / p if p > 0 else 0
-        mean_after = sum(data[i + 1 : i + p + 1]) / p if p > 0 else 0
 
-        # Calculating slope using the line equation (y2-y1)/(x2-x1)
-        slope = (mean_before - mean_after) / (p + p)
+    """
 
-        slopes.append(slope)
+    n = len(comy)
+    slope = [0] * n  # initialize with zeros
 
-    return np.asarray(slopes)
+    for i in range(p, n - p):
+        past = comy[i - p : i]
+        future = comy[i + 1 : i + p + 1]
+
+        # calculate means of past and future points
+        mean_past = np.mean(past)
+        mean_future = np.mean(future)
+
+        # update slope at time i using the calculated means
+        slope[i] = (mean_future - mean_past) / 2
+
+    slope = np.array(slope)
+
+    return slope
 
 
 def fir_filter(data, taps):
@@ -348,7 +359,7 @@ def fir_filter(data, taps):
 
 
 # TODO: Need visit documentation to understand how to get slope same as spike2
-def spike_slope(input_dataframe, time_constant, comy="37 CoMy (cm)"):
+def slope(input_dataframe, time_constant, comy="37 CoMy (cm)"):
 
     # Converting time constant to meaningful indices
     time_factor = int(time_constant / 2)
@@ -445,6 +456,7 @@ def step_width(
 
     return step_widths
 
+
 def step_width_est(
     input_dataframe: pd.DataFrame,
     rl_x: str,
@@ -489,7 +501,6 @@ def step_width_est(
     step_widths = np.asarray(step_widths)
 
     return step_widths
-
 
 
 def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=False):
@@ -833,7 +844,6 @@ def main():
     )
     print(f"Estimated step width {len(wt1_fl_stwi_est)}")
 
-
     wt5_fl_stwi_est = step_width_est(
         wt5nondf,
         rl_x="34 FRx (cm)",
@@ -843,9 +853,9 @@ def main():
     )
     print(f"Estimated step width {len(wt5_fl_stwi_est)}")
 
-    # right_ds = double_support_est(
-    #     wt1nondf, fl_channel="34 FRx (cm)", hl_channel="29 HRx (cm)", manual_peaks=False
-    # )
+    right_ds = double_support_est(
+        wt1nondf, fl_channel="34 FRx (cm)", hl_channel="29 HRx (cm)", manual_peaks=False
+    )
 
     # print(len(wt1_cycle_dur))
     #

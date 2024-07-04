@@ -20,7 +20,9 @@ def condition_add(input_df, file_list, limb, perturbation_state):
             mos_entry = [[limb, perturbation_state, entry]]
 
             input_df = input_df._append(
-                pd.DataFrame(mos_entry, columns=["Limb", "Perturbation State", "MoS (cm)"]),
+                pd.DataFrame(
+                    mos_entry, columns=["Limb", "Perturbation State", "MoS (cm)"]
+                ),
                 ignore_index=True,
             )
 
@@ -88,7 +90,9 @@ mos_combo = mos_df.drop(columns=["Limb"])
 
 # Plotting
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
-sns.set(style="white", font="serif", font_scale=1.8, palette="colorblind", rc=custom_params)
+sns.set(
+    style="white", font="serif", font_scale=1.8, palette="colorblind", rc=custom_params
+)
 
 fig, axs = plt.subplots(1, 2)
 
@@ -119,7 +123,7 @@ limb_plot_params = {
 
 # fig.suptitle("Margin of Lateral Dynamic Lateral Stability (MoS) in WT")
 
-# axs[0].set_title("MoS for WT by Limb")
+axs[0].set_title("MoS for WT by Limb")
 limb_comp = sns.barplot(**limb_plot_params, ci=95, capsize=0.05, ax=axs[0])
 # axs[0].legend(fontsize=12, bbox_to_anchor=(2.49, 0.7))
 axs[0].legend(fontsize=16, loc="best")
@@ -138,7 +142,7 @@ combo_plot_params = {
     "inner": "point",
 }
 
-# axs[1].set_title("MoS for WT by Pertubation State")
+axs[1].set_title("Combined Mos for WT")
 combo_comp = sns.violinplot(**combo_plot_params, ci=95, capsize=0.05, ax=axs[1])
 # axs[1].legend(combo_legend, loc="upper left", fontsize=12)
 annotator = Annotator(combo_comp, combo_pairs, **combo_plot_params)
@@ -153,4 +157,4 @@ fig = plt.gcf()
 fig.set_size_inches(19.8, 10.80)
 fig.tight_layout()
 # plt.show()
-plt.savefig("./combined_figures/wt_mos-violin.png", dpi=300)
+plt.savefig("./combined_figures/wt_mos-violin.svg", dpi=300)
