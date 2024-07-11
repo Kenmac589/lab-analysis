@@ -269,11 +269,10 @@ con_mos_combo = mos_df.drop(columns=["Limb"])
 con_mos_combo.to_csv("./mos_limbs_combined_all.csv")
 
 # Plotting
-custom_params = {
-    "axes.spines.right": False,
-    "axes.spines.top": False
-}
-sns.set(style="white", font="serif", font_scale=1.8, palette="colorblind", rc=custom_params)
+custom_params = {"axes.spines.right": False, "axes.spines.top": False}
+sns.set(
+    style="white", font="serif", font_scale=1.8, palette="colorblind", rc=custom_params
+)
 
 
 combo_pairs = [
@@ -317,12 +316,12 @@ cond_combo_plot_params = {
     "hue": "Perturbation State",
     "hue_order": perturbation_state_order,
     "inner": "point",
-
 }
 
 # axs[0].set_title("MoS between conditions")
 cond_combo_comp = sns.violinplot(**cond_combo_plot_params, ci=95, capsize=0.05)
 plt.legend(loc="upper left", fontsize=16)
+plt.axhline(0, color="r")
 annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
 annotator.new_plot(
     cond_combo_comp, condition_pairs, plot="violinplot", **cond_combo_plot_params
@@ -337,4 +336,4 @@ fig = mpl.pyplot.gcf()
 fig.set_size_inches(19.8, 10.80)
 fig.tight_layout()
 # plt.show()
-plt.savefig("./combined_figures/mos_all_violin_inner.png", dpi=300)
+plt.savefig("./combined_figures/mos_all_violin_inner.svg", dpi=300)

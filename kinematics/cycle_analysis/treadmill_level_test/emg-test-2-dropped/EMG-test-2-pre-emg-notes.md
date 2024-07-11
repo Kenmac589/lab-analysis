@@ -1,3 +1,7 @@
+# EMG-test-2-pre
+
+- NOTE: This is a mouse that jumped out mid recording
+
 mouse line ID: ePet-cre 1-1-1 (020)
 weight: 28.2
 Crest -> Hip   (/): 1.0

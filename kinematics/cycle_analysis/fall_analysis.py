@@ -61,5 +61,5 @@ plt.legend(conditions)
 
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(19.8, 10.8)
-plt.savefig("./combined_figures/falls_no_title.png", dpi=300)
+plt.savefig("./combined_figures/falls_no_title.svg", dpi=300)
 # plt.show()

@@ -8,7 +8,7 @@
 	trigger_frame=3903
 	start_frame=0
 	end_frame=3903
-	time_stamp=106:283:01:38:36.825942
+	time_stamp=106:289:01:34:14.899934
 	comment=
 
 [Camera]

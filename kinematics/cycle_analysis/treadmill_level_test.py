@@ -370,7 +370,7 @@ def mos(
 def main():
 
     # Loading in a dataset
-    video = 1
+    video = 4
     df, bodyparts, scorer = dlck.load_data(
         f"./treadmill_level_test/emg-test-2-dropped/EMG-test-2-pre-emg_00000{video}DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
     )
@@ -449,12 +449,16 @@ def main():
     toe_smooth = median_filter(toe_np, filter_k)
     toe_smooth = sp.signal.savgol_filter(toe_smooth, 20, 3)
     # com_med = median_filter(comy_np, filter_k)
-    com_med = sp.signal.savgol_filter(comy_np, 20, 3)
+    com_med = sp.signal.savgol_filter(comy_np, 40, 3)
 
     rfl_med = median_filter(rfl_np, filter_k)
+    rfl_med = sp.signal.savgol_filter(rfl_med, 30, 3)
     rhl_med = median_filter(rhl_np, filter_k)
+    rhl_med = sp.signal.savgol_filter(rhl_med, 30, 3)
     lfl_med = median_filter(lfl_np, filter_k)
+    lfl_med = sp.signal.savgol_filter(lfl_med, 30, 3)
     lhl_med = median_filter(lhl_np, filter_k)
+    lhl_med = sp.signal.savgol_filter(lhl_med, 30, 3)
 
     # Cleaning up selection to region before mouse moves back
     # toe_roi_selection_fil = toe_filtered[0:2550]

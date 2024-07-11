@@ -503,7 +503,13 @@ def step_width_est(
     return step_widths
 
 
-def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual=False):
+def hip_height(
+    input_dataframe,
+    toey="24 toey (cm)",
+    hipy="16 Hipy (cm)",
+    manual=False,
+    prominence=0.004,
+):
     """Approximates Hip Height
     :param input_dataframe: spike file input as *.csv
     :param toey: spike channel with y coordinate for the toe
@@ -514,8 +520,8 @@ def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual
     """
 
     # Bringing in the values for toey and hipy
-    toey_values = input_dataframe[toey].values
-    hipy_values = input_dataframe[hipy].values
+    toey_values = input_dataframe[toey].to_numpy(dtype=float)
+    hipy_values = input_dataframe[hipy].to_numpy(dtype=float)
 
     # Remove missing values
     toey_values = toey_values[np.logical_not(np.isnan(toey_values))]
@@ -525,9 +531,21 @@ def hip_height(input_dataframe, toey="24 toey (cm)", hipy="16 Hipy (cm)", manual
     if manual is False:
 
         # Getting lower quartile value of toey as proxy for the ground
-        toey_lowerq = np.percentile(toey_values, q=25)
+        toey_cutoff = np.percentile(toey_values, q=75)
+        toey_values[toey_values > toey_cutoff] = np.nan
+        toey_peaks, properties = sp.signal.find_peaks(
+            -toey_values, prominence=(None, prominence)
+        )
+        toey_lower = toey_values[toey_peaks]
+        toey_lower = np.mean(toey_lower)
+
         average_hip_value = np.mean(hipy_values)
-        hip_height = average_hip_value - toey_lowerq
+        hip_height = average_hip_value - toey_lower
+
+        plt.plot(toey_values, label="toey")
+        plt.plot(hipy_values, label="hipy")
+        plt.plot(toey_peaks, toey_values[toey_peaks], "x")
+        plt.show()
 
     elif manual is True:
         # Selection of regions foot would be on the ground
@@ -856,6 +874,14 @@ def main():
     right_ds = double_support_est(
         wt1nondf, fl_channel="34 FRx (cm)", hl_channel="29 HRx (cm)", manual_peaks=False
     )
+
+    # Hip height test
+
+    hiph_test_auto = hip_height(wt1nondf, "24 toey (cm)", "16 Hipy (cm)", manual=False)
+    # hiph_test_manual = hip_height(wt1nondf, "24 toey (cm)", "16 Hipy (cm)", manual=True)
+
+    print(f"hip height test {hiph_test_auto}")
+    # print(f"hip height test {hiph_test_manual}")
 
     # print(len(wt1_cycle_dur))
     #

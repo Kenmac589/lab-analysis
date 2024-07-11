@@ -4,11 +4,11 @@
 	width=1280
 	height=850
 	bit_mode=upper 8
-	frame_count=1223
+	frame_count=3904
 	trigger_frame=3903
-	start_frame=2681
+	start_frame=0
 	end_frame=3903
-	time_stamp=106:283:01:28:02.988554
+	time_stamp=106:289:01:18:34.159603
 	comment=
 
 [Camera]

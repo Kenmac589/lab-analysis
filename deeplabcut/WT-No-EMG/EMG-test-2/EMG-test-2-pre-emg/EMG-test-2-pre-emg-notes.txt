@@ -1,0 +1,26 @@
+mouse line ID: 94-2-4 (210)
+weight: 
+Crest -> Hip   (/): 0.9
+Hip   -> Knee  (\): 1.4
+Knee  -> Ankle (/): 1.4
+Ankle -> Paw   (\): 1.0
+Paw   -> Digit (-): 0.8
+
+- [ ] 3 X @ 0.050 m/s non-perturbation level
+- [ ] 3 X @ 0.100 m/s non-perturbation level
+- [ ] 1 X @ 0.200 m/s non-perturbation level
+- [ ] 2 X @ 0.100 m/s perturbation level
+- [ ] 2 X @ 0.100 m/s sinusoidal level
+- [ ] 3 X @ 0.100 m/s non-perturbation unlevel
+
+Videos:
+
+vid 00: 0.1 non level
+vid 01: 0.1 non level
+vid 02: 0.1 non level
+vid 03: 0.1 non level
+	- pretty decent
+vid 04: 0.1 non unlevel
+
+Notes:
+

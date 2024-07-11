@@ -1,15 +1,16 @@
 """Average length of gait cycle per condition
 
-This program is supposed to find the average 
+This program is supposed to find the average
 
 """
 
 import os
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from scipy.stats import ttest_ind
-from scipy.stats import f_oneway
+from scipy.stats import f_oneway, ttest_ind
+
 
 def read_all_csv(directory_path):
 
@@ -27,6 +28,7 @@ def read_all_csv(directory_path):
 
     return data_dict
 
+
 def step_duration(input_dataframe):
 
     # Define the value and column to search for
@@ -35,7 +37,7 @@ def step_duration(input_dataframe):
     column_for_time = "Time"
     column_for_treadmill = "2 Trdml"
 
-    # Store time values and treadmill speed when the specified value is found 
+    # Store time values and treadmill speed when the specified value is found
     time_values = []
     treadmill_speed = []
 
@@ -50,7 +52,7 @@ def step_duration(input_dataframe):
     # Calculate the differences between consecutive time values
     time_differences = []
     for i in range(len(time_values)):
-        time_diff = time_values[i] - time_values[i-1]
+        time_diff = time_values[i] - time_values[i - 1]
         time_differences.append(time_diff)
 
     # Finding the average value for the list
@@ -74,6 +76,7 @@ def step_duration(input_dataframe):
 
     return adjusted_time_differences, adjusted_treadmill_speeds
 
+
 # Main Code Body
 
 # Read in all csv's with cycle timing
@@ -94,6 +97,3 @@ for filename, data in trial_list.items():
     print(f"Treadmill speed for {filename}:", np.mean(treadmill_speed))
     # print(f"Data from {filename}:")
     # print(data.head)
-
-
-
