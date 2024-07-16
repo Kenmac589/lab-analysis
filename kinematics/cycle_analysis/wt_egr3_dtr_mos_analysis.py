@@ -18,6 +18,9 @@ def condition_add(input_df, file_list, condition, limb, perturbation_state):
         mos_values = mos_values.ravel()
         for j in range(len(mos_values)):
             entry = mos_values[j]
+            if entry < 0.0:
+                print(f"File with negative detected: {file_list[i]}")
+
             mos_entry = [[condition, limb, perturbation_state, entry]]
 
             input_df = input_df._append(
@@ -335,5 +338,5 @@ annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(19.8, 10.80)
 fig.tight_layout()
-# plt.show()
-plt.savefig("./combined_figures/mos_all_violin_inner.svg", dpi=300)
+plt.show()
+# plt.savefig("./combined_figures/mos_all_violin_inner.svg", dpi=300)

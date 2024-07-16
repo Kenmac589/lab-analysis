@@ -156,7 +156,9 @@ con_mos_combo.to_csv("./mos_limbs_combined_egr3.csv")
 
 # Plotting
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
-sns.set(style="white", font="serif", font_scale=2.0, palette="colorblind", rc=custom_params)
+sns.set(
+    style="white", font="serif", font_scale=2.0, palette="colorblind", rc=custom_params
+)
 
 # Dual plot figure was nice until 4 conditions happened
 fig, axs = plt.subplots(1, 2)
@@ -241,7 +243,9 @@ cond_combo_plot_params = {
 }
 
 # Violnplot view
-cond_combo_comp = sns.violinplot(**cond_combo_plot_params, ci=95, capsize=0.05, ax=axs[1])
+cond_combo_comp = sns.violinplot(
+    **cond_combo_plot_params, ci=95, capsize=0.05, ax=axs[1]
+)
 axs[1].legend(loc="upper right", fontsize=16)
 annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
 annotator.new_plot(
@@ -257,4 +261,4 @@ fig = plt.gcf()
 fig.set_size_inches(19.8, 10.8)
 fig.tight_layout()
 # plt.show()
-plt.savefig("./combined_figures/egr3_and_wt_only.png", dpi=300)
+plt.savefig("./combined_figures/egr3_and_wt_only.svg", dpi=300)

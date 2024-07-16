@@ -4,10 +4,9 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 import seaborn as sns
+from kinsynpy import latstability as ls
 from pandas import DataFrame as df
 from statannotations.Annotator import Annotator
-
-import latstability as ls
 
 
 def step_width_batch(inputdf, event_channels, y_channels):
@@ -600,5 +599,5 @@ annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(19.8, 10.80)
 fig.tight_layout()
-# plt.savefig("./combined_figures/sw_and_hiph_all.svg", dpi=300)
+# plt.savefig("./combined_figures/sw_and_hiph_all-bar.svg", dpi=300)
 plt.show()

@@ -28,7 +28,7 @@ NOTE: Really important information on certain data files that are problematic.
     - So far there is
     - By the looks of it, all of them with perturbation and sinusoidal
         - [X] Perturbation and sinus for egr 10
-            - Noting that for the perturbation, despite overlap, it's during a stimulation, mouse must of stumbled.
+            - Noting that for the perturbation, despite overlap, it's during a stimulation, mouse must have stumbled.
         - [X] Perturbation and sinus for egr 9
             - Added a second perturbation recording under cursors 7 to 8
                 - related export is the first of the perturbation ones
@@ -46,7 +46,23 @@ NOTE: Really important information on certain data files that are problematic.
 - Seeing some weird stuff with the Egr3-7 mouse check videos
 - NOTE: WT M2 and Egr3 M7 are kind of looking sketchy imo.
 
+### Egr3-M6
+
+- Videos used: 0, 10, 20
+
+### Egr3-M7
+
+- Videos used: 0, 9, 16
+
+
+### Egr3-M8
+
+- Videos used: 0, 18, 20
+
+
 ### Egr3-M9
+
+- Videos used: 0, 15, 17, 21, 22
 
 - Added a second perturbation recording under cursors 7 to 8
     - related export is the first of the perturbation ones
@@ -57,6 +73,7 @@ NOTE: Really important information on certain data files that are problematic.
 
 ### Egr3-10
 
+- Videos Used: 0, 15, 27
 - For the perturbation trial, the file with `pt1` is from cursor 3-7 and `pt2` is from 7-4. However, 
     - NOTE: That cursor 7 was moved to filter out region of inactivity.
     - And the *full* file is just from 3-4

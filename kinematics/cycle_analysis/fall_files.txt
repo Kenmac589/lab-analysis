@@ -1,0 +1,44 @@
+# From Wild-type
+
+File with negative detected: ./wt_data/wt1per_lmos.csv
+File with negative detected: ./wt_data/wt2per_lmos.csv
+
+# From Egr3
+
+File with negative detected: ./egr3_data/egr3_7non_lmos.csv
+File with negative detected: ./egr3_data/egr3_6per_lmos.csv
+File with negative detected: ./egr3_data/egr3_7per_lmos.csv
+File with negative detected: ./egr3_data/egr3_8per_lmos.csv
+File with negative detected: ./egr3_data/egr3_9per_lmos-1.csv
+File with negative detected: ./egr3_data/egr3_9sin_lmos-2.csv
+
+# From Pre-DTX
+
+File with negative detected: ./dtr_data/predtx/predtx_6non_lmos.csv
+File with negative detected: ./dtr_data/predtx/predtx_6per_lmos.csv
+File with negative detected: ./dtr_data/predtx/predtx_6per_lmos.csv
+File with negative detected: ./dtr_data/predtx/predtx_7per_lmos.csv
+File with negative detected: ./dtr_data/predtx/predtx_5sin_lmos.csv
+File with negative detected: ./dtr_data/predtx/predtx_6sin_lmos.csv
+File with negative detected: ./dtr_data/predtx/predtx_7sin_lmos.csv
+File with negative detected: ./dtr_data/predtx/predtx_7sin_lmos.csv
+
+# From Post-DTX
+
+File with negative detected: ./dtr_data/postdtx/postdtx_2per_lmos.csv
+    - Data is a little noisy
+File with negative detected: ./dtr_data/postdtx/postdtx_3per_lmos.csv
+    - Reviewed on 15/07/2024:
+        - 
+File with negative detected: ./dtr_data/postdtx/postdtx_3per_lmos.csv
+File with negative detected: ./dtr_data/postdtx/postdtx_3per_lmos.csv
+File with negative detected: ./dtr_data/postdtx/postdtx_3per_lmos.csv
+File with negative detected: ./dtr_data/postdtx/postdtx_3per_lmos.csv
+File with negative detected: ./dtr_data/postdtx/postdtx_5per_lmos-2.csv
+File with negative detected: ./dtr_data/postdtx/postdtx_6per_rmos-auto.csv
+File with negative detected: ./dtr_data/postdtx/postdtx_2sin_lmos.csv
+File with negative detected: ./dtr_data/postdtx/postdtx_2sin_lmos.csv
+File with negative detected: ./dtr_data/postdtx/postdtx_5sin_lmos.csv
+File with negative detected: ./dtr_data/postdtx/postdtx_5sin_lmos.csv
+File with negative detected: ./dtr_data/postdtx/postdtx_6sin_lmos-man.csv
+File with negative detected: ./dtr_data/postdtx/postdtx_2sin_rmos.csv

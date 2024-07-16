@@ -27,7 +27,7 @@
 
 ## WT 4
 
-- I used first non-perturbation recording and the perturbation recording starts at around 1205
+- I used first non-perturbation recording and then perturbation recording starts at around 1205
 
 # For DTR Mice Series (4 month group)
 
@@ -46,23 +46,23 @@ Here are the values in cm (first thigh and then shank):
 
 # For pre DTX recordings:
 
-M1: 1.5 -1.5
-M2: 1.6 - 1.8
-M3: 1.4 - 1.6
-M5: 1.5 - 1.8
+M1: 1.5 -- 1.5
+M2: 1.6 -- 1.8
+M3: 1.4 -- 1.6
+M5: 1.5 -- 1.8
 
 For post DTX recordings:
 
-M1: 1.4 -1.6
-M2: 1.5 - 1.6
-M3: 1.4 - 1.7
-M5: 1.4 - 1.7
+M1: 1.4 -- 1.6
+M2: 1.5 -- 1.6
+M3: 1.4 -- 1.7
+M5: 1.4 -- 1.7
 
 ## Working Through Files
 
 [recording_summary](../com/dtr/dtr-6-months/recording_summary.csv)
 
-**Turgay is planning on redoing all the 4 month group**
+**Turgay is planning on redoing all the 4-month group**
 
 - [X] M5-pre
 - [X] M5-post
@@ -112,7 +112,7 @@ videos_of_interest = [
     - So far there is
     - By the looks of it, all of them with perturbation and sinusoidal
         - [X] Perturbation and sinus for egr 10
-            - Noting that for the perturbation, despite overlap, it's during a stimulation, mouse must of stumbled.
+            - Noting that for the perturbation, despite overlap, it's during a stimulation, mouse must have stumbled.
         - [X] Perturbation and sinus for egr 9
             - Added a second perturbation recording under cursors 7 to 8
                 - related export is the first of the perturbation ones
@@ -146,5 +146,5 @@ NOTE: For the sw on and offset channels are only cleaned for conditions I will b
 
 ### Kinematics for DTR M6-M8
 
-- M6-preDTX-000019 video is fairly poor, so keep that in mind in terms of the model performance.
+- M6-preDTX-000019 video is fairly poor, so keep that in mind for the model performance.
 

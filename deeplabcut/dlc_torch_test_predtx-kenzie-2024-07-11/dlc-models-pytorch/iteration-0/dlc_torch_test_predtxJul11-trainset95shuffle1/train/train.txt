@@ -1,0 +1,816 @@
+2024-07-12 11:18:21 Training with configuration:
+2024-07-12 11:18:21 data:
+2024-07-12 11:18:21   colormode: RGB
+2024-07-12 11:18:21   inference:
+2024-07-12 11:18:21     normalize_images: True
+2024-07-12 11:18:21   train:
+2024-07-12 11:18:21     affine:
+2024-07-12 11:18:21       p: 0.5
+2024-07-12 11:18:21       rotation: 30
+2024-07-12 11:18:21       scaling: [1.0, 1.0]
+2024-07-12 11:18:21       translation: 0
+2024-07-12 11:18:21     collate:
+2024-07-12 11:18:21       type: ResizeFromDataSizeCollate
+2024-07-12 11:18:21       min_scale: 0.4
+2024-07-12 11:18:21       max_scale: 1.0
+2024-07-12 11:18:21       min_short_side: 128
+2024-07-12 11:18:21       max_short_side: 1152
+2024-07-12 11:18:21       multiple_of: 32
+2024-07-12 11:18:21       to_square: False
+2024-07-12 11:18:21     covering: False
+2024-07-12 11:18:21     gaussian_noise: 12.75
+2024-07-12 11:18:21     hist_eq: False
+2024-07-12 11:18:21     motion_blur: False
+2024-07-12 11:18:21     normalize_images: True
+2024-07-12 11:18:21 device: auto
+2024-07-12 11:18:21 metadata:
+2024-07-12 11:18:21   project_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11
+2024-07-12 11:18:21   pose_config_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11/dlc-models-pytorch/iteration-0/dlc_torch_test_predtxJul11-trainset95shuffle1/train/pose_cfg.yaml
+2024-07-12 11:18:21   bodyparts: ['calib_1', 'calib_2', 'calib_3', 'calib_4', 'calib_5', 'calib_6', 'iliac_crest', 'hip', 'knee', 'ankle', 'metatarsal', 'toe', 'fl_toe', 'mirror_lhl', 'mirror_rhl', 'mirror_lfl', 'mirror_rfl', 'mirror_com', 'mirror']
+2024-07-12 11:18:21   unique_bodyparts: []
+2024-07-12 11:18:21   individuals: ['animal']
+2024-07-12 11:18:21   with_identity: None
+2024-07-12 11:18:21 method: bu
+2024-07-12 11:18:21 model:
+2024-07-12 11:18:21   backbone:
+2024-07-12 11:18:21     type: ResNet
+2024-07-12 11:18:21     model_name: resnet50_gn
+2024-07-12 11:18:21     output_stride: 16
+2024-07-12 11:18:21     freeze_bn_stats: True
+2024-07-12 11:18:21     freeze_bn_weights: False
+2024-07-12 11:18:21   backbone_output_channels: 2048
+2024-07-12 11:18:21   heads:
+2024-07-12 11:18:21     bodypart:
+2024-07-12 11:18:21       type: HeatmapHead
+2024-07-12 11:18:21       weight_init: normal
+2024-07-12 11:18:21       predictor:
+2024-07-12 11:18:21         type: HeatmapPredictor
+2024-07-12 11:18:21         apply_sigmoid: False
+2024-07-12 11:18:21         clip_scores: True
+2024-07-12 11:18:21         location_refinement: True
+2024-07-12 11:18:21         locref_std: 7.2801
+2024-07-12 11:18:21       target_generator:
+2024-07-12 11:18:21         type: HeatmapGaussianGenerator
+2024-07-12 11:18:21         num_heatmaps: 19
+2024-07-12 11:18:21         pos_dist_thresh: 17
+2024-07-12 11:18:21         heatmap_mode: KEYPOINT
+2024-07-12 11:18:21         generate_locref: True
+2024-07-12 11:18:21         locref_std: 7.2801
+2024-07-12 11:18:21       criterion:
+2024-07-12 11:18:21         heatmap:
+2024-07-12 11:18:21           type: WeightedMSECriterion
+2024-07-12 11:18:21           weight: 1.0
+2024-07-12 11:18:21         locref:
+2024-07-12 11:18:21           type: WeightedHuberCriterion
+2024-07-12 11:18:21           weight: 0.05
+2024-07-12 11:18:21       heatmap_config:
+2024-07-12 11:18:21         channels: [2048, 19]
+2024-07-12 11:18:21         kernel_size: [3]
+2024-07-12 11:18:21         strides: [2]
+2024-07-12 11:18:21       locref_config:
+2024-07-12 11:18:21         channels: [2048, 38]
+2024-07-12 11:18:21         kernel_size: [3]
+2024-07-12 11:18:21         strides: [2]
+2024-07-12 11:18:21 net_type: resnet_50
+2024-07-12 11:18:21 runner:
+2024-07-12 11:18:21   type: PoseTrainingRunner
+2024-07-12 11:18:21   gpus: None
+2024-07-12 11:18:21   key_metric: test.mAP
+2024-07-12 11:18:21   key_metric_asc: True
+2024-07-12 11:18:21   eval_interval: 1
+2024-07-12 11:18:21   optimizer:
+2024-07-12 11:18:21     type: AdamW
+2024-07-12 11:18:21     params:
+2024-07-12 11:18:21       lr: 0.0001
+2024-07-12 11:18:21   scheduler:
+2024-07-12 11:18:21     type: LRListScheduler
+2024-07-12 11:18:21     params:
+2024-07-12 11:18:21       lr_list: [[1e-05], [1e-06]]
+2024-07-12 11:18:21       milestones: [160, 190]
+2024-07-12 11:18:21   snapshots:
+2024-07-12 11:18:21     max_snapshots: 5
+2024-07-12 11:18:21     save_epochs: 25
+2024-07-12 11:18:21     save_optimizer_state: False
+2024-07-12 11:18:21 train_settings:
+2024-07-12 11:18:21   batch_size: 1
+2024-07-12 11:18:21   dataloader_workers: 0
+2024-07-12 11:18:21   dataloader_pin_memory: True
+2024-07-12 11:18:21   display_iters: 500
+2024-07-12 11:18:21   epochs: 200
+2024-07-12 11:18:21   seed: 42
+2024-07-12 11:18:22 Loading pretrained weights from Hugging Face hub (timm/resnet50_gn.a1h_in1k)
+2024-07-12 11:18:31 [timm/resnet50_gn.a1h_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+2024-07-12 11:20:04 Training with configuration:
+2024-07-12 11:20:04 data:
+2024-07-12 11:20:04   colormode: RGB
+2024-07-12 11:20:04   inference:
+2024-07-12 11:20:04     normalize_images: True
+2024-07-12 11:20:04   train:
+2024-07-12 11:20:04     affine:
+2024-07-12 11:20:04       p: 0.5
+2024-07-12 11:20:04       rotation: 30
+2024-07-12 11:20:04       scaling: [1.0, 1.0]
+2024-07-12 11:20:04       translation: 0
+2024-07-12 11:20:04     collate:
+2024-07-12 11:20:04       type: ResizeFromDataSizeCollate
+2024-07-12 11:20:04       min_scale: 0.4
+2024-07-12 11:20:04       max_scale: 1.0
+2024-07-12 11:20:04       min_short_side: 128
+2024-07-12 11:20:04       max_short_side: 1152
+2024-07-12 11:20:04       multiple_of: 32
+2024-07-12 11:20:04       to_square: False
+2024-07-12 11:20:04     covering: False
+2024-07-12 11:20:04     gaussian_noise: 12.75
+2024-07-12 11:20:04     hist_eq: False
+2024-07-12 11:20:04     motion_blur: False
+2024-07-12 11:20:04     normalize_images: True
+2024-07-12 11:20:04 device: auto
+2024-07-12 11:20:04 metadata:
+2024-07-12 11:20:04   project_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11
+2024-07-12 11:20:04   pose_config_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11/dlc-models-pytorch/iteration-0/dlc_torch_test_predtxJul11-trainset95shuffle1/train/pose_cfg.yaml
+2024-07-12 11:20:04   bodyparts: ['calib_1', 'calib_2', 'calib_3', 'calib_4', 'calib_5', 'calib_6', 'iliac_crest', 'hip', 'knee', 'ankle', 'metatarsal', 'toe', 'fl_toe', 'mirror_lhl', 'mirror_rhl', 'mirror_lfl', 'mirror_rfl', 'mirror_com', 'mirror']
+2024-07-12 11:20:04   unique_bodyparts: []
+2024-07-12 11:20:04   individuals: ['animal']
+2024-07-12 11:20:04   with_identity: None
+2024-07-12 11:20:04 method: bu
+2024-07-12 11:20:04 model:
+2024-07-12 11:20:04   backbone:
+2024-07-12 11:20:04     type: ResNet
+2024-07-12 11:20:04     model_name: resnet50_gn
+2024-07-12 11:20:04     output_stride: 16
+2024-07-12 11:20:04     freeze_bn_stats: True
+2024-07-12 11:20:04     freeze_bn_weights: False
+2024-07-12 11:20:04   backbone_output_channels: 2048
+2024-07-12 11:20:04   heads:
+2024-07-12 11:20:04     bodypart:
+2024-07-12 11:20:04       type: HeatmapHead
+2024-07-12 11:20:04       weight_init: normal
+2024-07-12 11:20:04       predictor:
+2024-07-12 11:20:04         type: HeatmapPredictor
+2024-07-12 11:20:04         apply_sigmoid: False
+2024-07-12 11:20:04         clip_scores: True
+2024-07-12 11:20:04         location_refinement: True
+2024-07-12 11:20:04         locref_std: 7.2801
+2024-07-12 11:20:04       target_generator:
+2024-07-12 11:20:04         type: HeatmapGaussianGenerator
+2024-07-12 11:20:04         num_heatmaps: 19
+2024-07-12 11:20:04         pos_dist_thresh: 17
+2024-07-12 11:20:04         heatmap_mode: KEYPOINT
+2024-07-12 11:20:04         generate_locref: True
+2024-07-12 11:20:04         locref_std: 7.2801
+2024-07-12 11:20:04       criterion:
+2024-07-12 11:20:04         heatmap:
+2024-07-12 11:20:04           type: WeightedMSECriterion
+2024-07-12 11:20:04           weight: 1.0
+2024-07-12 11:20:04         locref:
+2024-07-12 11:20:04           type: WeightedHuberCriterion
+2024-07-12 11:20:04           weight: 0.05
+2024-07-12 11:20:04       heatmap_config:
+2024-07-12 11:20:04         channels: [2048, 19]
+2024-07-12 11:20:04         kernel_size: [3]
+2024-07-12 11:20:04         strides: [2]
+2024-07-12 11:20:04       locref_config:
+2024-07-12 11:20:04         channels: [2048, 38]
+2024-07-12 11:20:04         kernel_size: [3]
+2024-07-12 11:20:04         strides: [2]
+2024-07-12 11:20:04 net_type: resnet_50
+2024-07-12 11:20:04 runner:
+2024-07-12 11:20:04   type: PoseTrainingRunner
+2024-07-12 11:20:04   gpus: None
+2024-07-12 11:20:04   key_metric: test.mAP
+2024-07-12 11:20:04   key_metric_asc: True
+2024-07-12 11:20:04   eval_interval: 1
+2024-07-12 11:20:04   optimizer:
+2024-07-12 11:20:04     type: AdamW
+2024-07-12 11:20:04     params:
+2024-07-12 11:20:04       lr: 0.0001
+2024-07-12 11:20:04   scheduler:
+2024-07-12 11:20:04     type: LRListScheduler
+2024-07-12 11:20:04     params:
+2024-07-12 11:20:04       lr_list: [[1e-05], [1e-06]]
+2024-07-12 11:20:04       milestones: [160, 190]
+2024-07-12 11:20:04   snapshots:
+2024-07-12 11:20:04     max_snapshots: 5
+2024-07-12 11:20:04     save_epochs: 25
+2024-07-12 11:20:04     save_optimizer_state: False
+2024-07-12 11:20:04 train_settings:
+2024-07-12 11:20:04   batch_size: 1
+2024-07-12 11:20:04   dataloader_workers: 0
+2024-07-12 11:20:04   dataloader_pin_memory: True
+2024-07-12 11:20:04   display_iters: 500
+2024-07-12 11:20:04   epochs: 200
+2024-07-12 11:20:04   seed: 42
+2024-07-12 11:20:04 Loading pretrained weights from Hugging Face hub (timm/resnet50_gn.a1h_in1k)
+2024-07-12 11:20:04 [timm/resnet50_gn.a1h_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+2024-07-12 11:26:23 Training with configuration:
+2024-07-12 11:26:23 data:
+2024-07-12 11:26:23   colormode: RGB
+2024-07-12 11:26:23   inference:
+2024-07-12 11:26:23     normalize_images: True
+2024-07-12 11:26:23   train:
+2024-07-12 11:26:23     affine:
+2024-07-12 11:26:23       p: 0.5
+2024-07-12 11:26:23       rotation: 30
+2024-07-12 11:26:23       scaling: [1.0, 1.0]
+2024-07-12 11:26:23       translation: 0
+2024-07-12 11:26:23     collate:
+2024-07-12 11:26:23       type: ResizeFromDataSizeCollate
+2024-07-12 11:26:23       min_scale: 0.4
+2024-07-12 11:26:23       max_scale: 1.0
+2024-07-12 11:26:23       min_short_side: 128
+2024-07-12 11:26:23       max_short_side: 1152
+2024-07-12 11:26:23       multiple_of: 32
+2024-07-12 11:26:23       to_square: False
+2024-07-12 11:26:23     covering: False
+2024-07-12 11:26:23     gaussian_noise: 12.75
+2024-07-12 11:26:23     hist_eq: False
+2024-07-12 11:26:23     motion_blur: False
+2024-07-12 11:26:23     normalize_images: True
+2024-07-12 11:26:23 device: auto
+2024-07-12 11:26:23 metadata:
+2024-07-12 11:26:23   project_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11
+2024-07-12 11:26:23   pose_config_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11/dlc-models-pytorch/iteration-0/dlc_torch_test_predtxJul11-trainset95shuffle1/train/pose_cfg.yaml
+2024-07-12 11:26:23   bodyparts: ['calib_1', 'calib_2', 'calib_3', 'calib_4', 'calib_5', 'calib_6', 'iliac_crest', 'hip', 'knee', 'ankle', 'metatarsal', 'toe', 'fl_toe', 'mirror_lhl', 'mirror_rhl', 'mirror_lfl', 'mirror_rfl', 'mirror_com', 'mirror']
+2024-07-12 11:26:23   unique_bodyparts: []
+2024-07-12 11:26:23   individuals: ['animal']
+2024-07-12 11:26:23   with_identity: None
+2024-07-12 11:26:23 method: bu
+2024-07-12 11:26:23 model:
+2024-07-12 11:26:23   backbone:
+2024-07-12 11:26:23     type: ResNet
+2024-07-12 11:26:23     model_name: resnet50_gn
+2024-07-12 11:26:23     output_stride: 16
+2024-07-12 11:26:23     freeze_bn_stats: True
+2024-07-12 11:26:23     freeze_bn_weights: False
+2024-07-12 11:26:23   backbone_output_channels: 2048
+2024-07-12 11:26:23   heads:
+2024-07-12 11:26:23     bodypart:
+2024-07-12 11:26:23       type: HeatmapHead
+2024-07-12 11:26:23       weight_init: normal
+2024-07-12 11:26:23       predictor:
+2024-07-12 11:26:23         type: HeatmapPredictor
+2024-07-12 11:26:23         apply_sigmoid: False
+2024-07-12 11:26:23         clip_scores: True
+2024-07-12 11:26:23         location_refinement: True
+2024-07-12 11:26:23         locref_std: 7.2801
+2024-07-12 11:26:23       target_generator:
+2024-07-12 11:26:23         type: HeatmapGaussianGenerator
+2024-07-12 11:26:23         num_heatmaps: 19
+2024-07-12 11:26:23         pos_dist_thresh: 17
+2024-07-12 11:26:23         heatmap_mode: KEYPOINT
+2024-07-12 11:26:23         generate_locref: True
+2024-07-12 11:26:23         locref_std: 7.2801
+2024-07-12 11:26:23       criterion:
+2024-07-12 11:26:23         heatmap:
+2024-07-12 11:26:23           type: WeightedMSECriterion
+2024-07-12 11:26:23           weight: 1.0
+2024-07-12 11:26:23         locref:
+2024-07-12 11:26:23           type: WeightedHuberCriterion
+2024-07-12 11:26:23           weight: 0.05
+2024-07-12 11:26:23       heatmap_config:
+2024-07-12 11:26:23         channels: [2048, 19]
+2024-07-12 11:26:23         kernel_size: [3]
+2024-07-12 11:26:23         strides: [2]
+2024-07-12 11:26:23       locref_config:
+2024-07-12 11:26:23         channels: [2048, 38]
+2024-07-12 11:26:23         kernel_size: [3]
+2024-07-12 11:26:23         strides: [2]
+2024-07-12 11:26:23 net_type: resnet_50
+2024-07-12 11:26:23 runner:
+2024-07-12 11:26:23   type: PoseTrainingRunner
+2024-07-12 11:26:23   gpus: None
+2024-07-12 11:26:23   key_metric: test.mAP
+2024-07-12 11:26:23   key_metric_asc: True
+2024-07-12 11:26:23   eval_interval: 1
+2024-07-12 11:26:23   optimizer:
+2024-07-12 11:26:23     type: AdamW
+2024-07-12 11:26:23     params:
+2024-07-12 11:26:23       lr: 0.0001
+2024-07-12 11:26:23   scheduler:
+2024-07-12 11:26:23     type: LRListScheduler
+2024-07-12 11:26:23     params:
+2024-07-12 11:26:23       lr_list: [[1e-05], [1e-06]]
+2024-07-12 11:26:23       milestones: [160, 190]
+2024-07-12 11:26:23   snapshots:
+2024-07-12 11:26:23     max_snapshots: 5
+2024-07-12 11:26:23     save_epochs: 25
+2024-07-12 11:26:23     save_optimizer_state: False
+2024-07-12 11:26:23 train_settings:
+2024-07-12 11:26:23   batch_size: 1
+2024-07-12 11:26:23   dataloader_workers: 0
+2024-07-12 11:26:23   dataloader_pin_memory: True
+2024-07-12 11:26:23   display_iters: 500
+2024-07-12 11:26:23   epochs: 200
+2024-07-12 11:26:23   seed: 42
+2024-07-12 11:26:24 Loading pretrained weights from Hugging Face hub (timm/resnet50_gn.a1h_in1k)
+2024-07-12 11:26:24 [timm/resnet50_gn.a1h_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+2024-07-12 11:28:52 Training with configuration:
+2024-07-12 11:28:52 data:
+2024-07-12 11:28:52   colormode: RGB
+2024-07-12 11:28:52   inference:
+2024-07-12 11:28:52     normalize_images: True
+2024-07-12 11:28:52   train:
+2024-07-12 11:28:52     affine:
+2024-07-12 11:28:52       p: 0.5
+2024-07-12 11:28:52       rotation: 30
+2024-07-12 11:28:52       scaling: [1.0, 1.0]
+2024-07-12 11:28:52       translation: 0
+2024-07-12 11:28:52     collate:
+2024-07-12 11:28:52       type: ResizeFromDataSizeCollate
+2024-07-12 11:28:52       min_scale: 0.4
+2024-07-12 11:28:52       max_scale: 1.0
+2024-07-12 11:28:52       min_short_side: 128
+2024-07-12 11:28:52       max_short_side: 1152
+2024-07-12 11:28:52       multiple_of: 32
+2024-07-12 11:28:52       to_square: False
+2024-07-12 11:28:52     covering: False
+2024-07-12 11:28:52     gaussian_noise: 12.75
+2024-07-12 11:28:52     hist_eq: False
+2024-07-12 11:28:52     motion_blur: False
+2024-07-12 11:28:52     normalize_images: True
+2024-07-12 11:28:52 device: auto
+2024-07-12 11:28:52 metadata:
+2024-07-12 11:28:52   project_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11
+2024-07-12 11:28:52   pose_config_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11/dlc-models-pytorch/iteration-0/dlc_torch_test_predtxJul11-trainset95shuffle1/train/pose_cfg.yaml
+2024-07-12 11:28:52   bodyparts: ['calib_1', 'calib_2', 'calib_3', 'calib_4', 'calib_5', 'calib_6', 'iliac_crest', 'hip', 'knee', 'ankle', 'metatarsal', 'toe', 'fl_toe', 'mirror_lhl', 'mirror_rhl', 'mirror_lfl', 'mirror_rfl', 'mirror_com', 'mirror']
+2024-07-12 11:28:52   unique_bodyparts: []
+2024-07-12 11:28:52   individuals: ['animal']
+2024-07-12 11:28:52   with_identity: None
+2024-07-12 11:28:52 method: bu
+2024-07-12 11:28:52 model:
+2024-07-12 11:28:52   backbone:
+2024-07-12 11:28:52     type: ResNet
+2024-07-12 11:28:52     model_name: resnet50_gn
+2024-07-12 11:28:52     output_stride: 16
+2024-07-12 11:28:52     freeze_bn_stats: True
+2024-07-12 11:28:52     freeze_bn_weights: False
+2024-07-12 11:28:52   backbone_output_channels: 2048
+2024-07-12 11:28:52   heads:
+2024-07-12 11:28:52     bodypart:
+2024-07-12 11:28:52       type: HeatmapHead
+2024-07-12 11:28:52       weight_init: normal
+2024-07-12 11:28:52       predictor:
+2024-07-12 11:28:52         type: HeatmapPredictor
+2024-07-12 11:28:52         apply_sigmoid: False
+2024-07-12 11:28:52         clip_scores: True
+2024-07-12 11:28:52         location_refinement: True
+2024-07-12 11:28:52         locref_std: 7.2801
+2024-07-12 11:28:52       target_generator:
+2024-07-12 11:28:52         type: HeatmapGaussianGenerator
+2024-07-12 11:28:52         num_heatmaps: 19
+2024-07-12 11:28:52         pos_dist_thresh: 17
+2024-07-12 11:28:52         heatmap_mode: KEYPOINT
+2024-07-12 11:28:52         generate_locref: True
+2024-07-12 11:28:52         locref_std: 7.2801
+2024-07-12 11:28:52       criterion:
+2024-07-12 11:28:52         heatmap:
+2024-07-12 11:28:52           type: WeightedMSECriterion
+2024-07-12 11:28:52           weight: 1.0
+2024-07-12 11:28:52         locref:
+2024-07-12 11:28:52           type: WeightedHuberCriterion
+2024-07-12 11:28:52           weight: 0.05
+2024-07-12 11:28:52       heatmap_config:
+2024-07-12 11:28:52         channels: [2048, 19]
+2024-07-12 11:28:52         kernel_size: [3]
+2024-07-12 11:28:52         strides: [2]
+2024-07-12 11:28:52       locref_config:
+2024-07-12 11:28:52         channels: [2048, 38]
+2024-07-12 11:28:52         kernel_size: [3]
+2024-07-12 11:28:52         strides: [2]
+2024-07-12 11:28:52 net_type: resnet_50
+2024-07-12 11:28:52 runner:
+2024-07-12 11:28:52   type: PoseTrainingRunner
+2024-07-12 11:28:52   gpus: None
+2024-07-12 11:28:52   key_metric: test.mAP
+2024-07-12 11:28:52   key_metric_asc: True
+2024-07-12 11:28:52   eval_interval: 1
+2024-07-12 11:28:52   optimizer:
+2024-07-12 11:28:52     type: AdamW
+2024-07-12 11:28:52     params:
+2024-07-12 11:28:52       lr: 0.0001
+2024-07-12 11:28:52   scheduler:
+2024-07-12 11:28:52     type: LRListScheduler
+2024-07-12 11:28:52     params:
+2024-07-12 11:28:52       lr_list: [[1e-05], [1e-06]]
+2024-07-12 11:28:52       milestones: [160, 190]
+2024-07-12 11:28:52   snapshots:
+2024-07-12 11:28:52     max_snapshots: 5
+2024-07-12 11:28:52     save_epochs: 25
+2024-07-12 11:28:52     save_optimizer_state: False
+2024-07-12 11:28:52 train_settings:
+2024-07-12 11:28:52   batch_size: 1
+2024-07-12 11:28:52   dataloader_workers: 0
+2024-07-12 11:28:52   dataloader_pin_memory: True
+2024-07-12 11:28:52   display_iters: 500
+2024-07-12 11:28:52   epochs: 200
+2024-07-12 11:28:52   seed: 42
+2024-07-12 11:28:53 Loading pretrained weights from Hugging Face hub (timm/resnet50_gn.a1h_in1k)
+2024-07-12 11:28:53 [timm/resnet50_gn.a1h_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+2024-07-12 11:33:23 Training with configuration:
+2024-07-12 11:33:23 data:
+2024-07-12 11:33:23   colormode: RGB
+2024-07-12 11:33:23   inference:
+2024-07-12 11:33:23     normalize_images: True
+2024-07-12 11:33:23   train:
+2024-07-12 11:33:23     affine:
+2024-07-12 11:33:23       p: 0.5
+2024-07-12 11:33:23       rotation: 30
+2024-07-12 11:33:23       scaling: [1.0, 1.0]
+2024-07-12 11:33:23       translation: 0
+2024-07-12 11:33:23     collate:
+2024-07-12 11:33:23       type: ResizeFromDataSizeCollate
+2024-07-12 11:33:23       min_scale: 0.4
+2024-07-12 11:33:23       max_scale: 1.0
+2024-07-12 11:33:23       min_short_side: 128
+2024-07-12 11:33:23       max_short_side: 1152
+2024-07-12 11:33:23       multiple_of: 32
+2024-07-12 11:33:23       to_square: False
+2024-07-12 11:33:23     covering: False
+2024-07-12 11:33:23     gaussian_noise: 12.75
+2024-07-12 11:33:23     hist_eq: False
+2024-07-12 11:33:23     motion_blur: False
+2024-07-12 11:33:23     normalize_images: True
+2024-07-12 11:33:23 device: auto
+2024-07-12 11:33:23 metadata:
+2024-07-12 11:33:23   project_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11
+2024-07-12 11:33:23   pose_config_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11/dlc-models-pytorch/iteration-0/dlc_torch_test_predtxJul11-trainset95shuffle1/train/pose_cfg.yaml
+2024-07-12 11:33:23   bodyparts: ['calib_1', 'calib_2', 'calib_3', 'calib_4', 'calib_5', 'calib_6', 'iliac_crest', 'hip', 'knee', 'ankle', 'metatarsal', 'toe', 'fl_toe', 'mirror_lhl', 'mirror_rhl', 'mirror_lfl', 'mirror_rfl', 'mirror_com', 'mirror']
+2024-07-12 11:33:23   unique_bodyparts: []
+2024-07-12 11:33:23   individuals: ['animal']
+2024-07-12 11:33:23   with_identity: None
+2024-07-12 11:33:23 method: bu
+2024-07-12 11:33:23 model:
+2024-07-12 11:33:23   backbone:
+2024-07-12 11:33:23     type: ResNet
+2024-07-12 11:33:23     model_name: resnet50_gn
+2024-07-12 11:33:23     output_stride: 16
+2024-07-12 11:33:23     freeze_bn_stats: True
+2024-07-12 11:33:23     freeze_bn_weights: False
+2024-07-12 11:33:23   backbone_output_channels: 2048
+2024-07-12 11:33:23   heads:
+2024-07-12 11:33:23     bodypart:
+2024-07-12 11:33:23       type: HeatmapHead
+2024-07-12 11:33:23       weight_init: normal
+2024-07-12 11:33:23       predictor:
+2024-07-12 11:33:23         type: HeatmapPredictor
+2024-07-12 11:33:23         apply_sigmoid: False
+2024-07-12 11:33:23         clip_scores: True
+2024-07-12 11:33:23         location_refinement: True
+2024-07-12 11:33:23         locref_std: 7.2801
+2024-07-12 11:33:23       target_generator:
+2024-07-12 11:33:23         type: HeatmapGaussianGenerator
+2024-07-12 11:33:23         num_heatmaps: 19
+2024-07-12 11:33:23         pos_dist_thresh: 17
+2024-07-12 11:33:23         heatmap_mode: KEYPOINT
+2024-07-12 11:33:23         generate_locref: True
+2024-07-12 11:33:23         locref_std: 7.2801
+2024-07-12 11:33:23       criterion:
+2024-07-12 11:33:23         heatmap:
+2024-07-12 11:33:23           type: WeightedMSECriterion
+2024-07-12 11:33:23           weight: 1.0
+2024-07-12 11:33:23         locref:
+2024-07-12 11:33:23           type: WeightedHuberCriterion
+2024-07-12 11:33:23           weight: 0.05
+2024-07-12 11:33:23       heatmap_config:
+2024-07-12 11:33:23         channels: [2048, 19]
+2024-07-12 11:33:23         kernel_size: [3]
+2024-07-12 11:33:23         strides: [2]
+2024-07-12 11:33:23       locref_config:
+2024-07-12 11:33:23         channels: [2048, 38]
+2024-07-12 11:33:23         kernel_size: [3]
+2024-07-12 11:33:23         strides: [2]
+2024-07-12 11:33:23 net_type: resnet_50
+2024-07-12 11:33:23 runner:
+2024-07-12 11:33:23   type: PoseTrainingRunner
+2024-07-12 11:33:23   gpus: None
+2024-07-12 11:33:23   key_metric: test.mAP
+2024-07-12 11:33:23   key_metric_asc: True
+2024-07-12 11:33:23   eval_interval: 1
+2024-07-12 11:33:23   optimizer:
+2024-07-12 11:33:23     type: AdamW
+2024-07-12 11:33:23     params:
+2024-07-12 11:33:23       lr: 0.0001
+2024-07-12 11:33:23   scheduler:
+2024-07-12 11:33:23     type: LRListScheduler
+2024-07-12 11:33:23     params:
+2024-07-12 11:33:23       lr_list: [[1e-05], [1e-06]]
+2024-07-12 11:33:23       milestones: [160, 190]
+2024-07-12 11:33:23   snapshots:
+2024-07-12 11:33:23     max_snapshots: 5
+2024-07-12 11:33:23     save_epochs: 25
+2024-07-12 11:33:23     save_optimizer_state: False
+2024-07-12 11:33:23 train_settings:
+2024-07-12 11:33:23   batch_size: 1
+2024-07-12 11:33:23   dataloader_workers: 0
+2024-07-12 11:33:23   dataloader_pin_memory: True
+2024-07-12 11:33:23   display_iters: 500
+2024-07-12 11:33:23   epochs: 200
+2024-07-12 11:33:23   seed: 42
+2024-07-12 11:33:23 Loading pretrained weights from Hugging Face hub (timm/resnet50_gn.a1h_in1k)
+2024-07-12 11:33:23 [timm/resnet50_gn.a1h_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+2024-07-15 12:32:48 Training with configuration:
+2024-07-15 12:32:48 data:
+2024-07-15 12:32:48   colormode: RGB
+2024-07-15 12:32:48   inference:
+2024-07-15 12:32:48     normalize_images: True
+2024-07-15 12:32:48   train:
+2024-07-15 12:32:48     affine:
+2024-07-15 12:32:48       p: 0.5
+2024-07-15 12:32:48       rotation: 30
+2024-07-15 12:32:48       scaling: [1.0, 1.0]
+2024-07-15 12:32:48       translation: 0
+2024-07-15 12:32:48     collate:
+2024-07-15 12:32:48       type: ResizeFromDataSizeCollate
+2024-07-15 12:32:48       min_scale: 0.4
+2024-07-15 12:32:48       max_scale: 1.0
+2024-07-15 12:32:48       min_short_side: 128
+2024-07-15 12:32:48       max_short_side: 1152
+2024-07-15 12:32:48       multiple_of: 32
+2024-07-15 12:32:48       to_square: False
+2024-07-15 12:32:48     covering: False
+2024-07-15 12:32:48     gaussian_noise: 12.75
+2024-07-15 12:32:48     hist_eq: False
+2024-07-15 12:32:48     motion_blur: False
+2024-07-15 12:32:48     normalize_images: True
+2024-07-15 12:32:48 device: auto
+2024-07-15 12:32:48 metadata:
+2024-07-15 12:32:48   project_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11
+2024-07-15 12:32:48   pose_config_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11/dlc-models-pytorch/iteration-0/dlc_torch_test_predtxJul11-trainset95shuffle1/train/pose_cfg.yaml
+2024-07-15 12:32:48   bodyparts: ['calib_1', 'calib_2', 'calib_3', 'calib_4', 'calib_5', 'calib_6', 'iliac_crest', 'hip', 'knee', 'ankle', 'metatarsal', 'toe', 'fl_toe', 'mirror_lhl', 'mirror_rhl', 'mirror_lfl', 'mirror_rfl', 'mirror_com', 'mirror']
+2024-07-15 12:32:48   unique_bodyparts: []
+2024-07-15 12:32:48   individuals: ['animal']
+2024-07-15 12:32:48   with_identity: None
+2024-07-15 12:32:48 method: bu
+2024-07-15 12:32:48 model:
+2024-07-15 12:32:48   backbone:
+2024-07-15 12:32:48     type: ResNet
+2024-07-15 12:32:48     model_name: resnet50_gn
+2024-07-15 12:32:48     output_stride: 16
+2024-07-15 12:32:48     freeze_bn_stats: True
+2024-07-15 12:32:48     freeze_bn_weights: False
+2024-07-15 12:32:48   backbone_output_channels: 2048
+2024-07-15 12:32:48   heads:
+2024-07-15 12:32:48     bodypart:
+2024-07-15 12:32:48       type: HeatmapHead
+2024-07-15 12:32:48       weight_init: normal
+2024-07-15 12:32:48       predictor:
+2024-07-15 12:32:48         type: HeatmapPredictor
+2024-07-15 12:32:48         apply_sigmoid: False
+2024-07-15 12:32:48         clip_scores: True
+2024-07-15 12:32:48         location_refinement: True
+2024-07-15 12:32:48         locref_std: 7.2801
+2024-07-15 12:32:48       target_generator:
+2024-07-15 12:32:48         type: HeatmapGaussianGenerator
+2024-07-15 12:32:48         num_heatmaps: 19
+2024-07-15 12:32:48         pos_dist_thresh: 17
+2024-07-15 12:32:48         heatmap_mode: KEYPOINT
+2024-07-15 12:32:48         generate_locref: True
+2024-07-15 12:32:48         locref_std: 7.2801
+2024-07-15 12:32:48       criterion:
+2024-07-15 12:32:48         heatmap:
+2024-07-15 12:32:48           type: WeightedMSECriterion
+2024-07-15 12:32:48           weight: 1.0
+2024-07-15 12:32:48         locref:
+2024-07-15 12:32:48           type: WeightedHuberCriterion
+2024-07-15 12:32:48           weight: 0.05
+2024-07-15 12:32:48       heatmap_config:
+2024-07-15 12:32:48         channels: [2048, 19]
+2024-07-15 12:32:48         kernel_size: [3]
+2024-07-15 12:32:48         strides: [2]
+2024-07-15 12:32:48       locref_config:
+2024-07-15 12:32:48         channels: [2048, 38]
+2024-07-15 12:32:48         kernel_size: [3]
+2024-07-15 12:32:48         strides: [2]
+2024-07-15 12:32:48 net_type: resnet_50
+2024-07-15 12:32:48 runner:
+2024-07-15 12:32:48   type: PoseTrainingRunner
+2024-07-15 12:32:48   gpus: None
+2024-07-15 12:32:48   key_metric: test.mAP
+2024-07-15 12:32:48   key_metric_asc: True
+2024-07-15 12:32:48   eval_interval: 1
+2024-07-15 12:32:48   optimizer:
+2024-07-15 12:32:48     type: AdamW
+2024-07-15 12:32:48     params:
+2024-07-15 12:32:48       lr: 0.0001
+2024-07-15 12:32:48   scheduler:
+2024-07-15 12:32:48     type: LRListScheduler
+2024-07-15 12:32:48     params:
+2024-07-15 12:32:48       lr_list: [[1e-05], [1e-06]]
+2024-07-15 12:32:48       milestones: [160, 190]
+2024-07-15 12:32:48   snapshots:
+2024-07-15 12:32:48     max_snapshots: 5
+2024-07-15 12:32:48     save_epochs: 25
+2024-07-15 12:32:48     save_optimizer_state: False
+2024-07-15 12:32:48 train_settings:
+2024-07-15 12:32:48   batch_size: 1
+2024-07-15 12:32:48   dataloader_workers: 0
+2024-07-15 12:32:48   dataloader_pin_memory: True
+2024-07-15 12:32:48   display_iters: 500
+2024-07-15 12:32:48   epochs: 200
+2024-07-15 12:32:48   seed: 42
+2024-07-15 12:32:48 Loading pretrained weights from Hugging Face hub (timm/resnet50_gn.a1h_in1k)
+2024-07-15 12:32:48 [timm/resnet50_gn.a1h_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+2024-07-15 12:42:20 Training with configuration:
+2024-07-15 12:42:20 data:
+2024-07-15 12:42:20   colormode: RGB
+2024-07-15 12:42:20   inference:
+2024-07-15 12:42:20     normalize_images: True
+2024-07-15 12:42:20   train:
+2024-07-15 12:42:20     affine:
+2024-07-15 12:42:20       p: 0.5
+2024-07-15 12:42:20       rotation: 30
+2024-07-15 12:42:20       scaling: [1.0, 1.0]
+2024-07-15 12:42:20       translation: 0
+2024-07-15 12:42:20     collate:
+2024-07-15 12:42:20       type: ResizeFromDataSizeCollate
+2024-07-15 12:42:20       min_scale: 0.4
+2024-07-15 12:42:20       max_scale: 1.0
+2024-07-15 12:42:20       min_short_side: 128
+2024-07-15 12:42:20       max_short_side: 1152
+2024-07-15 12:42:20       multiple_of: 32
+2024-07-15 12:42:20       to_square: False
+2024-07-15 12:42:20     covering: False
+2024-07-15 12:42:20     gaussian_noise: 12.75
+2024-07-15 12:42:20     hist_eq: False
+2024-07-15 12:42:20     motion_blur: False
+2024-07-15 12:42:20     normalize_images: True
+2024-07-15 12:42:20 device: auto
+2024-07-15 12:42:20 metadata:
+2024-07-15 12:42:20   project_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11
+2024-07-15 12:42:20   pose_config_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11/dlc-models-pytorch/iteration-0/dlc_torch_test_predtxJul11-trainset95shuffle1/train/pose_cfg.yaml
+2024-07-15 12:42:20   bodyparts: ['calib_1', 'calib_2', 'calib_3', 'calib_4', 'calib_5', 'calib_6', 'iliac_crest', 'hip', 'knee', 'ankle', 'metatarsal', 'toe', 'fl_toe', 'mirror_lhl', 'mirror_rhl', 'mirror_lfl', 'mirror_rfl', 'mirror_com', 'mirror']
+2024-07-15 12:42:20   unique_bodyparts: []
+2024-07-15 12:42:20   individuals: ['animal']
+2024-07-15 12:42:20   with_identity: None
+2024-07-15 12:42:20 method: bu
+2024-07-15 12:42:20 model:
+2024-07-15 12:42:20   backbone:
+2024-07-15 12:42:20     type: ResNet
+2024-07-15 12:42:20     model_name: resnet50_gn
+2024-07-15 12:42:20     output_stride: 16
+2024-07-15 12:42:20     freeze_bn_stats: True
+2024-07-15 12:42:20     freeze_bn_weights: False
+2024-07-15 12:42:20   backbone_output_channels: 2048
+2024-07-15 12:42:20   heads:
+2024-07-15 12:42:20     bodypart:
+2024-07-15 12:42:20       type: HeatmapHead
+2024-07-15 12:42:20       weight_init: normal
+2024-07-15 12:42:20       predictor:
+2024-07-15 12:42:20         type: HeatmapPredictor
+2024-07-15 12:42:20         apply_sigmoid: False
+2024-07-15 12:42:20         clip_scores: True
+2024-07-15 12:42:20         location_refinement: True
+2024-07-15 12:42:20         locref_std: 7.2801
+2024-07-15 12:42:20       target_generator:
+2024-07-15 12:42:20         type: HeatmapGaussianGenerator
+2024-07-15 12:42:20         num_heatmaps: 19
+2024-07-15 12:42:20         pos_dist_thresh: 17
+2024-07-15 12:42:20         heatmap_mode: KEYPOINT
+2024-07-15 12:42:20         generate_locref: True
+2024-07-15 12:42:20         locref_std: 7.2801
+2024-07-15 12:42:20       criterion:
+2024-07-15 12:42:20         heatmap:
+2024-07-15 12:42:20           type: WeightedMSECriterion
+2024-07-15 12:42:20           weight: 1.0
+2024-07-15 12:42:20         locref:
+2024-07-15 12:42:20           type: WeightedHuberCriterion
+2024-07-15 12:42:20           weight: 0.05
+2024-07-15 12:42:20       heatmap_config:
+2024-07-15 12:42:20         channels: [2048, 19]
+2024-07-15 12:42:20         kernel_size: [3]
+2024-07-15 12:42:20         strides: [2]
+2024-07-15 12:42:20       locref_config:
+2024-07-15 12:42:20         channels: [2048, 38]
+2024-07-15 12:42:20         kernel_size: [3]
+2024-07-15 12:42:20         strides: [2]
+2024-07-15 12:42:20 net_type: resnet_50
+2024-07-15 12:42:20 runner:
+2024-07-15 12:42:20   type: PoseTrainingRunner
+2024-07-15 12:42:20   gpus: None
+2024-07-15 12:42:20   key_metric: test.mAP
+2024-07-15 12:42:20   key_metric_asc: True
+2024-07-15 12:42:20   eval_interval: 1
+2024-07-15 12:42:20   optimizer:
+2024-07-15 12:42:20     type: AdamW
+2024-07-15 12:42:20     params:
+2024-07-15 12:42:20       lr: 0.0001
+2024-07-15 12:42:20   scheduler:
+2024-07-15 12:42:20     type: LRListScheduler
+2024-07-15 12:42:20     params:
+2024-07-15 12:42:20       lr_list: [[1e-05], [1e-06]]
+2024-07-15 12:42:20       milestones: [160, 190]
+2024-07-15 12:42:20   snapshots:
+2024-07-15 12:42:20     max_snapshots: 5
+2024-07-15 12:42:20     save_epochs: 25
+2024-07-15 12:42:20     save_optimizer_state: False
+2024-07-15 12:42:20 train_settings:
+2024-07-15 12:42:20   batch_size: 1
+2024-07-15 12:42:20   dataloader_workers: 0
+2024-07-15 12:42:20   dataloader_pin_memory: True
+2024-07-15 12:42:20   display_iters: 500
+2024-07-15 12:42:20   epochs: 200
+2024-07-15 12:42:20   seed: 42
+2024-07-15 12:42:21 Loading pretrained weights from Hugging Face hub (timm/resnet50_gn.a1h_in1k)
+2024-07-15 12:42:21 [timm/resnet50_gn.a1h_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+2024-07-15 12:51:39 Training with configuration:
+2024-07-15 12:51:39 data:
+2024-07-15 12:51:39   colormode: RGB
+2024-07-15 12:51:39   inference:
+2024-07-15 12:51:39     normalize_images: True
+2024-07-15 12:51:39   train:
+2024-07-15 12:51:39     affine:
+2024-07-15 12:51:39       p: 0.5
+2024-07-15 12:51:39       rotation: 30
+2024-07-15 12:51:39       scaling: [1.0, 1.0]
+2024-07-15 12:51:39       translation: 0
+2024-07-15 12:51:39     collate:
+2024-07-15 12:51:39       type: ResizeFromDataSizeCollate
+2024-07-15 12:51:39       min_scale: 0.4
+2024-07-15 12:51:39       max_scale: 1.0
+2024-07-15 12:51:39       min_short_side: 128
+2024-07-15 12:51:39       max_short_side: 1152
+2024-07-15 12:51:39       multiple_of: 32
+2024-07-15 12:51:39       to_square: False
+2024-07-15 12:51:39     covering: False
+2024-07-15 12:51:39     gaussian_noise: 12.75
+2024-07-15 12:51:39     hist_eq: False
+2024-07-15 12:51:39     motion_blur: False
+2024-07-15 12:51:39     normalize_images: True
+2024-07-15 12:51:39 device: auto
+2024-07-15 12:51:39 metadata:
+2024-07-15 12:51:39   project_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11
+2024-07-15 12:51:39   pose_config_path: /Users/kenzie_mackinnon/sync/lab-analysis/deeplabcut/dlc_torch_test_predtx-kenzie-2024-07-11/dlc-models-pytorch/iteration-0/dlc_torch_test_predtxJul11-trainset95shuffle1/train/pose_cfg.yaml
+2024-07-15 12:51:39   bodyparts: ['calib_1', 'calib_2', 'calib_3', 'calib_4', 'calib_5', 'calib_6', 'iliac_crest', 'hip', 'knee', 'ankle', 'metatarsal', 'toe', 'fl_toe', 'mirror_lhl', 'mirror_rhl', 'mirror_lfl', 'mirror_rfl', 'mirror_com', 'mirror']
+2024-07-15 12:51:39   unique_bodyparts: []
+2024-07-15 12:51:39   individuals: ['animal']
+2024-07-15 12:51:39   with_identity: None
+2024-07-15 12:51:39 method: bu
+2024-07-15 12:51:39 model:
+2024-07-15 12:51:39   backbone:
+2024-07-15 12:51:39     type: ResNet
+2024-07-15 12:51:39     model_name: resnet50_gn
+2024-07-15 12:51:39     output_stride: 16
+2024-07-15 12:51:39     freeze_bn_stats: True
+2024-07-15 12:51:39     freeze_bn_weights: False
+2024-07-15 12:51:39   backbone_output_channels: 2048
+2024-07-15 12:51:39   heads:
+2024-07-15 12:51:39     bodypart:
+2024-07-15 12:51:39       type: HeatmapHead
+2024-07-15 12:51:39       weight_init: normal
+2024-07-15 12:51:39       predictor:
+2024-07-15 12:51:39         type: HeatmapPredictor
+2024-07-15 12:51:39         apply_sigmoid: False
+2024-07-15 12:51:39         clip_scores: True
+2024-07-15 12:51:39         location_refinement: True
+2024-07-15 12:51:39         locref_std: 7.2801
+2024-07-15 12:51:39       target_generator:
+2024-07-15 12:51:39         type: HeatmapGaussianGenerator
+2024-07-15 12:51:39         num_heatmaps: 19
+2024-07-15 12:51:39         pos_dist_thresh: 17
+2024-07-15 12:51:39         heatmap_mode: KEYPOINT
+2024-07-15 12:51:39         generate_locref: True
+2024-07-15 12:51:39         locref_std: 7.2801
+2024-07-15 12:51:39       criterion:
+2024-07-15 12:51:39         heatmap:
+2024-07-15 12:51:39           type: WeightedMSECriterion
+2024-07-15 12:51:39           weight: 1.0
+2024-07-15 12:51:39         locref:
+2024-07-15 12:51:39           type: WeightedHuberCriterion
+2024-07-15 12:51:39           weight: 0.05
+2024-07-15 12:51:39       heatmap_config:
+2024-07-15 12:51:39         channels: [2048, 19]
+2024-07-15 12:51:39         kernel_size: [3]
+2024-07-15 12:51:39         strides: [2]
+2024-07-15 12:51:39       locref_config:
+2024-07-15 12:51:39         channels: [2048, 38]
+2024-07-15 12:51:39         kernel_size: [3]
+2024-07-15 12:51:39         strides: [2]
+2024-07-15 12:51:39 net_type: resnet_50
+2024-07-15 12:51:39 runner:
+2024-07-15 12:51:39   type: PoseTrainingRunner
+2024-07-15 12:51:39   gpus: None
+2024-07-15 12:51:39   key_metric: test.mAP
+2024-07-15 12:51:39   key_metric_asc: True
+2024-07-15 12:51:39   eval_interval: 1
+2024-07-15 12:51:39   optimizer:
+2024-07-15 12:51:39     type: AdamW
+2024-07-15 12:51:39     params:
+2024-07-15 12:51:39       lr: 0.0001
+2024-07-15 12:51:39   scheduler:
+2024-07-15 12:51:39     type: LRListScheduler
+2024-07-15 12:51:39     params:
+2024-07-15 12:51:39       lr_list: [[1e-05], [1e-06]]
+2024-07-15 12:51:39       milestones: [160, 190]
+2024-07-15 12:51:39   snapshots:
+2024-07-15 12:51:39     max_snapshots: 5
+2024-07-15 12:51:39     save_epochs: 25
+2024-07-15 12:51:39     save_optimizer_state: False
+2024-07-15 12:51:39 train_settings:
+2024-07-15 12:51:39   batch_size: 1
+2024-07-15 12:51:39   dataloader_workers: 0
+2024-07-15 12:51:39   dataloader_pin_memory: True
+2024-07-15 12:51:39   display_iters: 500
+2024-07-15 12:51:39   epochs: 200
+2024-07-15 12:51:39   seed: 42
+2024-07-15 12:51:40 Loading pretrained weights from Hugging Face hub (timm/resnet50_gn.a1h_in1k)
+2024-07-15 12:51:40 [timm/resnet50_gn.a1h_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.

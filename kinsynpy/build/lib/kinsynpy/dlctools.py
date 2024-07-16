@@ -5,10 +5,7 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 import seaborn as sns
-from dlc2kinematics import Visualizer2D
 from scipy import signal
-
-import latstability as ls
 
 
 def frame_to_time(frame_index, fps=500):
@@ -22,14 +19,25 @@ def frame_to_time(frame_index, fps=500):
 
 
 def dlc_calibrate(df, bodyparts, scorer, calibration_markers):
-    """Calibrate DLC output to physical distance via calibration marker estimation.
+    """
+    Calibrate DLC output to physical distance via calibration marker estimation.
     This is redundant in ways as it's likely this will be loaded in for other things.
-    :param df: h5 file from DeepLabCut
-    :param bodyparts: This is output from the loaded dataset
-    :param scorer: This is output from the loaded dataset
-    :param calibration_markers: List of names for calibration markers
 
-    :return calibration_factor: float value to convert given pixel values to (cm)
+    Parameters
+    ----------
+    df :
+        h5 file from DeepLabCut
+    bodyparts:
+        This is output from the loaded dataset
+    scorer:
+        This is output from the loaded dataset
+    calibration_markers:
+        List of names for calibration markers
+
+    Returns
+    -------
+    calibration_factor:
+        float value to convert given pixel values to (cm)
     """
 
     avg_cal_cords = {}
@@ -258,10 +266,19 @@ def hip_height(toey_values, hipy_values, manual=False):
 
 def xcom(comy, vcom, hip_height):
     """
-    :param comy: numpy array of values for y coordinate of toe marker
-    :param hip_height: average hip height
+    Calculates extrapolated Center-of-mass (xCoM)
 
-    :return xcom: A 1-D array representing the extrapolated CoM in cm
+    Parameters
+    ----------
+    comy:
+        numpy array of values for y coordinate of toe marker
+    hip_height:
+        average hip height
+
+    Returns
+    -------
+    xcom:
+        A 1-D array representing the extrapolated CoM in cm
     """
 
     # Get xCoM in (cm)
@@ -270,7 +287,26 @@ def xcom(comy, vcom, hip_height):
     return xcom
 
 
+def double_support(fl_x, hl_x, manual_analysis=False, filt_window=40):
+    """Finds double support phases from forlimb movement
+    :param fl_x: forelimb x coordinate
+    :param hl_x: hindlimb x coordinate
+    :param manual_analysis: Will allow for manual annotation of traces to pick phases.
+    :param filt_window: Smoothening factor for traces.
+
+    :return ds_phases: Same length 1-D array as input either 1 or np.nan values indicating phases
+    """
+
+    # Smoothen Traces
+    fl_x = signal.savgol_filter(
+        fl_x,
+    )
+
+    return ds_phases
+
+
 def cop(fl_y, hl_y):
+
     return (fl_y + hl_y) / 2
 
 
@@ -327,8 +363,8 @@ def mos(
     # Optional manual point selection
     if manual_peaks is False:
         # Getting peaks and troughs
-        xcom_peaks, _ = sp.signal.find_peaks(xcom, width=width_threshold)
-        xcom_troughs, _ = sp.signal.find_peaks(-xcom, width=width_threshold)
+        xcom_peaks, _ = signal.find_peaks(xcom, width=width_threshold)
+        xcom_troughs, _ = signal.find_peaks(-xcom, width=width_threshold)
     elif manual_peaks is True:
         xcom_peaks, _ = mos_marks(xcom, leftds, rightds, title="Select Peaks")
         xcom_troughs, _ = mos_marks(xcom, leftds, rightds, title="Select Troughs")
@@ -371,9 +407,9 @@ def mos(
 def main():
 
     # Loading in a dataset
-    video = 4
+    video = "04"
     df, bodyparts, scorer = dlck.load_data(
-        f"./treadmill_level_test/emg-test-2-dropped/EMG-test-2-pre-emg_00000{video}DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
+        f"./treadmill_level_test/emg-test-2-dropped/EMG-test-2-pre-emg_0000{video}DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
     )
 
     # NOTE: Very important this is checked before running
@@ -448,18 +484,18 @@ def main():
 
     # Filtering to clean up traces like you would in spike
     toe_smooth = median_filter(toe_np, filter_k)
-    toe_smooth = sp.signal.savgol_filter(toe_smooth, 20, 3)
+    toe_smooth = signal.savgol_filter(toe_smooth, 20, 3)
     # com_med = median_filter(comy_np, filter_k)
-    com_med = sp.signal.savgol_filter(comy_np, 40, 3)
+    com_med = signal.savgol_filter(comy_np, 40, 3)
 
     rfl_med = median_filter(rfl_np, filter_k)
-    rfl_med = sp.signal.savgol_filter(rfl_med, 30, 3)
+    rfl_med = signal.savgol_filter(rfl_med, 30, 3)
     rhl_med = median_filter(rhl_np, filter_k)
-    rhl_med = sp.signal.savgol_filter(rhl_med, 30, 3)
+    rhl_med = signal.savgol_filter(rhl_med, 30, 3)
     lfl_med = median_filter(lfl_np, filter_k)
-    lfl_med = sp.signal.savgol_filter(lfl_med, 30, 3)
+    lfl_med = signal.savgol_filter(lfl_med, 30, 3)
     lhl_med = median_filter(lhl_np, filter_k)
-    lhl_med = sp.signal.savgol_filter(lhl_med, 30, 3)
+    lhl_med = signal.savgol_filter(lhl_med, 30, 3)
 
     # Cleaning up selection to region before mouse moves back
     # toe_roi_selection_fil = toe_filtered[0:2550]
@@ -480,9 +516,9 @@ def main():
 
     # Experimental Estimation of CoP considering the standards used
     rightcop = cop(rfl_med, rhl_med)
-    rightcop = sp.signal.savgol_filter(rightcop, 40, 3)
+    rightcop = signal.savgol_filter(rightcop, 40, 3)
     leftcop = cop(lfl_med, lhl_med)
-    leftcop = sp.signal.savgol_filter(leftcop, 40, 3)
+    leftcop = signal.savgol_filter(leftcop, 40, 3)
     right_DS = rightcop
     left_DS = leftcop
 
@@ -598,7 +634,6 @@ def main():
         "L COP",
         "R COP",
     ]
-    mos_legend = ["L MoS", "R MoS"]
     fig, axs = plt.subplots(2)
     fig.suptitle(mos_figure_title)
 
@@ -613,13 +648,12 @@ def main():
 
     # Looking at result
     axs[1].set_title("MoS Result")
-    sns.barplot(data=mos_comb, x="Limb", y="MoS (cm)", ci=95, ax=axs[1])
+    sns.barplot(data=mos_comb, x="Limb", y="MoS (cm)", ci=95, capsize=0.05, ax=axs[1])
     # axs[1].bar(0, np.mean(lmos), yerr=np.std(lmos), capsize=5)
     # axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
-    axs[1].legend(bbox_to_anchor=(1, 0.7))
 
     fig = plt.gcf()
-    fig.set_size_inches(8.5, 11)
+    fig.set_size_inches(8.27, 11.7)  # A4 formatting 8.27” by 11.7”
     fig.tight_layout()
 
     # Saving results

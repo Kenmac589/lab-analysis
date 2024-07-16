@@ -542,10 +542,10 @@ def hip_height(
         average_hip_value = np.mean(hipy_values)
         hip_height = average_hip_value - toey_lower
 
-        plt.plot(toey_values, label="toey")
-        plt.plot(hipy_values, label="hipy")
-        plt.plot(toey_peaks, toey_values[toey_peaks], "x")
-        plt.show()
+        # plt.plot(toey_values, label="toey")
+        # plt.plot(hipy_values, label="hipy")
+        # plt.plot(toey_peaks, toey_values[toey_peaks], "x")
+        # plt.show()
 
     elif manual is True:
         # Selection of regions foot would be on the ground

@@ -17,9 +17,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scipy as sp
-from scipy.interpolate import InterpolatedUnivariateSpline
+
+# from scipy.interpolate import InterpolatedUnivariateSpline
 from sklearn.decomposition import NMF
-from statsmodels.nonparametric.kernel_regression import KernelReg
+
+# from statsmodels.nonparametric.kernel_regression import KernelReg
 
 
 # %%
