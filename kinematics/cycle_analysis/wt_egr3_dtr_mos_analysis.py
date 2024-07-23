@@ -19,14 +19,14 @@ def condition_add(input_df, file_list, condition, limb, perturbation_state):
         for j in range(len(mos_values)):
             entry = mos_values[j]
             if entry < 0.0:
-                print(f"File with negative detected: {file_list[i]}")
+                print(f"File with negative detected: {file_list[i]} with value {entry}")
 
             mos_entry = [[condition, limb, perturbation_state, entry]]
 
             input_df = input_df._append(
                 pd.DataFrame(
                     mos_entry,
-                    columns=["Condition", "Limb", "Perturbation State", "MoS"],
+                    columns=["Condition", "Limb", "Perturbation State", "MoS (cm)"],
                 ),
                 ignore_index=True,
             )
@@ -233,7 +233,7 @@ dtrpost_sin_rmos = [
     "./dtr_data/postdtx/postdtx_6sin_rmos-man.csv",
 ]
 
-mos_df = df(columns=["Condition", "Limb", "Perturbation State", "MoS"])
+mos_df = df(columns=["Condition", "Limb", "Perturbation State", "MoS (cm)"])
 
 mos_df = condition_add(mos_df, wt_non_lmos, "WT", "Left", "Non-Perturbation")
 mos_df = condition_add(mos_df, wt_non_rmos, "WT", "Right", "Non-Perturbation")
@@ -315,7 +315,7 @@ perturbation_state_order = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
 cond_combo_plot_params = {
     "data": con_mos_combo,
     "x": "Condition",
-    "y": "MoS",
+    "y": "MoS (cm)",
     "hue": "Perturbation State",
     "hue_order": perturbation_state_order,
     "inner": "point",
@@ -338,5 +338,5 @@ annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(19.8, 10.80)
 fig.tight_layout()
-plt.show()
-# plt.savefig("./combined_figures/mos_all_violin_inner.svg", dpi=300)
+# plt.show()
+plt.savefig("./combined_figures/mos_all_violin_inner.svg", dpi=300)

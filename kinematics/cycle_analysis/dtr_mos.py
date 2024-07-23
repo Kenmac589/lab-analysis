@@ -3,8 +3,7 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 import seaborn as sns
-
-import latstability as ls
+from kinsynpy import latstability as ls
 
 
 def double_support_timings(input_dataframe, ds_channel):
@@ -133,9 +132,9 @@ def main():
     # dtrpost_2per = pd.read_csv(
     #     "./dtr_data/postdtx/dtr-post-2-per-xcom.txt", delimiter=",", header=0
     # )
-    # dtrpost_2sin = pd.read_csv(
-    #     "./dtr_data/postdtx/dtr-post-2-sin-xcom.txt", delimiter=",", header=0
-    # )
+    dtrpost_2sin = pd.read_csv(
+        "./dtr_data/postdtx/dtr-post-2-sin-xcom.txt", delimiter=",", header=0
+    )
     # dtrpost_3non = pd.read_csv(
     #     "./dtr_data/postdtx/dtr-post-3-non-xcom.txt", delimiter=",", header=0
     # )
@@ -163,30 +162,34 @@ def main():
     # dtrpost_6per = pd.read_csv(
     #     "./dtr_data/postdtx/dtr-post-6-per-xcom.txt", delimiter=",", header=0
     # )
-    dtrpost_6sin = pd.read_csv(
-        "./dtr_data/postdtx/dtr-post-6-sin-xcom.txt", delimiter=",", header=0
-    )
+    # dtrpost_6sin = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-6-sin-xcom.txt", delimiter=",", header=0
+    # )
 
     # Some things to set for plotting/saving
+    condition = "postdtx"
+    trial = "2-sin"
     manual_analysis = False
     save_auto = False
-    lmos_filename = "./dtr_data/postdtx/postdtx_6sin_lmos.csv"
-    rmos_filename = "./dtr_data/postdtx/postdtx_6sin_rmos.csv"
-    figure_title = (
-        "Measurement of Stability For DTR M6 with Sinusoidal Perturbation post-DTX"
-    )
+    lmos_filename = f"./dtr_data/postdtx/postdtx_{trial}_lmos.csv"
+    rmos_filename = f"./dtr_data/postdtx/postdtx_{trial}_rmos.csv"
+    figure_title = f"Measurement of Stability For DTR M{trial} post-DTX"
+    figure_filename = f"./dtr_data/{condition}/{condition}_{trial}-mos.svg"
 
     # Grabbing individual channels
-    xcom = dtrpost_6sin["v1 xCoM"].to_numpy(dtype=float)
-    leftcop = dtrpost_6sin["v3 L COP"].to_numpy(dtype=float)
-    rightcop = dtrpost_6sin["v2 R COP"].to_numpy(dtype=float)
-    left_DS = dtrpost_6sin["48 LDS cle"].to_numpy(dtype=float)
-    right_DS = dtrpost_6sin["47 RDS cle"].to_numpy(dtype=float)
+    xcom = dtrpost_2sin["v1 xCoM"].to_numpy(dtype=float)
+    leftcop = dtrpost_2sin["v3 L COP"].to_numpy(dtype=float)
+    rightcop = dtrpost_2sin["v2 R COP"].to_numpy(dtype=float)
+    left_DS = dtrpost_2sin["50 LDS cle"].to_numpy(dtype=float)
+    right_DS = dtrpost_2sin["49 RDS cle"].to_numpy(dtype=float)
 
     # Remove periods where it is not present or not valid
     # leftcop = np.where(leftcop == 0.0, np.nan, leftcop)
     rightcop = np.where(rightcop == 0.0, np.nan, rightcop)
     leftcop = np.where(leftcop == 0.0, np.nan, leftcop)
+    rightcop = sp.signal.savgol_filter(rightcop, 5, 3)
+    leftcop = sp.signal.savgol_filter(leftcop, 5, 3)
+
     # right_band = 2
     # rightcop[rightcop < right_band] = np.nan
     # leftcop[leftcop < left_band] = np.nan
@@ -231,6 +234,8 @@ def main():
     axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
     axs[1].legend(mos_legend, bbox_to_anchor=(1, 0.7))
 
+    fig = plt.gcf()
+    fig.set_size_inches(9, 9)
     plt.tight_layout()
     # plt.savefig("./dtr-mos-output.pdf", dpi=300)
     plt.show()
@@ -239,10 +244,12 @@ def main():
     if manual_analysis is True:
         np.savetxt(lmos_filename, lmos, delimiter=",")
         np.savetxt(rmos_filename, rmos, delimiter=",")
+        plt.savefig(figure_filename, dpi=300)
         print("mos results saved!")
     elif manual_analysis is False and save_auto is True:
         np.savetxt(lmos_filename, lmos, delimiter=",")
         np.savetxt(rmos_filename, rmos, delimiter=",")
+        plt.savefig(figure_filename, dpi=300)
         print("mos results saved!")
     else:
         print("mos results not saved")

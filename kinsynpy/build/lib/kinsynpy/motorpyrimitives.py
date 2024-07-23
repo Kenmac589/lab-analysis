@@ -906,18 +906,18 @@ def main():
 
     # Normalized Data List
     conditions_normalized_dtr = [
-        "./norm-emg-preDTX-100.csv",
-        "./norm-emg-preDTX-per.csv",
-        "./norm-postdtx-non.csv",
-        "./norm-postdtx-per.csv",
+        "../../emg/synergies/norm-emg-preDTX-100.csv",
+        "../../emg/synergies/norm-emg-preDTX-per.csv",
+        "../../emg/synergies/norm-postdtx-non.csv",
+        "../../emg/synergies/norm-postdtx-per.csv",
     ]
 
     # Cleaned up Primitives
     conditions_primitives_dtr = [
-        "./predtx-non-primitives-test.txt",
-        "./predtx-per-primitives-test.txt",
-        "./postdtx-non-primitives.txt",
-        "./postdtx-per-primitives.txt",
+        "../../emg/synergies/predtx-non-primitives-test.txt",
+        "../../emg/synergies/predtx-per-primitives-test.txt",
+        "../../emg/synergies/postdtx-non-primitives.txt",
+        "../../emg/synergies/postdtx-per-primitives.txt",
     ]
 
     # show_synergies('./norm-wt-m1-non.csv', './wt-m1-non-primitives.txt', synergy_selection, "Synergies for WT-M1 without perturbation")

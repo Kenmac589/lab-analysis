@@ -1,1 +1,1 @@
-# print("Loading kinsynpy 1.0")
+# print("Loading kinsynpy 1.0\n")

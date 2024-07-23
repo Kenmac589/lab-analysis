@@ -8,13 +8,12 @@ import seaborn as sns
 from dlc2kinematics import Visualizer2D
 from scipy import signal
 
-import latstability as ls
+# import latstability as ls
 
 
-def frame_to_time(frame_index, fps=500):
-
+def frame_to_time(frame_index):
     # Convert to miliseconds
-    frame_mili = (frame_index / fps) * 1000
+    frame_mili = frame_index * 2
     # Convert to seconds
     time_seconds = frame_mili / 1000
 
@@ -371,7 +370,7 @@ def mos(
 def main():
 
     # Loading in a dataset
-    video = 4
+    video = 3
     df, bodyparts, scorer = dlck.load_data(
         f"./treadmill_level_test/emg-test-2-dropped/EMG-test-2-pre-emg_00000{video}DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
     )
@@ -613,7 +612,7 @@ def main():
 
     # Looking at result
     axs[1].set_title("MoS Result")
-    sns.barplot(data=mos_comb, x="Limb", y="MoS (cm)", ci=95, ax=axs[1])
+    sns.violinplot(data=mos_comb, x="Limb", y="MoS (cm)", ax=axs[1])
     # axs[1].bar(0, np.mean(lmos), yerr=np.std(lmos), capsize=5)
     # axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
     axs[1].legend(bbox_to_anchor=(1, 0.7))

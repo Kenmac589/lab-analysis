@@ -3,8 +3,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import scipy as sp
 import seaborn as sns
+from dlc2kinematics import Visualizer2D
 from scipy import signal
 
 
@@ -69,6 +69,7 @@ def dlc_calibrate(df, bodyparts, scorer, calibration_markers):
         two_cm_difs = np.append(two_cm_difs, bottom_dif)
 
     x_factor = np.mean(two_cm_difs) / 2
+    print(x_factor)
 
     # Getting average y movement factor (2.5 cm across)
     # Noting y values towards bottom of image are higher than the top
@@ -78,18 +79,28 @@ def dlc_calibrate(df, bodyparts, scorer, calibration_markers):
         two_p5_cm_difs = np.append(two_p5_cm_difs, y_dif)
 
     y_factor = np.mean(two_p5_cm_difs) / 2.5
+    print(y_factor)
 
     calibration_factor = np.mean([x_factor, y_factor])
+    print(calibration_factor)
 
     return calibration_factor
 
 
 def manual_marks(related_trace, title="Select Points"):
     """Manually annotate points of interest on a given trace
-    :param related_trace: Trace you want to annotate
 
-    :return manual_marks_x: array of indices to approx desired value in original trace
-    :return manual_marks_y: array of selected values
+    Parameters
+    ----------
+    related_trace:
+        Trace you want to annotate
+
+    Returns
+    -------
+    manual_marks_x:
+        array of indices to approx desired value in original trace
+    manual_marks_y:
+        array of selected values
     """
 
     # Open interface with trace
@@ -298,9 +309,11 @@ def double_support(fl_x, hl_x, manual_analysis=False, filt_window=40):
     """
 
     # Smoothen Traces
-    fl_x = signal.savgol_filter(
-        fl_x,
-    )
+    fl_x = signal.savgol_filter(fl_x, filt_window, 3)
+    hl_x = signal.savgol_filter(hl_x, filt_window, 3)
+
+    fl_swon, fl_swoff = swing_estimation(fl_x, manual=False)
+    hl_swon, hl_swoff = swing_estimation(fl_x, manual=False)
 
     return ds_phases
 
@@ -407,9 +420,9 @@ def mos(
 def main():
 
     # Loading in a dataset
-    video = "04"
+    video = "00"
     df, bodyparts, scorer = dlck.load_data(
-        f"./treadmill_level_test/emg-test-2-dropped/EMG-test-2-pre-emg_0000{video}DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
+        f"../data/kinematics/EMG-test-1-pre-emg_0000{video}DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
     )
 
     # NOTE: Very important this is checked before running
@@ -440,13 +453,13 @@ def main():
     ]
 
     # For visualizing skeleton
-    # config_path = (
-    #     "../../deeplabcut/dlc-dtr/dtr_update_predtx-kenzie-2024-04-08/config.yaml"
-    # )
-    # foi = "../../deeplabcut/treadmill_level_test/level_mos_analysis-m1/WT-No-EMG-M1-pre/WT-No-EMG-M1-pre_000004DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
-    # viz = Visualizer2D(config_path, foi, form_skeleton=True)
-    # viz.view(show_axes=True, show_grid=True, show_labels=True)
-    # plt.show()
+    config_path = (
+        "../../deeplabcut/dlc-dtr/dtr_update_predtx-kenzie-2024-04-08/config.yaml"
+    )
+    foi = "../data/kinematics/EMG-test-1-pre-emg_000000DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
+    viz = Visualizer2D(config_path, foi, form_skeleton=True)
+    viz.view(show_axes=True, show_grid=True, show_labels=True)
+    plt.show()
 
     calib_factor = dlc_calibrate(df, bodyparts, scorer, calib_markers)
 
@@ -511,7 +524,6 @@ def main():
     # Center of pressures
     com_slope = spike_slope(com_trimmed, 30)
     hip_h = hip_height(toey_np, hipy_np)
-    print(hip_h)
     xcom_trimmed = xcom(com_trimmed, com_slope, hip_h)
 
     # Experimental Estimation of CoP considering the standards used
@@ -669,6 +681,8 @@ def main():
         print("Mos results saved!")
     else:
         print("Mos results not saved")
+
+    xcom
 
     plt.show()
 
