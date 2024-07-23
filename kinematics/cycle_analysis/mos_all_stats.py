@@ -320,7 +320,8 @@ def main():
 
     print(f"Two way Anova done with pingouin:\n{aov}\n")
 
-    # Post-hoc t-tests
+    # Post-hoc tests
+
     cmap = ["1", "#fb6a4a", "#08306b", "#4292c6", "#c6dbef"]
     heatmap_args = {
         "cmap": cmap,
