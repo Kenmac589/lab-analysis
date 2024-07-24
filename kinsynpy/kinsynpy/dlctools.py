@@ -417,6 +417,36 @@ def mos(
     return lmos_values, rmos_values, xcom_peaks, xcom_troughs
 
 
+def limb_measurements(input_skeleton, skeleton_list, calibration):
+    """Estimates lengths of limbs coordinates based on skeleton reconstruction
+
+    Parameters
+    ----------
+    input_skeleton:
+        raw dataframe from spike no cleaning necessary
+    skeleton_list:
+        list of components in skeleton to look for in dataframe
+    calibration:
+        calibration factor calculated from recording itself
+
+    Returns
+    -------
+    calibrated_measurements:
+        Dictionary of the average distance for each joint
+    """
+    calibrated_measurments = {}
+
+    input_skeleton = input_skeleton[skeleton_list[:]]
+    sk_df = input_skeleton.drop([0])  # removes row saying length
+    # print(sk_df)
+
+    for key in skeleton_list:
+        column_values = pd.array(sk_df[key], dtype=np.dtype(float)) / calibration
+        calibrated_measurments[key] = np.mean(column_values)
+
+    return calibrated_measurments
+
+
 def main():
 
     # Loading in a dataset
@@ -424,6 +454,18 @@ def main():
     df, bodyparts, scorer = dlck.load_data(
         f"../data/kinematics/EMG-test-1-pre-emg_0000{video}DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
     )
+
+    # Loading in skeleton
+    sk_df = pd.read_csv(
+        f"../data/kinematics/EMG-test-1-pre-emg_0000{video}DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered_skeleton.csv"
+    )
+    limb_names = [
+        "iliac_crest_hip",
+        "hip_knee",
+        "knee_ankle",
+        "ankle_metatarsal",
+        "metatarsal_toe",
+    ]
 
     # NOTE: Very important this is checked before running
     mouse_number = 2
@@ -459,9 +501,11 @@ def main():
     foi = "../data/kinematics/EMG-test-1-pre-emg_000000DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
     viz = Visualizer2D(config_path, foi, form_skeleton=True)
     viz.view(show_axes=True, show_grid=True, show_labels=True)
-    plt.show()
+    # plt.show()
 
     calib_factor = dlc_calibrate(df, bodyparts, scorer, calib_markers)
+    limb_diffs = limb_measurements(sk_df, limb_names, calib_factor)
+    print(f"Length of limb coordinates in cm\n{limb_diffs}")
 
     # Grabbing toe marker data
     toe = df[scorer]["toe"]
@@ -604,7 +648,7 @@ def main():
     else:
         print("Kinematic results not saved")
 
-    plt.show()
+    # plt.show()
 
     # Now onto Lateral stability
 
@@ -684,7 +728,7 @@ def main():
 
     xcom
 
-    plt.show()
+    # plt.show()
 
 
 if __name__ == "__main__":
