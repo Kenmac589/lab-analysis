@@ -203,3 +203,50 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 - Yeah confirming this again on 27/05/2024 and yeah most recordings aren't really usable.
     - I checked video 0, 1, 3,  
 
+# 1yr/1-6yr Mice
+
+## 1yrDTRnoRosa M1
+
+### 1yrDTRnoRosa M1 preDTX
+
+- 0.100 non --> 0
+- 0.100 per --> 7 to 16
+- 0.100 sin --> 17 to 20
+
+### 1yrDTRnoRosa M1 postDTX
+ 
+- 0.100 non --> 0
+- 0.100 per --> 3 to 12
+- 0.100 sin --> 13 to 15
+
+## 1yrDTRnoRosa M2 preDTX
+
+- 0.100 non --> 0 and 1
+- 0.100 per --> 8 to 17
+- 0.100 sin --> 18 to 20
+
+## 1yrDTRnoRosa M2 postDTX
+
+- 0.100 non --> 2 and 3
+- 0.100 per --> 6 to 15
+- 0.100 sin --> 16 to 18
+
+# 1yrShamPvCre M1
+
+## 1yrShamPvCre M1 preDTX
+
+- 0.100 non --> 0 and 1
+- 0.100 per --> 8 to 15
+- 0.100 sin --> 16 to 19
+
+## 1yrShamPvCre M1 postDTX
+ 
+- 0.100 non --> 1 and 2
+- 0.100 per --> 9 to 16
+- 0.100 sin --> 17 to 19
+
+## 1-6 RAP M1 preDTX
+
+- 0.100 non --> 0 to 2
+- 0.100 per --> 10 to 17
+- 0.100 sin --> 18 to 20
