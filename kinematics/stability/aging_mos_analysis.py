@@ -5,9 +5,9 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 import seaborn as sns
-from dlc2kinematics import Visualizer2D
+
+# from dlc2kinematics import Visualizer2D
 from kinsynpy import dlctools as dlt
-from scipy import signal
 
 # NOTE: Very important this is checked before running
 

@@ -200,7 +200,7 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 ### DTR-M8 Post-DTX
 
 - Stomach seems to be dragging quite a bit in videos overall
-- Yeah confirming this again on 27/05/2024 and yeah most recordings aren't really usable.
+- Confirming this again on 27/05/2024 and yeah most recordings aren't really usable.
     - I checked video 0, 1, 3,  
 
 # 1yr/1-6yr Mice
