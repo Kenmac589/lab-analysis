@@ -495,12 +495,12 @@ def main():
     ]
 
     # For visualizing skeleton
-    config_path = (
-        "../../deeplabcut/dlc-dtr/dtr_update_predtx-kenzie-2024-04-08/config.yaml"
-    )
-    foi = "../data/kinematics/EMG-test-1-pre-emg_000000DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
-    viz = Visualizer2D(config_path, foi, form_skeleton=True)
-    viz.view(show_axes=True, show_grid=True, show_labels=True)
+    # config_path = (
+    #     "../../deeplabcut/dlc-dtr/dtr_update_predtx-kenzie-2024-04-08/config.yaml"
+    # )
+    # foi = "../data/kinematics/EMG-test-1-pre-emg_000000DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
+    # viz = Visualizer2D(config_path, foi, form_skeleton=True)
+    # viz.view(show_axes=True, show_grid=True, show_labels=True)
     # plt.show()
 
     calib_factor = dlc_calibrate(df, bodyparts, scorer, calib_markers)
@@ -523,12 +523,9 @@ def main():
     toey_np = toey_np / calib_factor
     hipy_np = pd.array(hip["y"])
     hipy_np = hipy_np / calib_factor
-
     comy_np = pd.array(com["y"])
     comy_np = comy_np / calib_factor
     time = np.arange(0, len(comy_np), 1)
-    # time_vec = np.vectorize(frame_to_time)
-    # time = time_vec(time)
     time = frame_to_time(time)
     rfl_np = pd.array(rfl["y"])
     rfl_np = rfl_np / calib_factor
@@ -542,7 +539,6 @@ def main():
     # Filtering to clean up traces like you would in spike
     toe_smooth = median_filter(toe_np, filter_k)
     toe_smooth = signal.savgol_filter(toe_smooth, 20, 3)
-    # com_med = median_filter(comy_np, filter_k)
     com_med = signal.savgol_filter(comy_np, 40, 3)
 
     rfl_med = median_filter(rfl_np, filter_k)
@@ -647,8 +643,7 @@ def main():
         print("Kinematic results saved")
     else:
         print("Kinematic results not saved")
-
-    # plt.show()
+        plt.show()
 
     # Now onto Lateral stability
 
@@ -705,9 +700,6 @@ def main():
     # Looking at result
     axs[1].set_title("MoS Result")
     sns.barplot(data=mos_comb, x="Limb", y="MoS (cm)", ci=95, capsize=0.05, ax=axs[1])
-    # axs[1].bar(0, np.mean(lmos), yerr=np.std(lmos), capsize=5)
-    # axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
-
     fig = plt.gcf()
     fig.set_size_inches(8.27, 11.7)  # A4 formatting 8.27” by 11.7”
     fig.tight_layout()
@@ -725,10 +717,7 @@ def main():
         print("Mos results saved!")
     else:
         print("Mos results not saved")
-
-    xcom
-
-    # plt.show()
+        plt.show()
 
 
 if __name__ == "__main__":

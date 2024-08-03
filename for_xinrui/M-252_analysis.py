@@ -4,84 +4,28 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from dlc2kinematics import Visualizer2D
-from scipy import signal
 
-import latstability as ls
-
-
-def frame_to_time(frame_index):
-    # Convert to miliseconds
-    frame_mili = frame_index * 2
-    # Convert to seconds
-    time_seconds = frame_mili / 1000
-
-    return time_seconds
+# from dlc2kinematics import Visualizer2D
+from kinsynpy import dlctools as dlt
 
 
-def swing_estimation(foot_cord, width_threshold=40):
-    """This approximates swing onset and offset from kinematic data
-    :param : Exported channels from spike most importantly the x values for a channel
+def step_cycle_trial(input_h5, fig_filename, fig_title, cycle_filename, save_plots=True):
+    """Extracts step cycles from h5 output by deeplabcut
 
-    :return swing_onset: A list of indices where swing onset occurs
-    :return swing_offset: A list of indices where swing offet occurs
+    Parameters
+    ----------
+    input_h5:
+        The h5 data file that is automatically produced when analyzing videos.
+    fig_filename:
+        Where you want the figure saved to as well as the name of the file.
+    cycle_filename:
+        Where you want the csv output containing the cycle timings to be saved.
+
+    Returns
+    -------
+    None:
+
     """
-
-    swing_offset, _ = signal.find_peaks(foot_cord, distance=width_threshold)
-    swing_onset, _ = signal.find_peaks(-foot_cord, width=width_threshold)
-
-    return swing_onset, swing_offset
-
-
-def step_cycle_est(foot_cord, width_threshold=40):
-    """This approximates swing onset and offset from kinematic data
-    :param input_dataframe: Exported channels from spike most importantly the x values for a channel
-
-    :return cycle_durations: A numpy array with the duration of each cycle
-    :return average_step: A list of indices where swing offet occurs
-    """
-
-    # Calculating swing estimations
-    swing_onset, _ = swing_estimation(foot_cord)
-
-    # Converting Output to time in seconds
-    time_conversion = np.vectorize(frame_to_time)
-    onset_timing = time_conversion(swing_onset)
-
-    cycle_durations = np.array([])
-    for i in range(len(onset_timing) - 1):
-        time_diff = onset_timing[i + 1] - onset_timing[i]
-        cycle_durations = np.append(cycle_durations, time_diff)
-
-    return cycle_durations
-
-
-# Custom median filter from
-def median_filter(arr, k):
-    """
-    :param arr: input numpy array
-    :param k: is the size of the window you want to slide over the array.
-    also considered the kernel
-
-    :return : An array of the same length where each element is the median of
-    a window centered around the index in the array.
-    """
-    # Initialize output array
-    result = []
-
-    # Iterate over every index in arr
-    for i in range(len(arr)):
-        if i < (k // 2) or i > len(arr) - (k // 2) - 1:
-            # Add a placeholder for the indices before k//2 and after length of array - k//2 - 1
-            result.append(np.nan)
-        else:
-            # Calculate median within window and append to result list
-            result.append(np.median(arr[i - (k // 2) : i + (k // 2) + 1]))
-
-    return np.array(result)
-
-
-def step_cycle_trial(input_h5, fig_filename, fig_title, cycle_filename):
 
     # Loading in a dataset
     df, bodyparts, scorer = dlck.load_data(input_h5)
@@ -93,19 +37,17 @@ def step_cycle_trial(input_h5, fig_filename, fig_title, cycle_filename):
     toe_np = pd.array(toe["x"])
 
     # Filtering to clean up traces like you would in spike
-    toe_filtered = median_filter(toe_np, 9)
-    toe_roi_selection = toe_np[0:2550]  # Just to compare to original
+    toe_filtered = dlt.median_filter(toe_np, 9)
+    # toe_roi_selection = toe_np[0:2550]  # Just to compare to original
 
     # Cleaning up selection to region before mouse moves back
-    toe_roi_selection_fil = toe_filtered[0:2550]
+    # toe_roi_selection_fil = toe_filtered[0:2550]
 
     # Calling function for swing estimation
-    swing_onset, swing_offset = swing_estimation(toe_filtered)
+    swing_onset, swing_offset = dlt.swing_estimation(toe_filtered)
 
-    step_cyc_durations = step_cycle_est(toe_filtered)
+    step_cyc_durations = dlt.step_cycle_est(toe_filtered)
 
-    # Saving values
-    np.savetxt(cycle_filename, step_cyc_durations, delimiter=",")
 
     # Calling function for step cycle calculation
 
@@ -139,7 +81,11 @@ def step_cycle_trial(input_h5, fig_filename, fig_title, cycle_filename):
     # Saving Figure in same folder
     fig = mpl.pyplot.gcf()
     fig.set_size_inches(19.8, 10.80)
-    plt.savefig(fig_filename, dpi=300)
+
+    if save_plots is True:
+        # Saving values
+        np.savetxt(cycle_filename, step_cyc_durations, delimiter=",")
+        plt.savefig(fig_filename, dpi=300)
 
 
 def main():

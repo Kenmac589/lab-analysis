@@ -90,8 +90,8 @@ def swing_estimation(input_dataframe, x_channel, width_threshold=40):
 
     foot_cord = input_dataframe[x_channel].to_numpy(dtype=float)
 
-    swing_offset, _ = sp.signal.find_peaks(foot_cord, distance=width_threshold)
-    swing_onset, _ = sp.signal.find_peaks(-foot_cord, width=width_threshold)
+    swing_offset, _ = sp.sig.find_peaks(foot_cord, distance=width_threshold)
+    swing_onset, _ = sp.sig.find_peaks(-foot_cord, width=width_threshold)
 
     return swing_onset, swing_offset
 
@@ -353,7 +353,7 @@ def fir_filter(data, taps):
     gains = 0.5 - 0.5 * np.cos(2 * np.pi * (freqs - cutoff_freq))
 
     # Apply the filter using a convolution, which is equivalent to multiplication in the frequency domain.
-    filtered = sp.signal.lfilter([1], gains, data)
+    filtered = sp.sig.lfilter([1], gains, data)
 
     return filtered
 
@@ -533,7 +533,7 @@ def hip_height(
         # Getting lower quartile value of toey as proxy for the ground
         toey_cutoff = np.percentile(toey_values, q=75)
         toey_values[toey_values > toey_cutoff] = np.nan
-        toey_peaks, properties = sp.signal.find_peaks(
+        toey_peaks, properties = sp.sig.find_peaks(
             -toey_values, prominence=(None, prominence)
         )
         toey_lower = toey_values[toey_peaks]
@@ -736,8 +736,8 @@ def mos(
     # Optional manual point selection
     if manual_peaks is False:
         # Getting peaks and troughs
-        xcom_peaks, _ = sp.signal.find_peaks(xcom, width=width_threshold)
-        xcom_troughs, _ = sp.signal.find_peaks(-xcom, width=width_threshold)
+        xcom_peaks, _ = sp.sig.find_peaks(xcom, width=width_threshold)
+        xcom_troughs, _ = sp.sig.find_peaks(-xcom, width=width_threshold)
     elif manual_peaks is True:
         xcom_peaks, _ = mos_marks(xcom, leftds, rightds, title="Select Peaks")
         xcom_troughs, _ = mos_marks(xcom, leftds, rightds, title="Select Troughs")

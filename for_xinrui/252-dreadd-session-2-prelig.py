@@ -4,7 +4,7 @@ import pandas as pd
 import scipy as sp
 import seaborn as sns
 from matplotlib.gridspec import GridSpec
-from scipy import signal as sig
+from scipy import sig as sig
 
 
 def truncate(n, decimals=0):

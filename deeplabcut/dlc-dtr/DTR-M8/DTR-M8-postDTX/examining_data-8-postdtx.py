@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from dlc2kinematics import Visualizer2D
-from scipy import signal
+from scipy import sig
 
 
 # Custom median filter from
@@ -36,7 +36,7 @@ def apply_fir(data, coeff):
        The coefficients define the weights for each sample in the input sequence. In this case, they are [0.5, 0.5], which
     means that the output is calculated as the weighted average of the last two samples (in this case, `data[n]*coeff[0] + data[n-1]*coeff[1]`).
     """
-    filtered = signal.lfilter(coeff, 1, data)
+    filtered = sig.lfilter(coeff, 1, data)
     return filtered
 
 
