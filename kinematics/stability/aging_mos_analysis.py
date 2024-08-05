@@ -21,8 +21,8 @@ def main():
     condition = "sin"
     hiph_entry = f"18mo-predtx-{mouse_number}-{condition}-{video}"
     manual_analysis = False
-    save_auto = True
-    filter_k = 14
+    save_auto = False
+    select_region = True
 
     # Loading main kinematic dataset
     df, bodyparts, scorer = dlck.load_data(
@@ -54,93 +54,72 @@ def main():
         "calib_6",
     ]
 
-    # For visualizing skeleton
-    # config_path = (
-    #     "../../deeplabcut/1yr/1yrDTRnoRosa-preDTX-kenzie-2024-01-31_analyzed/config.yaml"
-    # )
-    # foi = f"./aging/12mo/1yr-dtr_norosa-1/1yr-dtr_norosa-1-predtx/non_filtered/1yrDTRnoRosa-M1-19102023_00000{video}DLC_resnet50_1yrDTRnoRosa-preDTXJan31shuffle1_1030000.h5"
-    # viz = Visualizer2D(config_path, foi, form_skeleton=True)
-    # viz.view(show_axes=True, show_grid=True, show_labels=True)
-    # plt.show()
-
     calib_factor = dlt.dlc_calibrate(df, bodyparts, scorer, calib_markers)
 
-    # Grabbing toe marker data
-    toe = df[scorer]["toe"]
-    hip = df[scorer]["hip"]
-    lhl = df[scorer]["mirror_lhl"]
-    rhl = df[scorer]["mirror_rhl"]
-    lfl = df[scorer]["mirror_lfl"]
-    rfl = df[scorer]["mirror_rfl"]
-    com = df[scorer]["mirror_com"]
+    # Grabbing marker data
+    toex_np = dlt.mark_process(df, scorer, "toe", "x", calib_factor)
+    toey_np = dlt.mark_process(df, scorer, "toe", "y", calib_factor)
+    hipy_np = dlt.mark_process(df, scorer, "hip", "y", calib_factor)
+    comy_np = dlt.mark_process(df, scorer, "mirror_com", "y", calib_factor)
+    rfly_np = dlt.mark_process(df, scorer, "mirror_rfl", "y", calib_factor)
+    rhly_np = dlt.mark_process(df, scorer, "mirror_rhl", "y", calib_factor)
+    lfly_np = dlt.mark_process(df, scorer, "mirror_lfl", "y", calib_factor)
+    lhly_np = dlt.mark_process(df, scorer, "mirror_lhl", "y", calib_factor)
+    rflx_np = dlt.mark_process(df, scorer, "mirror_rfl", "x", calib_factor)
+    rhlx_np = dlt.mark_process(df, scorer, "mirror_rhl", "x", calib_factor)
+    lflx_np = dlt.mark_process(df, scorer, "mirror_lfl", "x", calib_factor)
+    lhlx_np = dlt.mark_process(df, scorer, "mirror_lhl", "x", calib_factor)
+    miry = dlt.mark_process(df, scorer, "mirror", "y", calib_factor, smooth_wind=70)
 
-    # Converting to numpy array
-    toe_np = pd.array(toe["x"])
-    toe_np = toe_np / calib_factor
-    toey_np = pd.array(toe["y"])
-    toey_np = toey_np / calib_factor
-    hipy_np = pd.array(hip["y"])
-    hipy_np = hipy_np / calib_factor
+    # Selecting a Given Region
+    if select_region is True:
+        reg_start, reg_stop = dlt.analysis_reg_sel(mirror_y=miry, com_y=comy_np)
+        toex_np = toex_np[reg_start:reg_stop]
+        toey_np = toey_np[reg_start:reg_stop]
+        hipy_np = hipy_np[reg_start:reg_stop]
+        comy_np = comy_np[reg_start:reg_stop]
+        rfly_np = rfly_np[reg_start:reg_stop]
+        rhly_np = rhly_np[reg_start:reg_stop]
+        lfly_np = lfly_np[reg_start:reg_stop]
+        lhly_np = lhly_np[reg_start:reg_stop]
+        rflx_np = rflx_np[reg_start:reg_stop]
+        rhlx_np = rhlx_np[reg_start:reg_stop]
+        lflx_np = lflx_np[reg_start:reg_stop]
+        lhlx_np = lhlx_np[reg_start:reg_stop]
+    else:
+        print("Looking at entire recording")
 
-    comy_np = pd.array(com["y"])
-    comy_np = comy_np / calib_factor
+    # Getting a time adjusted array of equal length for time
     time = np.arange(0, len(comy_np), 1)
-    # time_vec = np.vectorize(frame_to_time)
-    # time = time_vec(time)
     time = dlt.frame_to_time(time)
-    rfl_np = pd.array(rfl["y"])
-    rfl_np = rfl_np / calib_factor
-    rhl_np = pd.array(rhl["y"])
-    rhl_np = rhl_np / calib_factor
-    lfl_np = pd.array(lfl["y"])
-    lfl_np = lfl_np / calib_factor
-    lhl_np = pd.array(lhl["y"])
-    lhl_np = lhl_np / calib_factor
-
-    # Filtering to clean up traces like you would in spike
-    toe_smooth = dlt.median_filter(toe_np, filter_k)
-    toe_smooth = sp.signal.savgol_filter(toe_smooth, 20, 3)
-    # com_med = dlt.median_filter(comy_np, filter_k)
-    com_med = sp.signal.savgol_filter(comy_np, 40, 3)
-
-    rfl_med = dlt.median_filter(rfl_np, filter_k)
-    rfl_med = sp.signal.savgol_filter(rfl_med, 30, 3)
-    rhl_med = dlt.median_filter(rhl_np, filter_k)
-    rhl_med = sp.signal.savgol_filter(rhl_med, 30, 3)
-    lfl_med = dlt.median_filter(lfl_np, filter_k)
-    lfl_med = sp.signal.savgol_filter(lfl_med, 30, 3)
-    lhl_med = dlt.median_filter(lhl_np, filter_k)
-    lhl_med = sp.signal.savgol_filter(lhl_med, 30, 3)
-
-    # Cleaning up selection to region before mouse moves back
-    # toe_roi_selection_fil = toe_filtered[0:2550]
-
-    # rfl_med = rfl_med[1400:]
-    # rhl_med = rhl_med[1400:]
-    # lfl_med = lfl_med[1400:]
-    # lhl_med = lhl_med[1400:]
-    time_trimmed = time
-    # toe_smooth = toe_smooth[1400:]
-    com_trimmed = com_med
 
     # Center of pressures
-    com_slope = dlt.spike_slope(com_trimmed, 30)
+    com_slope = dlt.spike_slope(comy_np, 30)
     hip_h = dlt.hip_height(toey_np, hipy_np)
-    print(f"Calculated hip height: {hip_h}")
-
-    xcom_trimmed = dlt.xcom(com_trimmed, com_slope, hip_h)
+    xcom_trimmed = dlt.xcom(comy_np, com_slope, hip_h)
 
     # Experimental Estimation of CoP considering the standards used
-    rightcop = dlt.cop(rfl_med, rhl_med)
+    rightcop = dlt.cop(rfly_np, rhly_np)
     rightcop = sp.signal.savgol_filter(rightcop, 40, 3)
-    leftcop = dlt.cop(lfl_med, lhl_med)
+    leftcop = dlt.cop(lfly_np, lhly_np)
     leftcop = sp.signal.savgol_filter(leftcop, 40, 3)
     right_DS = rightcop
     left_DS = leftcop
 
     # Calling function for swing estimation
-    swing_onset, swing_offset = dlt.swing_estimation(toe_smooth)
-    step_cyc_durations = dlt.step_cycle_est(toe_smooth)
+    swing_onset, swing_offset = dlt.swing_estimation(toex_np)
+    step_cyc_durations = dlt.step_cycle_est(toex_np)
+
+    # Step Width Test
+    fl_stepw = dlt.step_width_est(
+        rl_x=rflx_np, ll_x=lflx_np, rl_y=rfly_np, ll_y=lfly_np
+    )
+    hl_stepw = dlt.step_width_est(
+        rl_x=rhlx_np, ll_x=lhlx_np, rl_y=rhly_np, ll_y=lhly_np
+    )
+
+    print(fl_stepw)
+    print(hl_stepw)
 
     # Calling function for step cycle calculation
 
@@ -177,19 +156,19 @@ def main():
     axs[0].set_title("Filter test")
     # axs[0].plot(comy_np)
     # axs[0].plot(com_med)
-    axs[0].plot(time_trimmed, xcom_trimmed)
-    axs[0].plot(time_trimmed, com_trimmed)
-    axs[0].plot(time_trimmed, leftcop)
-    axs[0].plot(time_trimmed, rightcop)
+    axs[0].plot(time, xcom_trimmed)
+    axs[0].plot(time, comy_np)
+    axs[0].plot(time, leftcop)
+    axs[0].plot(time, rightcop)
     # axs[0].plot(time_trimmed, com_slope)
     axs[0].legend(filtest_legend, loc="best")
     # axs[0].bar(0, np.mean(step_cyc_durations), yerr=np.std(step_cyc_durations), capsize=5)
 
     # For plotting figure demonstrating how swing estimation was done
     axs[1].set_title("Swing Estimation")
-    axs[1].plot(toe_smooth)
-    axs[1].plot(swing_offset, toe_smooth[swing_offset], "^")
-    axs[1].plot(swing_onset, toe_smooth[swing_onset], "v")
+    axs[1].plot(toex_np)
+    axs[1].plot(swing_offset, toex_np[swing_offset], "^")
+    axs[1].plot(swing_onset, toex_np[swing_onset], "v")
     axs[1].legend(swing_legend, loc="best")
 
     # Saving Figure in same folder
