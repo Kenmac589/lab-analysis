@@ -1,14 +1,30 @@
+import csv
+
 import dlc2kinematics as dlck
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from dlc2kinematics import Visualizer2D
 from scipy import signal
 
 
 def frame_to_time(frame_index, fps=500):
+    """Converts frames of video to time based on fps
+
+    Parameters
+    ----------
+    frame_index:
+        The index of the frame in question
+    fps:
+        The frames per second the video is shot at
+
+    Returns
+    -------
+    time_seconds:
+        Returns the time in seconds the frame is taken at
+
+    """
 
     # Convert to miliseconds
     frame_mili = (frame_index / fps) * 1000
@@ -43,6 +59,7 @@ def dlc_calibrate(df, bodyparts, scorer, calibration_markers):
     avg_cal_cords = {}
 
     # TODO: Hard coded to shit plz fix later
+    # This is done explicitly based on how I label
     top_row = calibration_markers[0:3]
     bottom_row = calibration_markers[3:6]
 
@@ -69,7 +86,7 @@ def dlc_calibrate(df, bodyparts, scorer, calibration_markers):
         two_cm_difs = np.append(two_cm_difs, bottom_dif)
 
     x_factor = np.mean(two_cm_difs) / 2
-    print(x_factor)
+    # print(x_factor)
 
     # Getting average y movement factor (2.5 cm across)
     # Noting y values towards bottom of image are higher than the top
@@ -79,10 +96,10 @@ def dlc_calibrate(df, bodyparts, scorer, calibration_markers):
         two_p5_cm_difs = np.append(two_p5_cm_difs, y_dif)
 
     y_factor = np.mean(two_p5_cm_difs) / 2.5
-    print(y_factor)
+    # print(y_factor)
 
     calibration_factor = np.mean([x_factor, y_factor])
-    print(calibration_factor)
+    # print(calibration_factor)
 
     return calibration_factor
 
@@ -121,12 +138,61 @@ def manual_marks(related_trace, title="Select Points"):
     return manual_marks_x, manual_marks_y
 
 
+def analysis_reg_sel():
+
+    return region_start, region_stop
+
+
+def mark_process(df, scorer, marker, cord, calib_factor, smooth_wind=40):
+    """Extracts out and smoothens a marker coordinate to an numpy array
+
+    Parameters
+    ----------
+    df:
+        input h5 data file to get marker from
+    scorer:
+        Who scored the that trained the model, which analyzed the videos
+    marker:
+        Name of marker you want to extract
+    cord:
+        Whether you want the `x` or `y` coordinate of the marker
+    calib_factor:
+        Calibration factor calculated from `dlc_calibrate`
+    smooth_wind:
+        Just the smoothening window of savgol filter default=40
+
+    Returns
+    -------
+    marker_np:
+        Smoothened 1D numpy array of the given marker
+    """
+
+    mark_df = df[scorer][marker]
+
+    # Get single dimension out and calibrate to (cm)
+    marker_np = pd.array(mark_df[cord])
+    marker_np = marker_np / calib_factor
+
+    # Smoothen
+    marker_np = signal.savgol_filter(marker_np, smooth_wind, 3)
+
+    return marker_np
+
+
 def swing_estimation(foot_cord, manual=False, width_threshold=40):
     """This approximates swing onset and offset from kinematic data
-    :param : Exported channels from spike most importantly the x values for a channel
 
-    :return swing_onset: A list of indices where swing onset occurs
-    :return swing_offset: A list of indices where swing offet occurs
+    Parameters
+    ----------
+    foot_cord:
+        Exported channels from spike most importantly the x values for a channel
+
+    Returns
+    -------
+    swing_onset:
+        A list of indices where swing onset occurs
+    swing_offset:
+        A list of indices where swing offset occurs
     """
 
     if manual is False:
@@ -144,10 +210,17 @@ def swing_estimation(foot_cord, manual=False, width_threshold=40):
 
 def step_cycle_est(foot_cord, manual=False, width_threshold=40):
     """This approximates swing onset and offset from kinematic data
-    :param input_dataframe: Exported channels from spike most importantly the x values for a channel
+    Parameters
+    ----------
+    input_dataframe:
+        Exported channels from spike most importantly the x values for a channel
 
-    :return cycle_durations: A numpy array with the duration of each cycle
-    :return average_step: A list of indices where swing offet occurs
+    Returns
+    -------
+    cycle_durations:
+        A numpy array with the duration of each cycle
+    average_step:
+        A list of indices where swing offset occurs
     """
 
     # Calculating swing estimations
@@ -169,13 +242,21 @@ def step_cycle_est(foot_cord, manual=False, width_threshold=40):
 
 # Custom median filter from
 def median_filter(arr, k):
-    """
-    :param arr: input numpy array
-    :param k: is the size of the window you want to slide over the array.
-    also considered the kernel
+    """Median filter attempting to be faithful to Spike2's channel process
 
-    :return : An array of the same length where each element is the median of
-    a window centered around the index in the array.
+    Parameters
+    ----------
+    arr:
+        input numpy array
+    k:
+        The size of the window you want to slide over the array.
+        This is also considered the kernel
+
+    Returns
+    -------
+    result:
+        A numpy array of the same length where each element is the median of
+        a window centered around the index in the array.
     """
     # Initialize output array
     result = []
@@ -199,7 +280,8 @@ def smooth(y, box_pts):
 
 
 def spike_slope(comy, p):
-    """
+    """Getting slope of curve attempting to be faithful to Spike2's channel process
+
     :param comy: numpy array of the y coordinate of the center of mass
     :param p: How many values you want in either direction to be included
 
@@ -315,7 +397,7 @@ def double_support(fl_x, hl_x, manual_analysis=False, filt_window=40):
     fl_swon, fl_swoff = swing_estimation(fl_x, manual=False)
     hl_swon, hl_swoff = swing_estimation(fl_x, manual=False)
 
-    return ds_phases
+    # return ds_phases
 
 
 def cop(fl_y, hl_y):
@@ -417,7 +499,13 @@ def mos(
     return lmos_values, rmos_values, xcom_peaks, xcom_troughs
 
 
-def limb_measurements(input_skeleton, skeleton_list, calibration):
+def limb_measurements(
+    input_skeleton,
+    skeleton_list,
+    calibration,
+    save_as_csv=False,
+    csv_filename="./tmp-limb_measurmets.csv",
+):
     """Estimates lengths of limbs coordinates based on skeleton reconstruction
 
     Parameters
@@ -444,9 +532,15 @@ def limb_measurements(input_skeleton, skeleton_list, calibration):
         column_values = pd.array(sk_df[key], dtype=np.dtype(float)) / calibration
         calibrated_measurments[key] = np.mean(column_values)
 
+    if save_as_csv is True:
+        w = csv.writer(open(csv_filename, "w"))
+        for key, val in calibrated_measurments.items():
+            w.writerow([key, val])
+
     return calibrated_measurments
 
 
+# TODO: Create a function for selecting a region for analyzing to feed into rest of analysis
 def main():
 
     # Loading in a dataset
@@ -471,20 +565,20 @@ def main():
     mouse_number = 2
     manual_analysis = False
     save_auto = False
-    filter_k = 13
+    # filter_k = 13
 
     # Settings before running initial workup from DeepLabCut
     figure_title = f"Step Cycles for level-test-M{mouse_number}-vid-{video}"
-    figure_filename = f"./treadmill_level_test/emg-test-2-dropped/level_mos_analysis/m{mouse_number}-{video}.svg"
-    step_cycles_filename = f"./treadmill_level_test/emg-test-2-dropped/level_mos_analysis/m{mouse_number}-step-cycles-{video}.csv"
+    figure_filename = f"../tests/dlctools/m{mouse_number}-{video}.pdf"
+    step_cycles_filename = f"../tests/dlctools/m{mouse_number}-step-cycles-{video}.csv"
 
     # Some things to set for plotting/saving
-    lmos_filename = f"./treadmill_level_test/emg-test-2-dropped/level_mos_analysis/m{mouse_number}-lmos-{video}.csv"
-    rmos_filename = f"./treadmill_level_test/emg-test-2-dropped/level_mos_analysis/m{mouse_number}-rmos-{video}.csv"
+    lmos_filename = f"../tests/dlctools/m{mouse_number}-lmos-{video}.csv"
+    rmos_filename = f"../tests/dlctools/m{mouse_number}-rmos-{video}.csv"
     mos_figure_title = (
         f"Measurement of Stability For Level Test M{mouse_number}-{video}"
     )
-    mos_figure_filename = f"./treadmill_level_test/emg-test-2-dropped/level_mos_analysis/m{mouse_number}-mos-{video}.svg"
+    mos_figure_filename = f"../tests/dlctools/m{mouse_number}-mos-{video}.pdf"
     calib_markers = [
         "calib_1",
         "calib_2",
@@ -504,51 +598,59 @@ def main():
     # plt.show()
 
     calib_factor = dlc_calibrate(df, bodyparts, scorer, calib_markers)
-    limb_diffs = limb_measurements(sk_df, limb_names, calib_factor)
+    limb_diffs = limb_measurements(
+        sk_df,
+        limb_names,
+        calib_factor,
+        save_as_csv=True,
+        csv_filename="../tests/dlctools/limb_measure-test.csv",
+    )
     print(f"Length of limb coordinates in cm\n{limb_diffs}")
 
     # Grabbing toe marker data
-    toe = df[scorer]["toe"]
-    hip = df[scorer]["hip"]
-    lhl = df[scorer]["mirror_lhl"]
-    rhl = df[scorer]["mirror_rhl"]
-    lfl = df[scorer]["mirror_lfl"]
-    rfl = df[scorer]["mirror_rfl"]
-    com = df[scorer]["mirror_com"]
+    # toe = df[scorer]["toe"]
+    # hip = df[scorer]["hip"]
+    # lhl = df[scorer]["mirror_lhl"]
+    # rhl = df[scorer]["mirror_rhl"]
+    # lfl = df[scorer]["mirror_lfl"]
+    # rfl = df[scorer]["mirror_rfl"]
+    # com = df[scorer]["mirror_com"]
+    # mirror = df[scorer]["mirror"]
+
+    # Marker Workup Function test
+    # mark_test = mark_process(df, scorer, "toe", "x", calib_factor)
 
     # Converting to numpy array
-    toe_np = pd.array(toe["x"])
-    toe_np = toe_np / calib_factor
-    toey_np = pd.array(toe["y"])
-    toey_np = toey_np / calib_factor
-    hipy_np = pd.array(hip["y"])
-    hipy_np = hipy_np / calib_factor
-    comy_np = pd.array(com["y"])
-    comy_np = comy_np / calib_factor
-    time = np.arange(0, len(comy_np), 1)
-    time = frame_to_time(time)
-    rfl_np = pd.array(rfl["y"])
-    rfl_np = rfl_np / calib_factor
-    rhl_np = pd.array(rhl["y"])
-    rhl_np = rhl_np / calib_factor
-    lfl_np = pd.array(lfl["y"])
-    lfl_np = lfl_np / calib_factor
-    lhl_np = pd.array(lhl["y"])
-    lhl_np = lhl_np / calib_factor
-
-    # Filtering to clean up traces like you would in spike
-    toe_smooth = median_filter(toe_np, filter_k)
-    toe_smooth = signal.savgol_filter(toe_smooth, 20, 3)
-    com_med = signal.savgol_filter(comy_np, 40, 3)
-
-    rfl_med = median_filter(rfl_np, filter_k)
-    rfl_med = signal.savgol_filter(rfl_med, 30, 3)
-    rhl_med = median_filter(rhl_np, filter_k)
-    rhl_med = signal.savgol_filter(rhl_med, 30, 3)
-    lfl_med = median_filter(lfl_np, filter_k)
-    lfl_med = signal.savgol_filter(lfl_med, 30, 3)
-    lhl_med = median_filter(lhl_np, filter_k)
-    lhl_med = signal.savgol_filter(lhl_med, 30, 3)
+    # toe_np = pd.array(toe["x"])
+    # toe_np = toe_np / calib_factor
+    # toey_np = pd.array(toe["y"])
+    # toey_np = toey_np / calib_factor
+    # hipy_np = pd.array(hip["y"])
+    # hipy_np = hipy_np / calib_factor
+    # comy_np = pd.array(com["y"])
+    # comy_np = comy_np / calib_factor
+    # rfl_np = pd.array(rfl["y"])
+    # rfl_np = rfl_np / calib_factor
+    # rhl_np = pd.array(rhl["y"])
+    # rhl_np = rhl_np / calib_factor
+    # lfl_np = pd.array(lfl["y"])
+    # lfl_np = lfl_np / calib_factor
+    # lhl_np = pd.array(lhl["y"])
+    # lhl_np = lhl_np / calib_factor
+    #
+    # # Filtering to clean up traces like you would in spike
+    # toe_smooth = median_filter(toe_np, filter_k)
+    # toe_smooth = signal.savgol_filter(toe_smooth, 20, 3)
+    # com_med = signal.savgol_filter(comy_np, 40, 3)
+    #
+    # rfl_med = median_filter(rfl_np, filter_k)
+    # rfl_med = signal.savgol_filter(rfl_med, 30, 3)
+    # rhl_med = median_filter(rhl_np, filter_k)
+    # rhl_med = signal.savgol_filter(rhl_med, 30, 3)
+    # lfl_med = median_filter(lfl_np, filter_k)
+    # lfl_med = signal.savgol_filter(lfl_med, 30, 3)
+    # lhl_med = median_filter(lhl_np, filter_k)
+    # lhl_med = signal.savgol_filter(lhl_med, 30, 3)
 
     # Cleaning up selection to region before mouse moves back
     # toe_roi_selection_fil = toe_filtered[0:2550]
@@ -557,14 +659,25 @@ def main():
     # rhl_med = rhl_med[1400:]
     # lfl_med = lfl_med[1400:]
     # lhl_med = lhl_med[1400:]
-    time_trimmed = time
     # toe_smooth = toe_smooth[1400:]
-    com_trimmed = com_med
+
+    toex_np = mark_process(df, scorer, "toe", "x", calib_factor)
+    toey_np = mark_process(df, scorer, "toe", "y", calib_factor)
+    hipy_np = mark_process(df, scorer, "hip", "y", calib_factor)
+    comy_np = mark_process(df, scorer, "mirror_com", "y", calib_factor)
+    rfl_med = mark_process(df, scorer, "mirror_rfl", "y", calib_factor)
+    rhl_med = mark_process(df, scorer, "mirror_rhl", "y", calib_factor)
+    lfl_med = mark_process(df, scorer, "mirror_lfl", "y", calib_factor)
+    lhl_med = mark_process(df, scorer, "mirror_lhl", "y", calib_factor)
+
+    time = np.arange(0, len(comy_np), 1)
+    time_trimmed = time
+    time = frame_to_time(time)
 
     # Center of pressures
-    com_slope = spike_slope(com_trimmed, 30)
+    com_slope = spike_slope(comy_np, 30)
     hip_h = hip_height(toey_np, hipy_np)
-    xcom_trimmed = xcom(com_trimmed, com_slope, hip_h)
+    xcom_trimmed = xcom(comy_np, com_slope, hip_h)
 
     # Experimental Estimation of CoP considering the standards used
     rightcop = cop(rfl_med, rhl_med)
@@ -575,8 +688,8 @@ def main():
     left_DS = leftcop
 
     # Calling function for swing estimation
-    swing_onset, swing_offset = swing_estimation(toe_smooth)
-    step_cyc_durations = step_cycle_est(toe_smooth)
+    swing_onset, swing_offset = swing_estimation(toex_np)
+    step_cyc_durations = step_cycle_est(toex_np)
 
     # Calling function for step cycle calculation
 
@@ -614,7 +727,7 @@ def main():
     # axs[0].plot(comy_np)
     # axs[0].plot(com_med)
     axs[0].plot(time_trimmed, xcom_trimmed)
-    axs[0].plot(time_trimmed, com_trimmed)
+    axs[0].plot(time_trimmed, comy_np)
     axs[0].plot(time_trimmed, leftcop)
     axs[0].plot(time_trimmed, rightcop)
     # axs[0].plot(time_trimmed, com_slope)
@@ -623,9 +736,9 @@ def main():
 
     # For plotting figure demonstrating how swing estimation was done
     axs[1].set_title("Swing Estimation")
-    axs[1].plot(toe_smooth)
-    axs[1].plot(swing_offset, toe_smooth[swing_offset], "^")
-    axs[1].plot(swing_onset, toe_smooth[swing_onset], "v")
+    axs[1].plot(toex_np)
+    axs[1].plot(swing_offset, toex_np[swing_offset], "^")
+    axs[1].plot(swing_onset, toex_np[swing_onset], "v")
     axs[1].legend(swing_legend, loc="best")
 
     # Saving Figure in same folder

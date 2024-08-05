@@ -894,6 +894,8 @@ def sel_primitive_trace(
 
 def main():
 
+    test_emg = pd.read_csv("../data/emg/norm-wt-m1-non.csv", header=0)
+
     synergy_selection = 3
 
     # Title Names

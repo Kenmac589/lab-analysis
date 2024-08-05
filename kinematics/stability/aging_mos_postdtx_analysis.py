@@ -1,5 +1,3 @@
-import csv
-
 import dlc2kinematics as dlck
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -16,17 +14,16 @@ def main():
 
     # NOTE: Very important this is checked before running
 
-    mouse_number = 1
-    video = 20
+    mouse_number = 2
+    video = 18
     condition = "sin"
-    hiph_entry = f"18mo-predtx-{mouse_number}-{condition}-{video}"
     manual_analysis = False
     save_auto = True
-    filter_k = 14
+    filter_k = 13
 
     # Loading main kinematic dataset
     df, bodyparts, scorer = dlck.load_data(
-        f"./aging/18mo/18mo-RAP-predtx/1-6yrRAP-M1-preDTX_0000{video}DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
+        f"./aging/12mo/1yr-dtr_norosa-2/1yr-dtr_norosa-2-postdtx/1yrDTRnoRosa-M2-postDTX-01112023_0000{video}DLC_resnet50_1yrDTRnoRosa-postDTXFeb13shuffle1_700000_filtered.h5"
     )
 
     # Loading in skeleton
@@ -34,17 +31,17 @@ def main():
 
     # Settings before running initial workup from DeepLabCut
     figure_title = (
-        f"Step Cycles for 18mo RAP pre-DTX M{mouse_number}-{condition}-{video}"
+        f"Step Cycles for 1yr DTR-noRosa post-DTX M{mouse_number}-{condition}-{video}"
     )
-    figure_filename = f"./aging/18mo/aging-18mo-figures/18mo-rap-predtx-m{mouse_number}-{condition}-{video}.svg"
-    step_cycles_filename = f"./aging/18mo/aging-18mo-saved_values/18mo-rap-predtx-m{mouse_number}-{condition}-step-cycles-{video}.csv"
+    figure_filename = f"./aging/12mo/aging-12mo-figures/12mo-dtr_norosa-postdtx-m{mouse_number}-{condition}-{video}.svg"
+    step_cycles_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m{mouse_number}-{condition}-step-cycles-{video}.csv"
 
     # Some things to set for plotting/saving
-    lmos_filename = f"./aging/18mo/aging-18mo-saved_values/18mo-rap-predtx-m{mouse_number}-{condition}-lmos-{video}.csv"
-    rmos_filename = f"./aging/18mo/aging-18mo-saved_values/18mo-rap-predtx-m{mouse_number}-{condition}-rmos-{video}.csv"
+    lmos_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m{mouse_number}-{condition}-lmos-{video}.csv"
+    rmos_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m{mouse_number}-{condition}-rmos-{video}.csv"
 
-    mos_figure_title = f"Measurement of Stability For 18 month old R.A.P pre-DTX M{mouse_number}-{video}"
-    mos_figure_filename = f"./aging/18mo/aging-18mo-figures/18mo-rap-predtx-m{mouse_number}-{video}-mos_analysis.svg"
+    mos_figure_title = f"Measurement of Stability For 12 month old DTR post-DTX M{mouse_number}-{video}"
+    mos_figure_filename = f"./aging/12mo/aging-12mo-figures/12mo-dtr_norosa-postdtx-m{mouse_number}-{video}-mos_analysis.svg"
     calib_markers = [
         "calib_1",
         "calib_2",
@@ -127,7 +124,6 @@ def main():
     com_slope = dlt.spike_slope(com_trimmed, 30)
     hip_h = dlt.hip_height(toey_np, hipy_np)
     print(f"Calculated hip height: {hip_h}")
-
     xcom_trimmed = dlt.xcom(com_trimmed, com_slope, hip_h)
 
     # Experimental Estimation of CoP considering the standards used
@@ -249,30 +245,25 @@ def main():
         "L COP",
         "R COP",
     ]
-    fig = plt.figure(figsize=(15.8, 10.80))
-    axs = fig.subplot_mosaic([["mos_calc", "mos_calc"], ["mos_violin", "mos_box"]])
-    # fig, axs = plt.subplots(2)
-
+    mos_legend = ["L MoS", "R MoS"]
+    fig, axs = plt.subplots(2)
     fig.suptitle(mos_figure_title)
 
     # For plotting figure demonstrating how calculation was done
-    axs["mos_calc"].set_title("How MoS is Derived")
-    axs["mos_calc"].plot(xcom_trimmed)
-    axs["mos_calc"].plot(xcom_peaks, xcom_trimmed[xcom_peaks], "^")
-    axs["mos_calc"].plot(xcom_troughs, xcom_trimmed[xcom_troughs], "v")
-    axs["mos_calc"].plot(leftcop)
-    axs["mos_calc"].plot(rightcop)
-    axs["mos_calc"].legend(xcom_legend, bbox_to_anchor=(1, 0.7))
+    axs[0].set_title("How MoS is Derived")
+    axs[0].plot(xcom_trimmed)
+    axs[0].plot(xcom_peaks, xcom_trimmed[xcom_peaks], "^")
+    axs[0].plot(xcom_troughs, xcom_trimmed[xcom_troughs], "v")
+    axs[0].plot(leftcop)
+    axs[0].plot(rightcop)
+    axs[0].legend(xcom_legend, bbox_to_anchor=(1, 0.7))
 
     # Looking at result
-    # axs[1].set_title("MoS Result")
-    sns.barplot(data=mos_comb, x="Limb", y="MoS (cm)", capsize=0.04, ax=axs["mos_box"])
-    sns.violinplot(
-        data=mos_comb, x="Limb", y="MoS (cm)", inner="point", ax=axs["mos_violin"]
-    )
+    axs[1].set_title("MoS Result")
+    sns.barplot(data=mos_comb, x="Limb", y="MoS (cm)", capsize=0.04, ax=axs[1])
     # axs[1].bar(0, np.mean(lmos), yerr=np.std(lmos), capsize=5)
     # axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
-    # axs[1].legend(bbox_to_anchor=(1, 0.7))
+    axs[1].legend(bbox_to_anchor=(1, 0.7))
 
     fig = plt.gcf()
     fig.set_size_inches(15.8, 10.80)
@@ -280,30 +271,14 @@ def main():
 
     # Saving results
     if manual_analysis is True:
-        # Saving MoS figure and values
         np.savetxt(lmos_filename, lmos, delimiter=",")
         np.savetxt(rmos_filename, rmos, delimiter=",")
         plt.savefig(mos_figure_filename, dpi=300)
-
-        # Saving hip height to cumulative sheet
-        hiph_dict = {hiph_entry: hip_h}
-        w = csv.writer(open("./aging/aging-hiph.csv", "a"))
-        for key, val in hiph_dict.items():
-            w.writerow([key, val])
-
         print("Mos results saved!")
     elif manual_analysis is False and save_auto is True:
-        # Saving MoS figure and values
         np.savetxt(lmos_filename, lmos, delimiter=",")
         np.savetxt(rmos_filename, rmos, delimiter=",")
         plt.savefig(mos_figure_filename, dpi=300)
-
-        # Saving hip height to cumulative sheet
-        hiph_dict = {hiph_entry: hip_h}
-        w = csv.writer(open("./aging/aging-hiph.csv", "a"))
-        for key, val in hiph_dict.items():
-            w.writerow([key, val])
-
         print("Mos results saved!")
     else:
         print("Mos results not saved")

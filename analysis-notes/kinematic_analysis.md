@@ -209,9 +209,24 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 
 ### 1yrDTRnoRosa M1 preDTX
 
+
 - 0.100 non --> 0
+    - There are more than one recording session revisit to see if other viable recordings
 - 0.100 per --> 7 to 16
+    - vid 07 kinda noisy at beginning but overall not too bad.
+    - vid 08 similar, did save.
+    - vid 09 more solid would use if non other look good
+        - Hip height is kind of wild would take a look at.
+    - vid 10 also pretty solid in terms of pretty tight measurements
+    - vid 11 doesn't look too noisy would also include
+    - vid 12 not super clean but not too bad
+    - vid 13 only one real blip but solid otherwise
+    - vid 14 there is likely one massive neg, this is miss labeling.
+    - vid 15 like it worth review
+    - vid 16 should investigate where perturbation is
 - 0.100 sin --> 17 to 20
+    - very clear which regions are the ones select
+    - vid 17, 18 and 20 very solid, 19 not as much
 
 ### 1yrDTRnoRosa M1 postDTX
  
@@ -221,17 +236,40 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 
 ## 1yrDTRnoRosa M2 preDTX
 
-- 0.100 non --> 0 and 1
-- 0.100 per --> 8 to 17
-- 0.100 sin --> 18 to 20
+- MoS values pretty level for this mouse, worth looking into
+- Not so much the case for sinusoidal but definitely early on.
 
+- 0.100 non --> 0 and 1
+    - vid 0 look pretty good *noting that it's pretty level*
+    - vid 1 is all over the place did not save
+- 0.100 per --> 8 to 17
+    - vid 8 also pretty level
+    - vid 9 not bad, few blips but don't appear to interfere with chosen peaks.
+    - vid 10 not too great
+    - similar notes to 09 for 11
+    - vid 12 not bad
+    - vid 13 notable amount of sway but looks good
+    - vid 14 little dodgy but not too bad
+    - vid 15 little noisy but don't think it interfered
+    - vid 16 looks pretty solid
+    - vid 17 also doesn't look bad
+- 0.100 sin --> 18 to 20
+    - vid 18 good periods of both states
+    - 19 and 20 also look good
+    
 ## 1yrDTRnoRosa M2 postDTX
 
 - 0.100 non --> 2 and 3
 - 0.100 per --> 6 to 15
+    - vid 11 is pretty solid
+    - investigate vid 14 for potential fall
+    - vid 17 definitely noisy but saved
+    - vid 18 for sin definitely some lean
 - 0.100 sin --> 16 to 18
 
 # 1yrShamPvCre M1
+
+- Current kinematics on server are from previous model consider training a new one.
 
 ## 1yrShamPvCre M1 preDTX
 
@@ -247,6 +285,15 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 
 ## 1-6 RAP M1 preDTX
 
+- Caveat similar to 1yrShamPvCre-1 where analyzed with previous model.
+
 - 0.100 non --> 0 to 2
+    - Hip height noticeably higher at ~ 2.0
+    - vid 2 isn't greatest consider excluding
 - 0.100 per --> 10 to 17
+    - vid 10 may be okay maybe not
+    - on vid 11 there might be a artifact from dlc or a fall, unclear.
+    - vid 13 for per is pretty solid for a front runner
+    - vid 17 also seems solid
 - 0.100 sin --> 18 to 20
+    - Don't seem too bad

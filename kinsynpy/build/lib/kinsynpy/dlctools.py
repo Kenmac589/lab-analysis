@@ -1,3 +1,5 @@
+import csv
+
 import dlc2kinematics as dlck
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -9,6 +11,21 @@ from scipy import signal
 
 
 def frame_to_time(frame_index, fps=500):
+    """Converts frames of video to time based on fps
+
+    Parameters
+    ----------
+    frame_index:
+        The index of the frame in question
+    fps:
+        The frames per second the video is shot at
+
+    Returns
+    -------
+    time_seconds:
+        Returns the time in seconds the frame is taken at
+
+    """
 
     # Convert to miliseconds
     frame_mili = (frame_index / fps) * 1000
@@ -43,6 +60,7 @@ def dlc_calibrate(df, bodyparts, scorer, calibration_markers):
     avg_cal_cords = {}
 
     # TODO: Hard coded to shit plz fix later
+    # This is done explicitly based on how I label
     top_row = calibration_markers[0:3]
     bottom_row = calibration_markers[3:6]
 
@@ -69,7 +87,7 @@ def dlc_calibrate(df, bodyparts, scorer, calibration_markers):
         two_cm_difs = np.append(two_cm_difs, bottom_dif)
 
     x_factor = np.mean(two_cm_difs) / 2
-    print(x_factor)
+    # print(x_factor)
 
     # Getting average y movement factor (2.5 cm across)
     # Noting y values towards bottom of image are higher than the top
@@ -79,10 +97,10 @@ def dlc_calibrate(df, bodyparts, scorer, calibration_markers):
         two_p5_cm_difs = np.append(two_p5_cm_difs, y_dif)
 
     y_factor = np.mean(two_p5_cm_difs) / 2.5
-    print(y_factor)
+    # print(y_factor)
 
     calibration_factor = np.mean([x_factor, y_factor])
-    print(calibration_factor)
+    # print(calibration_factor)
 
     return calibration_factor
 
@@ -123,10 +141,18 @@ def manual_marks(related_trace, title="Select Points"):
 
 def swing_estimation(foot_cord, manual=False, width_threshold=40):
     """This approximates swing onset and offset from kinematic data
-    :param : Exported channels from spike most importantly the x values for a channel
 
-    :return swing_onset: A list of indices where swing onset occurs
-    :return swing_offset: A list of indices where swing offet occurs
+    Parameters
+    ----------
+    foot_cord:
+        Exported channels from spike most importantly the x values for a channel
+
+    Returns
+    -------
+    swing_onset:
+        A list of indices where swing onset occurs
+    swing_offset:
+        A list of indices where swing offset occurs
     """
 
     if manual is False:
@@ -144,10 +170,17 @@ def swing_estimation(foot_cord, manual=False, width_threshold=40):
 
 def step_cycle_est(foot_cord, manual=False, width_threshold=40):
     """This approximates swing onset and offset from kinematic data
-    :param input_dataframe: Exported channels from spike most importantly the x values for a channel
+    Parameters
+    ----------
+    input_dataframe:
+        Exported channels from spike most importantly the x values for a channel
 
-    :return cycle_durations: A numpy array with the duration of each cycle
-    :return average_step: A list of indices where swing offet occurs
+    Returns
+    -------
+    cycle_durations:
+        A numpy array with the duration of each cycle
+    average_step:
+        A list of indices where swing offset occurs
     """
 
     # Calculating swing estimations
@@ -169,13 +202,21 @@ def step_cycle_est(foot_cord, manual=False, width_threshold=40):
 
 # Custom median filter from
 def median_filter(arr, k):
-    """
-    :param arr: input numpy array
-    :param k: is the size of the window you want to slide over the array.
-    also considered the kernel
+    """Median filter attempting to be faithful to Spike2's channel process
 
-    :return : An array of the same length where each element is the median of
-    a window centered around the index in the array.
+    Parameters
+    ----------
+    arr:
+        input numpy array
+    k:
+        The size of the window you want to slide over the array.
+        This is also considered the kernel
+
+    Returns
+    -------
+    result:
+        A numpy array of the same length where each element is the median of
+        a window centered around the index in the array.
     """
     # Initialize output array
     result = []
@@ -199,7 +240,8 @@ def smooth(y, box_pts):
 
 
 def spike_slope(comy, p):
-    """
+    """Getting slope of curve attempting to be faithful to Spike2's channel process
+
     :param comy: numpy array of the y coordinate of the center of mass
     :param p: How many values you want in either direction to be included
 
@@ -315,7 +357,7 @@ def double_support(fl_x, hl_x, manual_analysis=False, filt_window=40):
     fl_swon, fl_swoff = swing_estimation(fl_x, manual=False)
     hl_swon, hl_swoff = swing_estimation(fl_x, manual=False)
 
-    return ds_phases
+    # return ds_phases
 
 
 def cop(fl_y, hl_y):
@@ -417,7 +459,13 @@ def mos(
     return lmos_values, rmos_values, xcom_peaks, xcom_troughs
 
 
-def limb_measurements(input_skeleton, skeleton_list, calibration):
+def limb_measurements(
+    input_skeleton,
+    skeleton_list,
+    calibration,
+    save_as_csv=False,
+    csv_filename="./tmp-limb_measurmets.csv",
+):
     """Estimates lengths of limbs coordinates based on skeleton reconstruction
 
     Parameters
@@ -444,9 +492,15 @@ def limb_measurements(input_skeleton, skeleton_list, calibration):
         column_values = pd.array(sk_df[key], dtype=np.dtype(float)) / calibration
         calibrated_measurments[key] = np.mean(column_values)
 
+    if save_as_csv is True:
+        w = csv.writer(open(csv_filename, "w"))
+        for key, val in calibrated_measurments.items():
+            w.writerow([key, val])
+
     return calibrated_measurments
 
 
+# TODO: Create a function for selecting a region for analyzing to feed into rest of analysis
 def main():
 
     # Loading in a dataset
@@ -470,21 +524,21 @@ def main():
     # NOTE: Very important this is checked before running
     mouse_number = 2
     manual_analysis = False
-    save_auto = False
+    save_auto = True
     filter_k = 13
 
     # Settings before running initial workup from DeepLabCut
     figure_title = f"Step Cycles for level-test-M{mouse_number}-vid-{video}"
-    figure_filename = f"./treadmill_level_test/emg-test-2-dropped/level_mos_analysis/m{mouse_number}-{video}.svg"
-    step_cycles_filename = f"./treadmill_level_test/emg-test-2-dropped/level_mos_analysis/m{mouse_number}-step-cycles-{video}.csv"
+    figure_filename = f"../tests/dlctools/m{mouse_number}-{video}.pdf"
+    step_cycles_filename = f"../tests/dlctools/m{mouse_number}-step-cycles-{video}.csv"
 
     # Some things to set for plotting/saving
-    lmos_filename = f"./treadmill_level_test/emg-test-2-dropped/level_mos_analysis/m{mouse_number}-lmos-{video}.csv"
-    rmos_filename = f"./treadmill_level_test/emg-test-2-dropped/level_mos_analysis/m{mouse_number}-rmos-{video}.csv"
+    lmos_filename = f"../tests/dlctools/m{mouse_number}-lmos-{video}.csv"
+    rmos_filename = f"../tests/dlctools/m{mouse_number}-rmos-{video}.csv"
     mos_figure_title = (
         f"Measurement of Stability For Level Test M{mouse_number}-{video}"
     )
-    mos_figure_filename = f"./treadmill_level_test/emg-test-2-dropped/level_mos_analysis/m{mouse_number}-mos-{video}.svg"
+    mos_figure_filename = f"../tests/dlctools/m{mouse_number}-mos-{video}.pdf"
     calib_markers = [
         "calib_1",
         "calib_2",
@@ -495,16 +549,22 @@ def main():
     ]
 
     # For visualizing skeleton
-    config_path = (
-        "../../deeplabcut/dlc-dtr/dtr_update_predtx-kenzie-2024-04-08/config.yaml"
-    )
-    foi = "../data/kinematics/EMG-test-1-pre-emg_000000DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
-    viz = Visualizer2D(config_path, foi, form_skeleton=True)
-    viz.view(show_axes=True, show_grid=True, show_labels=True)
+    # config_path = (
+    #     "../../deeplabcut/dlc-dtr/dtr_update_predtx-kenzie-2024-04-08/config.yaml"
+    # )
+    # foi = "../data/kinematics/EMG-test-1-pre-emg_000000DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
+    # viz = Visualizer2D(config_path, foi, form_skeleton=True)
+    # viz.view(show_axes=True, show_grid=True, show_labels=True)
     # plt.show()
 
     calib_factor = dlc_calibrate(df, bodyparts, scorer, calib_markers)
-    limb_diffs = limb_measurements(sk_df, limb_names, calib_factor)
+    limb_diffs = limb_measurements(
+        sk_df,
+        limb_names,
+        calib_factor,
+        save_as_csv=True,
+        csv_filename="../tests/dlctools/limb_measure-test.csv",
+    )
     print(f"Length of limb coordinates in cm\n{limb_diffs}")
 
     # Grabbing toe marker data
@@ -523,12 +583,9 @@ def main():
     toey_np = toey_np / calib_factor
     hipy_np = pd.array(hip["y"])
     hipy_np = hipy_np / calib_factor
-
     comy_np = pd.array(com["y"])
     comy_np = comy_np / calib_factor
     time = np.arange(0, len(comy_np), 1)
-    # time_vec = np.vectorize(frame_to_time)
-    # time = time_vec(time)
     time = frame_to_time(time)
     rfl_np = pd.array(rfl["y"])
     rfl_np = rfl_np / calib_factor
@@ -542,7 +599,6 @@ def main():
     # Filtering to clean up traces like you would in spike
     toe_smooth = median_filter(toe_np, filter_k)
     toe_smooth = signal.savgol_filter(toe_smooth, 20, 3)
-    # com_med = median_filter(comy_np, filter_k)
     com_med = signal.savgol_filter(comy_np, 40, 3)
 
     rfl_med = median_filter(rfl_np, filter_k)
@@ -647,8 +703,7 @@ def main():
         print("Kinematic results saved")
     else:
         print("Kinematic results not saved")
-
-    # plt.show()
+        plt.show()
 
     # Now onto Lateral stability
 
@@ -705,9 +760,6 @@ def main():
     # Looking at result
     axs[1].set_title("MoS Result")
     sns.barplot(data=mos_comb, x="Limb", y="MoS (cm)", ci=95, capsize=0.05, ax=axs[1])
-    # axs[1].bar(0, np.mean(lmos), yerr=np.std(lmos), capsize=5)
-    # axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
-
     fig = plt.gcf()
     fig.set_size_inches(8.27, 11.7)  # A4 formatting 8.27” by 11.7”
     fig.tight_layout()
@@ -725,10 +777,7 @@ def main():
         print("Mos results saved!")
     else:
         print("Mos results not saved")
-
-    xcom
-
-    # plt.show()
+        plt.show()
 
 
 if __name__ == "__main__":
