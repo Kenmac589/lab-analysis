@@ -18,6 +18,7 @@ def condition_add(
         mos_values = pd.read_csv(file_list[i], header=None)
         mos_values = mos_values.to_numpy()
         mos_values = mos_values.ravel()
+        # print(f"Average MoS for file {file_list[i]}: {np.mean(mos_values)}")
         for j in range(len(mos_values)):
             entry = mos_values[j]
             if print_neg is True:
@@ -40,10 +41,12 @@ def condition_add(
 
 
 # Setting some info at beginning
-save_fig_and_df = False
+save_fig_and_df = True
 df_filename = "./aging_mos_limbs_combined_all.csv"
-figure_title = "MoS between WT, Egr3 KO, and DTX Mice Pre and Post Injection"
-figure_filename = "./aging/aging_mos_violin.svg"
+figure_title = (
+    "MoS between 4 month and 12 month old DTX Mice Pre and Post Injection Hindlimb Only"
+)
+figure_filename = "./aging/aging_mos_non_and_sin-hl_only.pdf"
 
 wt_non_lmos = [
     "./wt_data/wt1non_lmos.csv",
@@ -246,12 +249,12 @@ dtrpost_sin_rmos = [
 
 age_predtx_non_lmos = [
     "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m1-non-lmos-0.csv",
-    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m2-non-lmos-0.csv",
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m2-non-lmos-00.csv",
 ]
 
 age_predtx_non_rmos = [
     "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m1-non-rmos-0.csv",
-    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m2-non-rmos-0.csv",
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m2-non-rmos-00.csv",
 ]
 age_predtx_per_lmos = [
     "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m1-per-lmos-9.csv",
@@ -268,6 +271,25 @@ age_predtx_sin_lmos = [
 age_predtx_sin_rmos = [
     "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m1-sin-rmos-18.csv",
     "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m2-sin-rmos-19.csv",
+]
+
+# HL only test
+age_predtx_non_lmos_hl = [
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m1-non-lmos-00-hl.csv",
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m2-non-lmos-00-hl.csv",
+]
+
+age_predtx_non_rmos_hl = [
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m1-non-rmos-00-hl.csv",
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m2-non-rmos-00-hl.csv",
+]
+age_predtx_sin_lmos_hl = [
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m1-sin-lmos-18-hl.csv",
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m2-sin-lmos-19-hl.csv",
+]
+age_predtx_sin_rmos_hl = [
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m1-sin-rmos-18-hl.csv",
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m2-sin-rmos-19-hl.csv",
 ]
 
 mos_df = df(columns=["Condition", "Limb", "Perturbation State", "MoS (cm)"])
@@ -293,8 +315,8 @@ mos_df = condition_add(
 mos_df = condition_add(
     mos_df, dtrpre_non_rmos, "4m Pre-DTX", "Right", "Non-Perturbation"
 )
-mos_df = condition_add(mos_df, dtrpre_per_lmos, "4m Pre-DTX", "Left", "Perturbation")
-mos_df = condition_add(mos_df, dtrpre_per_rmos, "4m Pre-DTX", "Right", "Perturbation")
+# mos_df = condition_add(mos_df, dtrpre_per_lmos, "4m Pre-DTX", "Left", "Perturbation")
+# mos_df = condition_add(mos_df, dtrpre_per_rmos, "4m Pre-DTX", "Right", "Perturbation")
 mos_df = condition_add(mos_df, dtrpre_sin_lmos, "4m Pre-DTX", "Left", "Sinusoidal")
 mos_df = condition_add(mos_df, dtrpre_sin_rmos, "4m Pre-DTX", "Right", "Sinusoidal")
 
@@ -304,8 +326,8 @@ mos_df = condition_add(
 mos_df = condition_add(
     mos_df, dtrpost_non_rmos, "4m Post-DTX", "Right", "Non-Perturbation"
 )
-mos_df = condition_add(mos_df, dtrpost_per_lmos, "4m Post-DTX", "Left", "Perturbation")
-mos_df = condition_add(mos_df, dtrpost_per_rmos, "4m Post-DTX", "Right", "Perturbation")
+# mos_df = condition_add(mos_df, dtrpost_per_lmos, "4m Post-DTX", "Left", "Perturbation")
+# mos_df = condition_add(mos_df, dtrpost_per_rmos, "4m Post-DTX", "Right", "Perturbation")
 mos_df = condition_add(mos_df, dtrpost_sin_lmos, "4m Post-DTX", "Left", "Sinusoidal")
 mos_df = condition_add(mos_df, dtrpost_sin_rmos, "4m Post-DTX", "Right", "Sinusoidal")
 
@@ -316,15 +338,29 @@ mos_df = condition_add(
 mos_df = condition_add(
     mos_df, age_predtx_non_rmos, "12m Pre-DTX", "Right", "Non-Perturbation"
 )
-mos_df = condition_add(
-    mos_df, age_predtx_per_lmos, "12m Pre-DTX", "Left", "Perturbation"
-)
-mos_df = condition_add(
-    mos_df, age_predtx_per_rmos, "12m Pre-DTX", "Right", "Perturbation"
-)
+# mos_df = condition_add(
+#     mos_df, age_predtx_per_lmos, "12m Pre-DTX", "Left", "Perturbation"
+# )
+# mos_df = condition_add(
+#     mos_df, age_predtx_per_rmos, "12m Pre-DTX", "Right", "Perturbation"
+# )
 mos_df = condition_add(mos_df, age_predtx_sin_lmos, "12m Pre-DTX", "Left", "Sinusoidal")
 mos_df = condition_add(
     mos_df, age_predtx_sin_rmos, "12m Pre-DTX", "Right", "Sinusoidal"
+)
+
+# Aged HL only
+mos_df = condition_add(
+    mos_df, age_predtx_non_lmos_hl, "12m Pre-DTX HL", "Left", "Non-Perturbation"
+)
+mos_df = condition_add(
+    mos_df, age_predtx_non_rmos, "12m Pre-DTX HL", "Right", "Non-Perturbation"
+)
+mos_df = condition_add(
+    mos_df, age_predtx_sin_lmos, "12m Pre-DTX HL", "Left", "Sinusoidal"
+)
+mos_df = condition_add(
+    mos_df, age_predtx_sin_rmos, "12m Pre-DTX HL", "Right", "Sinusoidal"
 )
 
 # For just comparing between perturbation
@@ -334,7 +370,7 @@ con_mos_combo = mos_df.drop(columns=["Limb"])
 # Plotting
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
 sns.set(
-    style="white", font="serif", font_scale=1.8, palette="colorblind", rc=custom_params
+    style="white", font="serif", font_scale=1.6, palette="colorblind", rc=custom_params
 )
 
 
@@ -344,6 +380,14 @@ combo_pairs = [
 combo_legend = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
 
 perturbation_state_order = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
+
+# Only Non and Sinusoidal
+# -----------------------
+# fig, axs = plt.subplots(1, 2)
+combo_legend = ["Non-Perturbation", "Sinusoidal"]
+
+perturbation_state_order = ["Non-Perturbation", "Sinusoidal"]
+# -----------------------
 
 plt.title(figure_title)
 
@@ -362,28 +406,50 @@ condition_pairs = [
     # [("Egr3", "Sinusoidal"), ("Egr3", "Perturbation")],
     # [("Egr3", "Non-Perturbation"), ("Egr3", "Sinusoidal")],
     # Comparison within 4m Pre-DTX condition
-    [("4m Pre-DTX", "Non-Perturbation"), ("4m Pre-DTX", "Perturbation")],
-    [("4m Pre-DTX", "Sinusoidal"), ("4m Pre-DTX", "Perturbation")],
+    # [("4m Pre-DTX", "Non-Perturbation"), ("4m Pre-DTX", "Perturbation")],
+    # [("4m Pre-DTX", "Sinusoidal"), ("4m Pre-DTX", "Perturbation")],
     [("4m Pre-DTX", "Non-Perturbation"), ("4m Pre-DTX", "Sinusoidal")],
     # Comparison within 4m Post-DTX condition
-    [("4m Post-DTX", "Non-Perturbation"), ("4m Post-DTX", "Perturbation")],
-    [("4m Post-DTX", "Sinusoidal"), ("4m Post-DTX", "Perturbation")],
+    # [("4m Post-DTX", "Non-Perturbation"), ("4m Post-DTX", "Perturbation")],
+    # [("4m Post-DTX", "Sinusoidal"), ("4m Post-DTX", "Perturbation")],
     [("4m Post-DTX", "Non-Perturbation"), ("4m Post-DTX", "Sinusoidal")],
     # Comparison within 12m Pre-DTX condition
-    [("12m Pre-DTX", "Non-Perturbation"), ("12m Pre-DTX", "Perturbation")],
-    [("12m Pre-DTX", "Sinusoidal"), ("12m Pre-DTX", "Perturbation")],
+    # [("12m Pre-DTX", "Non-Perturbation"), ("12m Pre-DTX", "Perturbation")],
+    # [("12m Pre-DTX", "Sinusoidal"), ("12m Pre-DTX", "Perturbation")],
     [("12m Pre-DTX", "Non-Perturbation"), ("12m Pre-DTX", "Sinusoidal")],
     # Comparison within 12m Post-DTX condition
-    [("12m Post-DTX", "Non-Perturbation"), ("12m Post-DTX", "Perturbation")],
-    [("12m Post-DTX", "Sinusoidal"), ("12m Post-DTX", "Perturbation")],
-    [("12m Post-DTX", "Non-Perturbation"), ("12m Post-DTX", "Sinusoidal")],
+    # [("12m Post-DTX", "Non-Perturbation"), ("12m Post-DTX", "Perturbation")],
+    # [("12m Post-DTX", "Sinusoidal"), ("12m Post-DTX", "Perturbation")],
+    # [("12m Post-DTX", "Non-Perturbation"), ("12m Post-DTX", "Sinusoidal")],
     # Comparison between 4m and 12m DTR mice
     [("12m Pre-DTX", "Non-Perturbation"), ("4m Pre-DTX", "Non-Perturbation")],
     [("12m Pre-DTX", "Sinusoidal"), ("4m Pre-DTX", "Sinusoidal")],
-    [("12m Pre-DTX", "Perturbation"), ("4m Pre-DTX", "Perturbation")],
+    # [("12m Pre-DTX", "Perturbation"), ("4m Pre-DTX", "Perturbation")],
+    # Comparing Hindlimb Only within 12m
+    [("12m Pre-DTX", "Non-Perturbation"), ("12m Pre-DTX HL", "Non-Perturbation")],
+    [("12m Pre-DTX", "Sinusoidal"), ("12m Pre-DTX HL", "Sinusoidal")],
+    [("12m Pre-DTX HL", "Non-Perturbation"), ("12m Pre-DTX HL", "Sinusoidal")],
 ]
+# Swarm
+perturbation_state_order = ["Non-Perturbation", "Sinusoidal"]
+swarm_params = {
+    "data": con_mos_combo,
+    "x": "Condition",
+    "y": "MoS (cm)",
+    "hue": "Perturbation State",
+    "hue_order": perturbation_state_order,
+    # "inner": "point",
+}
 
-perturbation_state_order = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
+# axs[0].set_title("MoS between conditions")
+# sns.swarmplot(**swarm_params, ax=axs[0])
+
+fig = mpl.pyplot.gcf()
+fig.set_size_inches(19.8, 10.80)
+fig.tight_layout()
+
+# perturbation_state_order = ["Non-Perturbation", "Perturbation", "Sinusoidal"]
+perturbation_state_order = ["Non-Perturbation", "Sinusoidal"]
 cond_combo_plot_params = {
     "data": con_mos_combo,
     "x": "Condition",
@@ -394,15 +460,18 @@ cond_combo_plot_params = {
 }
 
 # axs[0].set_title("MoS between conditions")
-cond_combo_comp = sns.barplot(**cond_combo_plot_params, ci=95, capsize=0.05)
+cond_combo_comp = sns.barplot(**cond_combo_plot_params, ci="sd", capsize=0.05)
 plt.legend(loc="upper left", fontsize=16)
-plt.axhline(0, color="r")
+# plt.axhline(0, color="r")
 annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
 annotator.new_plot(
     cond_combo_comp, condition_pairs, plot="barplot", **cond_combo_plot_params
 )
 annotator.configure(
-    hide_non_significant=True, test="t-test_ind", text_format="star", loc="inside"
+    hide_non_significant=True,
+    test="t-test_ind",
+    text_format="full",
+    loc="inside",
 )
 
 annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)
@@ -413,7 +482,7 @@ fig.tight_layout()
 
 if save_fig_and_df is True:
     plt.savefig(figure_filename, dpi=300)
-    con_mos_combo.to_csv(df_filename)
+    con_mos_combo.to_csv(df_filename, index=False)
 else:
     print("Results not saved")
 

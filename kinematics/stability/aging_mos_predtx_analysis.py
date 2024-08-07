@@ -15,19 +15,21 @@ from kinsynpy import dlctools as dlt
 def main():
 
     # NOTE: Very important this is checked before running
+    # NOTE: Currently using vids 0, 9, 18 for M1 and 0, 16, 19 for M2
 
-    mouse_number = 2
-    video = "20"
-    condition = "sin"
-    hiph_entry = f"12mo-predtx-{mouse_number}-{condition}-{video}"
+    mouse = 2
+    video = "00"
+    condition = "non"
+    hiph_entry = f"12mo-predtx-{mouse}-{condition}-{video}"
     manual_analysis = False
-    save_auto = False
-    select_region = False
+    save_auto = True
+    select_region = True
 
     print(f"Analysis for {hiph_entry}")
 
     # Loading main kinematic dataset
     df, bodyparts, scorer = dlck.load_data(
+        # f"./aging/12mo/1yr-dtr_norosa-1/1yr-dtr_norosa-1-predtx/1yrDTRnoRosa-M1-19102023_0000{video}DLC_resnet50_1yrDTRnoRosa-preDTXJan31shuffle1_1030000_filtered.h5"
         f"./aging/12mo/1yr-dtr_norosa-2/1yr-dtr_norosa-2-predtx/1yrDTRnoRosa-M2-preDTX-23102023_0000{video}DLC_resnet50_1yrDTRnoRosa-preDTXJan31shuffle1_1030000_filtered.h5"
     )
 
@@ -36,19 +38,19 @@ def main():
 
     # Settings before running initial workup from DeepLabCut
     figure_title = (
-        f"Step Cycles for 1yr DTR-noRosa pre-DTX M{mouse_number}-{condition}-{video}"
+        f"Step Cycles for 1yr DTR-noRosa pre-DTX M{mouse}-{condition}-{video}"
     )
-    figure_filename = f"./aging/12mo/aging-12mo-figures/12mo-dtr_norosa-predtx-m{mouse_number}-{condition}-{video}.svg"
-    step_cycles_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m{mouse_number}-{condition}-step-cycles-{video}.csv"
+    figure_filename = f"./aging/12mo/aging-12mo-figures/12mo-dtr_norosa-predtx-m{mouse}-{condition}-{video}.pdf"
+    step_cycles_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m{mouse}-{condition}-step-cycles-{video}.csv"
 
     # Some things to set for plotting/saving
-    lmos_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m{mouse_number}-{condition}-lmos-{video}.csv"
-    rmos_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m{mouse_number}-{condition}-rmos-{video}.csv"
+    lmos_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m{mouse}-{condition}-lmos-{video}.csv"
+    rmos_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m{mouse}-{condition}-rmos-{video}.csv"
 
     mos_figure_title = (
-        f"Measurement of Stability For 12 month old DTR pre-DTX M{mouse_number}-{video}"
+        f"Measurement of Stability For 12 month old DTR pre-DTX M{mouse}-{video}"
     )
-    mos_figure_filename = f"./aging/12mo/aging-12mo-figures/12mo-dtr_norosa-predtx-m{mouse_number}-{video}-mos_analysis.svg"
+    mos_figure_filename = f"./aging/12mo/aging-12mo-figures/12mo-dtr_norosa-predtx-m{mouse}-{video}-mos_analysis.pdf"
     calib_markers = [
         "calib_1",
         "calib_2",
@@ -119,20 +121,28 @@ def main():
     right_DS = rightcop
     left_DS = leftcop
 
+    # WARNING: This is only for checking Hindlimb only
+    # rightcop = rhly_np
+    # rightcop = sp.signal.savgol_filter(rightcop, 40, 3)
+    # leftcop = lhly_np
+    # leftcop = sp.signal.savgol_filter(leftcop, 40, 3)
+    # right_DS = rightcop
+    # left_DS = leftcop
+
     # Calling function for swing estimation
     swing_onset, swing_offset = dlt.swing_estimation(toex_np)
     step_cyc_durations = dlt.step_cycle_est(toex_np)
 
     # Step Width Test
-    fl_stepw = dlt.step_width_est(
-        rl_x=rflx_np, ll_x=lflx_np, rl_y=rfly_np, ll_y=lfly_np
-    )
-    hl_stepw = dlt.step_width_est(
-        rl_x=rhlx_np, ll_x=lhlx_np, rl_y=rhly_np, ll_y=lhly_np
-    )
+    # fl_stepw = dlt.step_width_est(
+    #     rl_x=rflx_np, ll_x=lflx_np, rl_y=rfly_np, ll_y=lfly_np
+    # )
+    # hl_stepw = dlt.step_width_est(
+    #     rl_x=rhlx_np, ll_x=lhlx_np, rl_y=rhly_np, ll_y=lhly_np
+    # )
 
-    print(fl_stepw)
-    print(hl_stepw)
+    # print(fl_stepw)
+    # print(hl_stepw)
 
     # Calling function for step cycle calculation
 
@@ -152,15 +162,6 @@ def main():
         "Swing offset",
         "Swing onset",
     ]
-    filtest_legend = [
-        # "Original",
-        # "Median",
-        "xCoM",
-        "CoMy",
-        "L CoP",
-        "R CoP",
-        # "Slope",
-    ]
 
     fig, axs = plt.subplots(2)
     fig.suptitle(figure_title)
@@ -169,12 +170,12 @@ def main():
     axs[0].set_title("Filter test")
     # axs[0].plot(comy_np)
     # axs[0].plot(com_med)
-    axs[0].plot(time, xcom_trimmed)
-    axs[0].plot(time, comy_np)
-    axs[0].plot(time, leftcop)
-    axs[0].plot(time, rightcop)
+    axs[0].plot(time, xcom_trimmed, label="xCoM")
+    axs[0].plot(time, comy_np, label="CoM")
+    axs[0].plot(time, leftcop, label="L CoP")
+    axs[0].plot(time, rightcop, label="R CoP")
     # axs[0].plot(time_trimmed, com_slope)
-    axs[0].legend(filtest_legend, loc="best")
+    axs[0].legend(loc="best")
     # axs[0].bar(0, np.mean(step_cyc_durations), yerr=np.std(step_cyc_durations), capsize=5)
 
     # For plotting figure demonstrating how swing estimation was done
@@ -234,43 +235,31 @@ def main():
             ignore_index=True,
         )
 
-    xcom_legend = [
-        "xCoM",
-        "xCoM peaks",
-        "xCoM troughs",
-        "L COP",
-        "R COP",
-    ]
-
     fig = plt.figure(figsize=(15.8, 10.80))
     axs = fig.subplot_mosaic([["mos_calc", "mos_calc"], ["mos_violin", "mos_box"]])
 
     fig.suptitle(mos_figure_title)
 
-    swarm_params = {
+    mos_param = {
         "data": mos_comb,
         "x": "Limb",
         "y": "MoS (cm)",
-        "color": "black",
-        "edgecolor": "white",
     }
 
     # For plotting figure demonstrating how calculation was done
     axs["mos_calc"].set_title("How MoS is Derived")
-    axs["mos_calc"].plot(xcom_trimmed)
-    axs["mos_calc"].plot(xcom_peaks, xcom_trimmed[xcom_peaks], "^")
-    axs["mos_calc"].plot(xcom_troughs, xcom_trimmed[xcom_troughs], "v")
-    axs["mos_calc"].plot(leftcop)
-    axs["mos_calc"].plot(rightcop)
-    axs["mos_calc"].legend(xcom_legend, bbox_to_anchor=(1, 0.7))
+    axs["mos_calc"].plot(xcom_trimmed, label="xCoM")
+    axs["mos_calc"].plot(xcom_peaks, xcom_trimmed[xcom_peaks], "^", label="Peaks")
+    axs["mos_calc"].plot(xcom_troughs, xcom_trimmed[xcom_troughs], "v", label="Peaks")
+    axs["mos_calc"].plot(leftcop, label="L CoP")
+    axs["mos_calc"].plot(rightcop, label="R CoP")
+    axs["mos_calc"].legend(bbox_to_anchor=(1, 0.7))
 
     # Looking at results
-    sns.boxplot(data=mos_comb, x="Limb", y="MoS (cm)", ax=axs["mos_box"])
-    sns.violinplot(
-        data=mos_comb, x="Limb", y="MoS (cm)", inner=None, ax=axs["mos_violin"]
-    )
-    sns.swarmplot(**swarm_params, ax=axs["mos_box"])
-    sns.swarmplot(**swarm_params, ax=axs["mos_violin"])
+    sns.boxplot(**mos_param, ax=axs["mos_box"])
+    sns.violinplot(**mos_param, inner=None, ax=axs["mos_violin"])
+    sns.swarmplot(**mos_param, color="black", ax=axs["mos_box"])
+    sns.swarmplot(**mos_param, color="black", ax=axs["mos_violin"])
 
     fig = plt.gcf()
     fig.set_size_inches(15.8, 10.80)
@@ -298,7 +287,7 @@ def main():
 
         # Saving hip height to cumulative sheet
         hiph_dict = {hiph_entry: hip_h}
-        w = csv.writer(open("./aging/aging-hiph.csv", "a"))
+        w = csv.writer(open("./aging/aging-hiph-hl_only.csv", "a"))
         for key, val in hiph_dict.items():
             w.writerow([key, val])
 

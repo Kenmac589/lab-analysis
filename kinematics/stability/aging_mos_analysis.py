@@ -124,8 +124,8 @@ def main():
     custom_params = {"axes.spines.right": False, "axes.spines.top": False}
     sns.set(
         style="white",
-        font_scale=1.6,
-        font="serif",
+        font_scale=1.4,
+        # font="serif",
         palette="colorblind",
         rc=custom_params,
     )

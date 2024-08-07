@@ -228,6 +228,9 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
     - very clear which regions are the ones select
     - vid 17, 18 and 20 very solid, 19 not as much
 
+- Currently going with vid 0, 9, 18 for plot
+
+
 ### 1yrDTRnoRosa M1 postDTX
  
 - 0.100 non --> 0
@@ -256,6 +259,7 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 - 0.100 sin --> 18 to 20
     - vid 18 good periods of both states
     - 19 and 20 also look good
+- Currently using 0, 16, 19
     
 ## 1yrDTRnoRosa M2 postDTX
 

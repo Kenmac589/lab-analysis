@@ -1,3 +1,4 @@
+requirements.txt
 setup.py
 kinsynpy/__init__.py
 kinsynpy/dlctools.py
