@@ -6,7 +6,7 @@ video_folder = "C:/Users/GPU/Documents/temp_kenzie/"
 
 
 # Analyze Videos
-dlc.analyze_videos(config_path, [video_folder], videotype="avi", save_as_csv=True)
+# dlc.analyze_videos(config_path, [video_folder], videotype="avi", save_as_csv=True)
 
 # Filter predictions
 dlc.filterpredictions(config_path, [video_folder], filtertype="median")

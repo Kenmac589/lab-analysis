@@ -41,13 +41,13 @@ def dlc_calibrate(df, bodyparts, scorer, calibration_markers):
 
     Parameters
     ----------
-    df :
+    df: pandas.core.frame.Dataframe
         h5 file from DeepLabCut
-    bodyparts:
+    bodyparts: list
         This is output from the loaded dataset
-    scorer:
+    scorer: list
         This is output from the loaded dataset
-    calibration_markers:
+    calibration_markers: list
         List of names for calibration markers
 
     Returns
@@ -162,24 +162,24 @@ def analysis_reg_sel(mirror_y, com_y):
     return region_start, region_stop
 
 
-def mark_process(df, scorer, marker, cord, calib_factor, smooth_wind=40):
+def mark_process(df, scorer, marker, cord, calib, smooth_wind=40):
     """
     Extracts out and smoothens a marker coordinate to an numpy array
 
     Parameters
     ----------
-    df:
+    df: pandas.core.frame.Dataframe
         input h5 data file to get marker from
-    scorer:
+    scorer: str
         Who scored the that trained the model, which analyzed the videos
-    marker:
+    marker: str
         Name of marker you want to extract
-    cord:
+    cord: str
         Whether you want the `x` or `y` coordinate of the marker
-    calib_factor:
+    calib: numpy.float64
         Calibration factor calculated from `dlc_calibrate`
-    smooth_wind:
-        Just the smoothening window of savgol filter default=40
+    smooth_wind: int, default=`40`
+        Just the smoothening window of `scipy.signal.savgol_filter`
 
     Returns
     -------
@@ -191,7 +191,7 @@ def mark_process(df, scorer, marker, cord, calib_factor, smooth_wind=40):
 
     # Get single dimension out and calibrate to (cm)
     marker_np = pd.array(mark_df[cord])
-    marker_np = marker_np / calib_factor
+    marker_np = marker_np / calib
 
     # Smoothen
     marker_np = signal.savgol_filter(marker_np, smooth_wind, 3)
@@ -200,12 +200,16 @@ def mark_process(df, scorer, marker, cord, calib_factor, smooth_wind=40):
 
 
 def swing_estimation(foot_cord, manual=False, width_threshold=40):
-    """This approximates swing onset and offset from kinematic data
+    """This approximates swing onset and offset from kinematic data.
 
     Parameters
     ----------
-    foot_cord:
-        Exported channels from spike most importantly the x values for a channel
+    foot_cord: numpy.ndarray
+        Numpy array of the `x` coordinate of the limb
+    manual: boolean, default=`False`
+        Whether or not you want to manually annotate the trace
+    width_threshold: int, default=`40`
+        The width cutoff used by `scipy.signal.find_peaks`
 
     Returns
     -------
@@ -232,15 +236,17 @@ def step_cycle_est(foot_cord, manual=False, width_threshold=40):
     """This approximates swing onset and offset from kinematic data
     Parameters
     ----------
-    input_dataframe:
-        Exported channels from spike most importantly the x values for a channel
+    foot_cord: numpy.ndarray
+        Numpy array of the `x` coordinate of the limb
+    manual: boolean, default=`False`
+        Whether or not you want to manually annotate the trace
+    width_threshold: int, default=`40`
+        The width cutoff used by `scipy.signal.find_peaks`
 
     Returns
     -------
-    cycle_durations:
+    cycle_durations: numpy.ndarray
         A numpy array with the duration of each cycle
-    average_step:
-        A list of indices where swing offset occurs
     """
 
     # Calculating swing estimations
@@ -266,7 +272,7 @@ def median_filter(arr, k):
 
     Parameters
     ----------
-    arr:
+    arr: numpy.ndarray
         input numpy array
     k:
         The size of the window you want to slide over the array.
@@ -293,19 +299,20 @@ def median_filter(arr, k):
     return np.array(result)
 
 
-def smooth(y, box_pts):
-    box = np.ones(box_pts) / box_pts
-    y_smooth = np.convolve(y, box, mode="same")
-    return y_smooth
-
-
 def spike_slope(comy, p):
     """Getting slope of curve attempting to be faithful to Spike2's channel process
 
-    :param comy: numpy array of the y coordinate of the center of mass
-    :param p: How many values you want in either direction to be included
+    Parameters
+    ----------
+    comy: numpy.ndarray
+        numpy array of the y coordinate of the center of mass
+    p: numpy.ndarray
+        How many values you want in either direction to be included
 
-
+    Returns
+    -------
+    slope: numpy.ndarray
+        An array with the slope values
     """
 
     n = len(comy)
@@ -329,11 +336,20 @@ def spike_slope(comy, p):
 
 def hip_height(toey_values, hipy_values, manual=False):
     """Approximates Hip Height
-    :param toey_values: numpy array of values for y coordinate of toe marker
-    :param hipy_values: numpy array of values for y coordinate of hip marker
-    :param manual: (Boolean) whether to manually label regions where foot is on ground
 
-    :return hip_height: returns hip height in meters (cm)
+    Parameters
+    ----------
+    toey_values: numpy.ndarray
+        numpy array of values for y coordinate of toe marker
+    hipy_values: numpy.ndarray
+        numpy array of values for y coordinate of hip marker
+    manual: boolean, default=`False`
+        Whether or not you want to manually annotate the trace
+
+    Returns
+    -------
+    hip_height:
+        returns hip height in centimeters (cm)
     """
 
     # Either manually mark regions foot is on the ground or go with proxy
@@ -424,6 +440,7 @@ def cop(fl_y, hl_y):
 
     return (fl_y + hl_y) / 2
 
+
 def step_width_est(
     rl_x: np.array,
     ll_x: np.array,
@@ -467,6 +484,7 @@ def step_width_est(
     step_widths = np.asarray(step_widths)
 
     return step_widths
+
 
 def mos_marks(related_trace, leftcop, rightcop, title="Select Points"):
     """Manually annotate points of interest on a given trace
@@ -612,7 +630,7 @@ def main():
     manual_analysis = False
     save_auto = False
     select_region = False
-    show_plots = True
+    show_plots = False
 
     # Settings before running initial workup from DeepLabCut
     figure_title = f"Step Cycles for level-test-M{mouse_number}-vid-{video}"
@@ -654,6 +672,7 @@ def main():
     ]
 
     calib_factor = dlc_calibrate(df, bodyparts, scorer, calib_markers)
+    print(type(calib_factor))
     limb_diffs = limb_measurements(
         sk_df,
         limb_names,
@@ -720,7 +739,6 @@ def main():
     rhl_swon, rhl_swoff = swing_estimation(foot_cord=rhlx_np)
     lfl_swon, lfl_swoff = swing_estimation(foot_cord=lflx_np)
     lhl_swon, lhl_swoff = swing_estimation(foot_cord=lhlx_np)
-
 
     # Some of my default plotting parameters I like
     custom_params = {"axes.spines.right": False, "axes.spines.top": False}

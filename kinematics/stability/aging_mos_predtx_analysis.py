@@ -140,8 +140,8 @@ def main():
     custom_params = {"axes.spines.right": False, "axes.spines.top": False}
     sns.set(
         style="white",
-        font_scale=1.6,
-        font="serif",
+        font_scale=1.4,
+        # font="serif",
         palette="colorblind",
         rc=custom_params,
     )
@@ -241,11 +241,19 @@ def main():
         "L COP",
         "R COP",
     ]
+
     fig = plt.figure(figsize=(15.8, 10.80))
     axs = fig.subplot_mosaic([["mos_calc", "mos_calc"], ["mos_violin", "mos_box"]])
-    # fig, axs = plt.subplots(2)
 
     fig.suptitle(mos_figure_title)
+
+    swarm_params = {
+        "data": mos_comb,
+        "x": "Limb",
+        "y": "MoS (cm)",
+        "color": "black",
+        "edgecolor": "white",
+    }
 
     # For plotting figure demonstrating how calculation was done
     axs["mos_calc"].set_title("How MoS is Derived")
@@ -256,15 +264,13 @@ def main():
     axs["mos_calc"].plot(rightcop)
     axs["mos_calc"].legend(xcom_legend, bbox_to_anchor=(1, 0.7))
 
-    # Looking at result
-    # axs[1].set_title("MoS Result")
-    sns.barplot(data=mos_comb, x="Limb", y="MoS (cm)", capsize=0.04, ax=axs["mos_box"])
+    # Looking at results
+    sns.boxplot(data=mos_comb, x="Limb", y="MoS (cm)", ax=axs["mos_box"])
     sns.violinplot(
-        data=mos_comb, x="Limb", y="MoS (cm)", inner="point", ax=axs["mos_violin"]
+        data=mos_comb, x="Limb", y="MoS (cm)", inner=None, ax=axs["mos_violin"]
     )
-    # axs[1].bar(0, np.mean(lmos), yerr=np.std(lmos), capsize=5)
-    # axs[1].bar(1, np.mean(rmos), yerr=np.std(rmos), capsize=5)
-    # axs[1].legend(bbox_to_anchor=(1, 0.7))
+    sns.swarmplot(**swarm_params, ax=axs["mos_box"])
+    sns.swarmplot(**swarm_params, ax=axs["mos_violin"])
 
     fig = plt.gcf()
     fig.set_size_inches(15.8, 10.80)
