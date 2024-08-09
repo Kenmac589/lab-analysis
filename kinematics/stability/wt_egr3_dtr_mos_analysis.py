@@ -35,7 +35,7 @@ def condition_add(input_df, file_list, condition, limb, perturbation_state):
 
 
 # Setting some info at beginning
-save_fig_and_df = True
+save_fig_and_df = False
 df_filename = "./mos_limbs_combined_all.csv"
 figure_title = "MoS between WT, Egr3 KO, and DTX Mice Pre and Post Injection"
 figure_filename = "./combined_figures/mos_all_violin_inner.svg"

@@ -15,36 +15,39 @@ from kinsynpy import dlctools as dlt
 def main():
 
     # NOTE: Very important this is checked before running
+    # Non: 0 to 2, Per: 10 to 17, Sin: 18 to 20
+    # Currently using non:01, per:14, sin:20 for analysis
 
-    mouse_number = 1
-    video = 20
+    mouse = 1
+    video = "20"
     condition = "sin"
-    hiph_entry = f"18mo-predtx-{mouse_number}-{condition}-{video}"
+    hiph_entry = f"18mo-predtx-{mouse}-{condition}-{video}"
     manual_analysis = False
-    save_auto = False
-    select_region = False
+    save_auto = True
+    select_region = True
 
     # Loading main kinematic dataset
     df, bodyparts, scorer = dlck.load_data(
         f"./aging/18mo/18mo-RAP-predtx/1-6yrRAP-M1-preDTX_0000{video}DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
     )
 
+    print(f"Analyzing: {hiph_entry}")
     # Loading in skeleton
     # sk_df = pd.read_csv(f"./aging/12mo/1yr-dtr_norosa-1/1yr-dtr_norosa-1-predtx/1yrDTRnoRosa-M1-19102023_000001DLC_resnet50_1yrDTRnoRosa-preDTXJan31shuffle1_1030000_filtered_labeled.mp4")
 
     # Settings before running initial workup from DeepLabCut
-    figure_title = (
-        f"Step Cycles for 18mo RAP pre-DTX M{mouse_number}-{condition}-{video}"
-    )
-    figure_filename = f"./aging/18mo/aging-18mo-figures/18mo-rap-predtx-m{mouse_number}-{condition}-{video}.svg"
-    step_cycles_filename = f"./aging/18mo/aging-18mo-saved_values/18mo-rap-predtx-m{mouse_number}-{condition}-step-cycles-{video}.csv"
+    figure_title = f"Step Cycles for 18mo RAP pre-DTX M{mouse}-{condition}-{video}"
+    figure_filename = f"./aging/18mo/aging-18mo-figures/18mo-rap-predtx-m{mouse}-{condition}-{video}.pdf"
+    step_cycles_filename = f"./aging/18mo/aging-18mo-saved_values/18mo-rap-predtx-m{mouse}-{condition}-step-cycles-{video}.csv"
 
     # Some things to set for plotting/saving
-    lmos_filename = f"./aging/18mo/aging-18mo-saved_values/18mo-rap-predtx-m{mouse_number}-{condition}-lmos-{video}.csv"
-    rmos_filename = f"./aging/18mo/aging-18mo-saved_values/18mo-rap-predtx-m{mouse_number}-{condition}-rmos-{video}.csv"
+    lmos_filename = f"./aging/18mo/aging-18mo-saved_values/18mo-rap-predtx-m{mouse}-{condition}-lmos-{video}.csv"
+    rmos_filename = f"./aging/18mo/aging-18mo-saved_values/18mo-rap-predtx-m{mouse}-{condition}-rmos-{video}.csv"
 
-    mos_figure_title = f"Measurement of Stability For 18 month old R.A.P pre-DTX M{mouse_number}-{video}"
-    mos_figure_filename = f"./aging/18mo/aging-18mo-figures/18mo-rap-predtx-m{mouse_number}-{video}-mos_analysis.svg"
+    mos_figure_title = (
+        f"Measurement of Stability For 18 month old R.A.P pre-DTX M{mouse}-{video}"
+    )
+    mos_figure_filename = f"./aging/18mo/aging-18mo-figures/18mo-rap-predtx-m{mouse}-{condition}-{video}-mos_analysis.pdf"
     calib_markers = [
         "calib_1",
         "calib_2",
@@ -125,7 +128,6 @@ def main():
     sns.set(
         style="white",
         font_scale=1.4,
-        # font="serif",
         palette="colorblind",
         rc=custom_params,
     )
@@ -141,15 +143,11 @@ def main():
 
     # Showing results for step cycle timing
     axs[0].set_title("Filter test")
-    # axs[0].plot(comy_np)
-    # axs[0].plot(com_med)
     axs[0].plot(time, xcom_trimmed, label="xCoM")
     axs[0].plot(time, comy_np, label="CoM")
     axs[0].plot(time, leftcop, label="L CoP")
     axs[0].plot(time, rightcop, label="R CoP")
-    # axs[0].plot(time_trimmed, com_slope)
     axs[0].legend(loc="best")
-    # axs[0].bar(0, np.mean(step_cyc_durations), yerr=np.std(step_cyc_durations), capsize=5)
 
     # For plotting figure demonstrating how swing estimation was done
     axs[1].set_title("Swing Estimation")

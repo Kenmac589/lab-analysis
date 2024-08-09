@@ -134,12 +134,12 @@ def main():
     step_cyc_durations = dlt.step_cycle_est(toex_np)
 
     # Step Width Test
-    # fl_stepw = dlt.step_width_est(
-    #     rl_x=rflx_np, ll_x=lflx_np, rl_y=rfly_np, ll_y=lfly_np
-    # )
-    # hl_stepw = dlt.step_width_est(
-    #     rl_x=rhlx_np, ll_x=lhlx_np, rl_y=rhly_np, ll_y=lhly_np
-    # )
+    fl_stepw = dlt.step_width_est(
+        rl_x=rflx_np, ll_x=lflx_np, rl_y=rfly_np, ll_y=lfly_np
+    )
+    hl_stepw = dlt.step_width_est(
+        rl_x=rhlx_np, ll_x=lhlx_np, rl_y=rhly_np, ll_y=lhly_np
+    )
 
     # print(fl_stepw)
     # print(hl_stepw)

@@ -232,6 +232,8 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 
 
 ### 1yrDTRnoRosa M1 postDTX
+
+- Using 0, 
  
 - 0.100 non --> 0
 - 0.100 per --> 3 to 12
@@ -241,6 +243,7 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 
 - MoS values pretty level for this mouse, worth looking into
 - Not so much the case for sinusoidal but definitely early on.
+- Currently using 0, 16, 19
 
 - 0.100 non --> 0 and 1
     - vid 0 look pretty good *noting that it's pretty level*
@@ -259,7 +262,6 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 - 0.100 sin --> 18 to 20
     - vid 18 good periods of both states
     - 19 and 20 also look good
-- Currently using 0, 16, 19
     
 ## 1yrDTRnoRosa M2 postDTX
 
@@ -287,9 +289,11 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 - 0.100 per --> 9 to 16
 - 0.100 sin --> 17 to 19
 
-## 1-6 RAP M1 preDTX
+## 1-6yr RAP M1 preDTX
 
 - Caveat similar to 1yrShamPvCre-1 where analyzed with previous model.
+- Currently using 01, 14, 20
+    - If adding additional 00, 13(maybe 17), 18 or 19 really
 
 - 0.100 non --> 0 to 2
     - Hip height noticeably higher at ~ 2.0

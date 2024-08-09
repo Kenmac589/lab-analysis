@@ -513,15 +513,110 @@ def limb_measurements(
 # If you have any questions email me at kenzie.mackinnon@dal.ca or just come talk
 # to me. Will be able to do most of the kinematic stuff you guys to but unless there
 # is a dot for center or mass then alot of the stability functions won't work.
+
+
+# NOTE: Mutants ==> 458, 460, 461
 def main():
 
     # NOTE: Very important this is checked before running
-    video = 3
+    video = 1
     mouse = 458
     manual = False  # Whether to annotate dots manually
     save_auto = False  # Whether to save plot generated automatically
     show_plots = True  # Whether or not you want the plots and data saved
     calib_factor = 1
+
+    # df = pd.read_excel(
+    #     "./NJ457/NJ457_lvl_075_15cms_left_1DLC_resnet101_V3OFFKAMay3shuffle1_1010000.xlsx",
+    #     sheet_name="Sheet2",
+    # )
+    # df = pd.DataFrame([df],columns = ["id","information"])
+    # df = pd.read_excel(
+    #     "./NJ457/NJ457_lvl_075_15cms_left_1DLC_resnet101_V3OFFKAMay3shuffle1_1010000.xlsx",
+    #     sheet_name="Sheet2",
+    names = [
+        "crestx",
+        "cresty",
+        "hipx",
+        "hipy",
+        "kneex",
+        "kneey",
+        "anklex",
+        "ankley",
+        "pawx",
+        "pawy",
+        "toex",
+        "toey",
+        "hip-anklex",
+        "hip-ankley",
+        "virt-kneex",
+        "virt-kneey",
+        "nosex",
+        "nosey",
+        "kneckx",
+        "knecky",
+        "backx",
+        "backy",
+        "tailrootx",
+        "tailrooty",
+        "ipfrx",
+        "ipfry",
+        "flx",
+        "fly",
+        "frx",
+        "fry",
+        "hlx",
+        "hly",
+        "hrx",
+        "hry",
+    ]
+
+    actual_col = len(names)
+    # As csv
+    df = pd.read_csv(
+        "./NJ457/test_fuck.csv",
+        # n=actual_col
+        names=[
+            "crestx",
+            "cresty",
+            "hipx",
+            "hipy",
+            "kneex",
+            "kneey",
+            "anklex",
+            "ankley",
+            "pawx",
+            "pawy",
+            "toex",
+            "toey",
+            "hip-anklex",
+            "hip-ankley",
+            "virt-kneex",
+            "virt-kneey",
+            "nosex",
+            "nosey",
+            "kneckx",
+            "knecky",
+            "backx",
+            "backy",
+            "tailrootx",
+            "tailrooty",
+            "ipfrx",
+            "ipfry",
+            "flx",
+            "fly",
+            "frx",
+            "fry",
+            "hlx",
+            "hly",
+            "hrx",
+            "hry",
+        ],
+    )
+    # df = pd.DataFrame([df],columns = ["id","information"])
+    print(df.head(5))
+
+    # df.to_csv("./output-test.csv", index=False)
 
     # Settings before running initial workup from DeepLabCut
     figure_title = f"Step Cycles for NJ{mouse}-vid-{video}"
@@ -563,7 +658,7 @@ def main():
     # Step cycle Estimation
     step_cyc_durations = step_cycle_est(ftoex_np)
     ftoe_swing_onset, ftoe_swing_offset = swing_estimation(
-        ftoex_np, manual=manual, width_threshold=15
+        ftoex_np, manual=True, width_threshold=10
     )
 
     ftoe_swon_times, ftoe_swoff_times = swing_timings(ftoex_np)
@@ -654,7 +749,7 @@ def main():
         np.savetxt(step_cycles_filename, step_cyc_durations, delimiter=",")
         swing_times.to_csv(swing_times_file, index=False)
         print("Kinematic results saved")
-    elif manual is False and save_auto is False and show_plots is True:
+    elif manual is False and show_plots is True:
         print("Kinematic results not saved")
         plt.show()
     else:
