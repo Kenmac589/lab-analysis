@@ -233,11 +233,13 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 
 ### 1yrDTRnoRosa M1 postDTX
 
-- Using 0, 
+- Using 0, 7, 14
  
 - 0.100 non --> 0
 - 0.100 per --> 3 to 12
+    - Vids 7, 8 doesn't look too bad
 - 0.100 sin --> 13 to 15
+    - 14 looks the best
 
 ## 1yrDTRnoRosa M2 preDTX
 
@@ -265,8 +267,13 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
     
 ## 1yrDTRnoRosa M2 postDTX
 
+- Using 2, 11, 18
 - 0.100 non --> 2 and 3
+    - Got more faith in 2
 - 0.100 per --> 6 to 15
+    - vid 10 MoS around 5 seconds indicative that a fall just occurred.
+        - Like straight negative value kind of after the fact.
+        - Is there a threshold?
     - vid 11 is pretty solid
     - investigate vid 14 for potential fall
     - vid 17 definitely noisy but saved

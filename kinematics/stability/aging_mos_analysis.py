@@ -23,8 +23,8 @@ def main():
     condition = "sin"
     hiph_entry = f"18mo-predtx-{mouse}-{condition}-{video}"
     manual_analysis = False
-    save_auto = True
-    select_region = True
+    save_auto = False
+    select_region = False
 
     # Loading main kinematic dataset
     df, bodyparts, scorer = dlck.load_data(

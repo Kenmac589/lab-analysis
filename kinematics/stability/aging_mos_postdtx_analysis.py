@@ -15,12 +15,13 @@ from kinsynpy import dlctools as dlt
 def main():
 
     # NOTE: Very important this is checked before running
+    # NOTE: Currently using vids 0, 7, 14 for M1 and 2, 11, 18 for M2
     mouse = 2
     video = "18"
     condition = "sin"
     hiph_entry = f"12mo-postdtx-{mouse}-{condition}-{video}"
     manual_analysis = False
-    save_auto = False
+    save_auto = True
     select_region = True
 
     # Loading main kinematic dataset

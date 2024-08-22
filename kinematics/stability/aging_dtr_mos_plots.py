@@ -44,7 +44,7 @@ def condition_add(
 save_fig_and_df = False
 df_filename = "./aging_mos_4m_12m_18m_dtr.csv"
 figure_title = "MoS between 4, 12 and 18 month old DTX Mice Pre and Post Injection"
-figure_filename = "./aging/aging_mos_all_groups.pdf"
+figure_filename = "./aging/aging_for_grant/aging_mos_all_groups.svg"
 
 wt_non_lmos = [
     "./wt_data/wt1non_lmos.csv",
@@ -245,6 +245,7 @@ dtrpost_sin_rmos = [
     "./dtr_data/postdtx/postdtx_6sin_rmos-man.csv",
 ]
 
+# 12m Mice
 age_predtx_non_lmos = [
     "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m1-non-lmos-0.csv",
     "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m2-non-lmos-00.csv",
@@ -269,6 +270,33 @@ age_predtx_sin_lmos = [
 age_predtx_sin_rmos = [
     "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m1-sin-rmos-18.csv",
     "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m2-sin-rmos-19.csv",
+]
+
+# 12m Post-DTX
+age_postdtx_non_lmos = [
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m1-non-lmos-0.csv",
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m2-non-lmos-02.csv",
+]
+
+age_postdtx_non_rmos = [
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m1-non-rmos-0.csv",
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m2-non-rmos-02.csv",
+]
+age_postdtx_per_lmos = [
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m1-per-lmos-7.csv",
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m2-per-lmos-11.csv",
+]
+age_postdtx_per_rmos = [
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m1-per-rmos-7.csv",
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m2-per-rmos-11.csv",
+]
+age_postdtx_sin_lmos = [
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m1-sin-lmos-14.csv",
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m2-sin-lmos-18.csv",
+]
+age_postdtx_sin_rmos = [
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m1-sin-rmos-14.csv",
+    "./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-postdtx-m2-sin-rmos-18.csv",
 ]
 
 # 18m Mouse
@@ -350,6 +378,26 @@ mos_df = condition_add(
     mos_df, age_predtx_sin_rmos, "12m Pre-DTX", "Right", "Sinusoidal"
 )
 
+# Adding 12m Post-DTX group
+mos_df = condition_add(
+    mos_df, age_postdtx_non_lmos, "12m Post-DTX", "Left", "Non-Perturbation"
+)
+mos_df = condition_add(
+    mos_df, age_postdtx_non_rmos, "12m Post-DTX", "Right", "Non-Perturbation"
+)
+mos_df = condition_add(
+    mos_df, age_postdtx_per_lmos, "12m Post-DTX", "Left", "Perturbation"
+)
+mos_df = condition_add(
+    mos_df, age_postdtx_per_rmos, "12m Post-DTX", "Right", "Perturbation"
+)
+mos_df = condition_add(
+    mos_df, age_postdtx_sin_lmos, "12m Post-DTX", "Left", "Sinusoidal"
+)
+mos_df = condition_add(
+    mos_df, age_postdtx_sin_rmos, "12m Post-DTX", "Right", "Sinusoidal"
+)
+
 # Adding 18mo old group
 mos_df = condition_add(
     mos_df, old_predtx_non_lmos, "18m Pre-DTX", "Left", "Non-Perturbation"
@@ -412,17 +460,17 @@ plt.title(figure_title)
 # Intercondition Comparison
 condition_pairs = [
     # Comparison within wildtype condition
-    # [("WT", "Non-Perturbation"), ("WT", "Perturbation")],
-    # [("WT", "Sinusoidal"), ("WT", "Perturbation")],
-    # [("WT", "Non-Perturbation"), ("WT", "Sinusoidal")],
+    [("WT", "Non-Perturbation"), ("WT", "Perturbation")],
+    [("WT", "Sinusoidal"), ("WT", "Perturbation")],
+    [("WT", "Non-Perturbation"), ("WT", "Sinusoidal")],
     # # Comparison between Wildtype and 4m Pre-DTX
-    # [("WT", "Non-Perturbation"), ("4m Pre-DTX", "Non-Perturbation")],
-    # [("WT", "Sinusoidal"), ("4m Pre-DTX", "Sinusoidal")],
-    # [("WT", "Perturbation"), ("4m Pre-DTX", "Perturbation")],
+    [("WT", "Non-Perturbation"), ("4m Pre-DTX", "Non-Perturbation")],
+    [("WT", "Sinusoidal"), ("4m Pre-DTX", "Sinusoidal")],
+    [("WT", "Perturbation"), ("4m Pre-DTX", "Perturbation")],
     # # Comparison within Egr3 condition
-    # [("Egr3", "Non-Perturbation"), ("Egr3", "Perturbation")],
-    # [("Egr3", "Sinusoidal"), ("Egr3", "Perturbation")],
-    # [("Egr3", "Non-Perturbation"), ("Egr3", "Sinusoidal")],
+    [("Egr3", "Non-Perturbation"), ("Egr3", "Perturbation")],
+    [("Egr3", "Sinusoidal"), ("Egr3", "Perturbation")],
+    [("Egr3", "Non-Perturbation"), ("Egr3", "Sinusoidal")],
     # Comparison within 4m Pre-DTX condition
     [("4m Pre-DTX", "Non-Perturbation"), ("4m Pre-DTX", "Perturbation")],
     [("4m Pre-DTX", "Sinusoidal"), ("4m Pre-DTX", "Perturbation")],
@@ -436,9 +484,9 @@ condition_pairs = [
     [("12m Pre-DTX", "Sinusoidal"), ("12m Pre-DTX", "Perturbation")],
     [("12m Pre-DTX", "Non-Perturbation"), ("12m Pre-DTX", "Sinusoidal")],
     # Comparison within 12m Post-DTX condition
-    # [("12m Post-DTX", "Non-Perturbation"), ("12m Post-DTX", "Perturbation")],
-    # [("12m Post-DTX", "Sinusoidal"), ("12m Post-DTX", "Perturbation")],
-    # [("12m Post-DTX", "Non-Perturbation"), ("12m Post-DTX", "Sinusoidal")],
+    [("12m Post-DTX", "Non-Perturbation"), ("12m Post-DTX", "Perturbation")],
+    [("12m Post-DTX", "Sinusoidal"), ("12m Post-DTX", "Perturbation")],
+    [("12m Post-DTX", "Non-Perturbation"), ("12m Post-DTX", "Sinusoidal")],
     # Comparison between 4m and 12m DTR mice
     [("12m Pre-DTX", "Non-Perturbation"), ("4m Pre-DTX", "Non-Perturbation")],
     [("12m Pre-DTX", "Sinusoidal"), ("4m Pre-DTX", "Sinusoidal")],
@@ -452,9 +500,9 @@ condition_pairs = [
     [("18m Pre-DTX", "Sinusoidal"), ("18m Pre-DTX", "Perturbation")],
     [("18m Pre-DTX", "Non-Perturbation"), ("18m Pre-DTX", "Sinusoidal")],
     # Comparison between Wildtype and 18m Pre-DTX
-    # [("WT", "Non-Perturbation"), ("18m Pre-DTX", "Non-Perturbation")],
-    # [("WT", "Sinusoidal"), ("18m Pre-DTX", "Sinusoidal")],
-    # [("WT", "Perturbation"), ("18m Pre-DTX", "Perturbation")],
+    [("WT", "Non-Perturbation"), ("18m Pre-DTX", "Non-Perturbation")],
+    [("WT", "Sinusoidal"), ("18m Pre-DTX", "Sinusoidal")],
+    [("WT", "Perturbation"), ("18m Pre-DTX", "Perturbation")],
     # Comparing Hindlimb Only within 12m
     # [("12m Pre-DTX", "Non-Perturbation"), ("12m Pre-DTX HL", "Non-Perturbation")],
     # [("12m Pre-DTX", "Sinusoidal"), ("12m Pre-DTX HL", "Sinusoidal")],
@@ -477,11 +525,11 @@ cond_combo_plot_params = {
 }
 
 # axs[0].set_title("MoS between conditions")
-cond_combo_comp = sns.violinplot(**cond_combo_plot_params, ci=95, capsize=0.05)
+cond_combo_comp = sns.barplot(**cond_combo_plot_params, ci=95, capsize=0.05)
 plt.legend(loc="upper left", fontsize=16)
 annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
 annotator.new_plot(
-    cond_combo_comp, condition_pairs, plot="violinplot", **cond_combo_plot_params
+    cond_combo_comp, condition_pairs, plot="barplot", **cond_combo_plot_params
 )
 annotator.configure(
     hide_non_significant=True,
