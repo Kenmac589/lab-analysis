@@ -448,24 +448,21 @@ def step_width_est(
     ll_y: np.array,
 ) -> np.array:
     """Step width during step cycle
-    :param input_dataframe: spike file input as *.csv
-    :param rl_swoff: channel containing swoffset events
-    :param ll_swon: channel containing swoffset events
-    :param rl_y: spike channel with y coordinate for the right limb
-    :param ll_y: spike channel with y coordinate for the right limb
+    :param rl_x: x cordinate of right limb
+    :param ll_x: x cordinate of left limb
+    :param rl_y: y cordinate of right limb
+    :param ll_y: y cordinate of left limb
 
     :return step_widths: numpy array of step width values for each step cycle
     """
 
     # Filtering whole dataframe down to values we are considering
-    rl_y_cords = rl_y
-    ll_y_cords = ll_y
 
     _, rl_swoff = swing_estimation(rl_x)
     _, ll_swoff = swing_estimation(ll_x)
 
-    rl_step_placement = rl_y_cords[rl_swoff]
-    ll_step_placement = ll_y_cords[ll_swoff]
+    rl_step_placement = rl_y[rl_swoff]
+    ll_step_placement = ll_y[ll_swoff]
 
     # Dealing with possible unequal amount of recorded swoffsets for each limb
     comparable_steps = 0
@@ -578,6 +575,17 @@ def mos(
         lmos_values = np.append(lmos_values, lmos)
 
     return lmos_values, rmos_values, xcom_peaks, xcom_troughs
+
+
+def stepw_mos_corr(fl_stepw, hl_stepw, mos_values):
+
+    fl_avg = np.mean(fl_stepw)
+    hl_avg = np.mean(hl_stepw)
+    sw_corr = fl_avg + hl_avg / 2.0
+
+    corr_mos_values = mos_values / sw_corr
+
+    return corr_mos_values
 
 
 def limb_measurements(
@@ -739,6 +747,8 @@ def main():
     rhl_swon, rhl_swoff = swing_estimation(foot_cord=rhlx_np)
     lfl_swon, lfl_swoff = swing_estimation(foot_cord=lflx_np)
     lhl_swon, lhl_swoff = swing_estimation(foot_cord=lhlx_np)
+    fl_step = step_width_est(rl_x=rflx_np, ll_x=lflx_np, rl_y=rfly_np, ll_y=lfly_np)
+    hl_step = step_width_est(rl_x=rhlx_np, ll_x=lhlx_np, rl_y=rhly_np, ll_y=lhly_np)
 
     # Some of my default plotting parameters I like
     custom_params = {"axes.spines.right": False, "axes.spines.top": False}
@@ -820,6 +830,15 @@ def main():
     )
     lmos = np.where(lmos < 0.0, np.nan, lmos)
     rmos = np.where(rmos < 0.0, np.nan, rmos)
+
+    lmos = stepw_mos_corr(fl_stepw=fl_step, hl_stepw=hl_step, mos_values=lmos)
+    rmos = stepw_mos_corr(fl_stepw=fl_step, hl_stepw=hl_step, mos_values=rmos)
+
+    # print(f"L MoS unaltered {lmos}\n")
+    # print(f"L MoS adjusted by step width {lmos_corr_test}\n")
+    #
+    # print(f"R MoS unaltered {rmos}\n")
+    # print(f"R MoS adjusted by step width {rmos_corr_test}\n")
 
     mos_comb = pd.DataFrame(columns=["Limb", "MoS (cm)"])
     for i in range(len(lmos)):

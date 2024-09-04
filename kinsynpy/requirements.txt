@@ -1,2 +1,2 @@
 dlc2kinematics
-seaborn
+matplotlib==3.7.3

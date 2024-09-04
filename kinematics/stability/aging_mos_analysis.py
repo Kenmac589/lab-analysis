@@ -100,6 +100,7 @@ def main():
     com_slope = dlt.spike_slope(comy_np, 30)
     hip_h = dlt.hip_height(toey_np, hipy_np)
     xcom_trimmed = dlt.xcom(comy_np, com_slope, hip_h)
+    xcom_fft = sp.fft.fft(xcom_trimmed)
 
     # Experimental Estimation of CoP considering the standards used
     rightcop = dlt.cop(rfly_np, rhly_np)
@@ -133,11 +134,11 @@ def main():
     )
 
     # Plot Legend
-    swing_legend = [
-        "Limb X cord",
-        "Swing offset",
-        "Swing onset",
-    ]
+    # swing_legend = [
+    #     "Limb X cord",
+    #     "Swing offset",
+    #     "Swing onset",
+    # ]
     fig, axs = plt.subplots(2)
     fig.suptitle(figure_title)
 
@@ -150,11 +151,13 @@ def main():
     axs[0].legend(loc="best")
 
     # For plotting figure demonstrating how swing estimation was done
-    axs[1].set_title("Swing Estimation")
-    axs[1].plot(toex_np)
-    axs[1].plot(swing_offset, toex_np[swing_offset], "^")
-    axs[1].plot(swing_onset, toex_np[swing_onset], "v")
-    axs[1].legend(swing_legend, loc="best")
+    axs[1].set_title("FFT of xCoM")
+    axs[1].plot(xcom_fft)
+
+    # axs[1].plot(toex_np)
+    # axs[1].plot(swing_offset, toex_np[swing_offset], "^")
+    # axs[1].plot(swing_onset, toex_np[swing_onset], "v")
+    # axs[1].legend(swing_legend, loc="best")
 
     # Saving Figure in same folder
     fig = mpl.pyplot.gcf()

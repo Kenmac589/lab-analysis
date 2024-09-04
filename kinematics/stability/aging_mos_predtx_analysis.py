@@ -24,6 +24,7 @@ def main():
     manual_analysis = False
     save_auto = True
     select_region = True
+    step_mos_adjust = True
 
     print(f"Analysis for {hiph_entry}")
 
@@ -44,8 +45,8 @@ def main():
     step_cycles_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m{mouse}-{condition}-step-cycles-{video}.csv"
 
     # Some things to set for plotting/saving
-    lmos_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m{mouse}-{condition}-lmos-{video}.csv"
-    rmos_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m{mouse}-{condition}-rmos-{video}.csv"
+    lmos_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m{mouse}-{condition}-lmos-{video}"
+    rmos_filename = f"./aging/12mo/aging-12mo-saved_values/12mo-dtr_norosa-predtx-m{mouse}-{condition}-rmos-{video}"
 
     mos_figure_title = (
         f"Measurement of Stability For 12 month old DTR pre-DTX M{mouse}-{video}"
@@ -215,6 +216,19 @@ def main():
     )
     lmos = np.where(lmos < 0.0, np.nan, lmos)
     rmos = np.where(rmos < 0.0, np.nan, rmos)
+
+    if step_mos_adjust is True:
+
+        # Adjusting to Step Width of Animal and saving MoS values accordingly
+        lmos = dlt.stepw_mos_corr(fl_stepw=fl_stepw, hl_stepw=hl_stepw, mos_values=lmos)
+        rmos = dlt.stepw_mos_corr(fl_stepw=fl_stepw, hl_stepw=hl_stepw, mos_values=rmos)
+        lmos_filename = f"{lmos_filename}-sw_adjust.csv"
+        rmos_filename = f"{rmos_filename}-sw_adjust.csv"
+    else:
+        lmos_filename = f"{lmos_filename}.csv"
+        rmos_filename = f"{rmos_filename}.csv"
+
+    print(lmos_filename)
 
     mos_comb = pd.DataFrame(columns=["Limb", "MoS (cm)"])
     for i in range(len(lmos)):
