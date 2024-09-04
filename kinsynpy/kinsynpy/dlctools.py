@@ -588,6 +588,38 @@ def stepw_mos_corr(fl_stepw, hl_stepw, mos_values):
     return corr_mos_values
 
 
+def xcom_flux(xcom, width_threshold=40):
+    """
+    Parameters
+    ----------
+    xcom: np.ndarray
+        1-D array of of xCoM
+    width_threshold: int, default=`40`
+        Threshold for finding peaks and troughs.
+
+    Returns
+    -------
+    avg_flux: np.float64
+        Average value indicating how much xCoM is fluctuating
+
+    """
+
+    # Getting peaks and troughs
+    xcom_peaks, _ = signal.find_peaks(xcom, width=width_threshold)
+    xcom_troughs, _ = signal.find_peaks(-xcom, width=width_threshold)
+
+    difs = np.array([])
+
+    for peak, trough in zip(xcom_peaks, xcom_troughs):
+
+        wave_dif = np.abs(xcom[peak] - xcom[trough])
+        difs = np.append(difs, wave_dif)
+
+    avg_flux = np.mean(difs)
+
+    return avg_flux
+
+
 def limb_measurements(
     input_skeleton,
     skeleton_list,
@@ -833,6 +865,9 @@ def main():
 
     lmos = stepw_mos_corr(fl_stepw=fl_step, hl_stepw=hl_step, mos_values=lmos)
     rmos = stepw_mos_corr(fl_stepw=fl_step, hl_stepw=hl_step, mos_values=rmos)
+
+    avg_flux = xcom_flux(xcom=xcom_trimmed)
+    print(avg_flux)
 
     # print(f"L MoS unaltered {lmos}\n")
     # print(f"L MoS adjusted by step width {lmos_corr_test}\n")
