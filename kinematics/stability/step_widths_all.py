@@ -265,7 +265,7 @@ def hiph_condition_add(
 
 def main():
     # Some Parameters about what to do
-    save_stepw = True
+    save_stepw = False
     save_hiph = True
 
     step_width_df = df(
@@ -594,60 +594,60 @@ def main():
         "Sinusoidal",
     )
 
-    step_width_df = sw_condition_add(
-        step_width_df,
-        dtrpost_non,
-        dtr_fl_x_channels,
-        dtr_fl_y_channels,
-        "Post-DTX",
-        "Forelimb",
-        "Non-Perturbation",
-    )
-    step_width_df = sw_condition_add(
-        step_width_df,
-        dtrpost_non,
-        dtr_hl_x_channels,
-        dtr_hl_y_channels,
-        "Post-DTX",
-        "Hindlimb",
-        "Non-Perturbation",
-    )
-    step_width_df = sw_condition_add(
-        step_width_df,
-        dtrpost_per,
-        dtr_fl_x_channels,
-        dtr_fl_y_channels,
-        "Post-DTX",
-        "Forelimb",
-        "Perturbation",
-    )
-    step_width_df = sw_condition_add(
-        step_width_df,
-        dtrpost_per,
-        dtr_hl_x_channels,
-        dtr_hl_y_channels,
-        "Post-DTX",
-        "Hindlimb",
-        "Perturbation",
-    )
-    step_width_df = sw_condition_add(
-        step_width_df,
-        dtrpost_sin,
-        dtr_fl_x_channels,
-        dtr_fl_y_channels,
-        "Post-DTX",
-        "Forelimb",
-        "Sinusoidal",
-    )
-    step_width_df = sw_condition_add(
-        step_width_df,
-        dtrpost_sin,
-        dtr_hl_x_channels,
-        dtr_hl_y_channels,
-        "Post-DTX",
-        "Hindlimb",
-        "Sinusoidal",
-    )
+    # step_width_df = sw_condition_add(
+    #     step_width_df,
+    #     dtrpost_non,
+    #     dtr_fl_x_channels,
+    #     dtr_fl_y_channels,
+    #     "Post-DTX",
+    #     "Forelimb",
+    #     "Non-Perturbation",
+    # )
+    # step_width_df = sw_condition_add(
+    #     step_width_df,
+    #     dtrpost_non,
+    #     dtr_hl_x_channels,
+    #     dtr_hl_y_channels,
+    #     "Post-DTX",
+    #     "Hindlimb",
+    #     "Non-Perturbation",
+    # )
+    # step_width_df = sw_condition_add(
+    #     step_width_df,
+    #     dtrpost_per,
+    #     dtr_fl_x_channels,
+    #     dtr_fl_y_channels,
+    #     "Post-DTX",
+    #     "Forelimb",
+    #     "Perturbation",
+    # )
+    # step_width_df = sw_condition_add(
+    #     step_width_df,
+    #     dtrpost_per,
+    #     dtr_hl_x_channels,
+    #     dtr_hl_y_channels,
+    #     "Post-DTX",
+    #     "Hindlimb",
+    #     "Perturbation",
+    # )
+    # step_width_df = sw_condition_add(
+    #     step_width_df,
+    #     dtrpost_sin,
+    #     dtr_fl_x_channels,
+    #     dtr_fl_y_channels,
+    #     "Post-DTX",
+    #     "Forelimb",
+    #     "Sinusoidal",
+    # )
+    # step_width_df = sw_condition_add(
+    #     step_width_df,
+    #     dtrpost_sin,
+    #     dtr_hl_x_channels,
+    #     dtr_hl_y_channels,
+    #     "Post-DTX",
+    #     "Hindlimb",
+    #     "Sinusoidal",
+    # )
 
     # 12m aged mice
 
@@ -672,24 +672,24 @@ def main():
     )
 
     # 12m Post-DTX
-    step_width_df = dlc_sw_cond_add(
-        step_width_df, age_dtrpost_non, "12m Post-DTX", "Forelimb", "Non-Perturbation"
-    )
-    step_width_df = dlc_sw_cond_add(
-        step_width_df, age_dtrpost_non, "12m Post-DTX", "Hindlimb", "Non-Perturbation"
-    )
-    step_width_df = dlc_sw_cond_add(
-        step_width_df, age_dtrpost_per, "12m Post-DTX", "Forelimb", "Perturbation"
-    )
-    step_width_df = dlc_sw_cond_add(
-        step_width_df, age_dtrpost_per, "12m Post-DTX", "Hindlimb", "Perturbation"
-    )
-    step_width_df = dlc_sw_cond_add(
-        step_width_df, age_dtrpost_sin, "12m Post-DTX", "Forelimb", "Sinusoidal"
-    )
-    step_width_df = dlc_sw_cond_add(
-        step_width_df, age_dtrpost_sin, "12m Post-DTX", "Hindlimb", "Sinusoidal"
-    )
+    # step_width_df = dlc_sw_cond_add(
+    #     step_width_df, age_dtrpost_non, "12m Post-DTX", "Forelimb", "Non-Perturbation"
+    # )
+    # step_width_df = dlc_sw_cond_add(
+    #     step_width_df, age_dtrpost_non, "12m Post-DTX", "Hindlimb", "Non-Perturbation"
+    # )
+    # step_width_df = dlc_sw_cond_add(
+    #     step_width_df, age_dtrpost_per, "12m Post-DTX", "Forelimb", "Perturbation"
+    # )
+    # step_width_df = dlc_sw_cond_add(
+    #     step_width_df, age_dtrpost_per, "12m Post-DTX", "Hindlimb", "Perturbation"
+    # )
+    # step_width_df = dlc_sw_cond_add(
+    #     step_width_df, age_dtrpost_sin, "12m Post-DTX", "Forelimb", "Sinusoidal"
+    # )
+    # step_width_df = dlc_sw_cond_add(
+    #     step_width_df, age_dtrpost_sin, "12m Post-DTX", "Hindlimb", "Sinusoidal"
+    # )
 
     # Older 18m
     step_width_df = dlc_sw_cond_add(
@@ -743,15 +743,15 @@ def main():
     )
 
     # Post-DTX
-    hiph_df = hiph_condition_add(
-        hiph_df, dtrpost_non, dtr_hh_channels, "Post-DTX", "Non-Perturbation"
-    )
-    hiph_df = hiph_condition_add(
-        hiph_df, dtrpost_per, dtr_hh_channels, "Post-DTX", "Perturbation"
-    )
-    hiph_df = hiph_condition_add(
-        hiph_df, dtrpost_sin, dtr_hh_channels, "Post-DTX", "Sinusoidal"
-    )
+    # hiph_df = hiph_condition_add(
+    #     hiph_df, dtrpost_non, dtr_hh_channels, "Post-DTX", "Non-Perturbation"
+    # )
+    # hiph_df = hiph_condition_add(
+    #     hiph_df, dtrpost_per, dtr_hh_channels, "Post-DTX", "Perturbation"
+    # )
+    # hiph_df = hiph_condition_add(
+    #     hiph_df, dtrpost_sin, dtr_hh_channels, "Post-DTX", "Sinusoidal"
+    # )
 
     # 12m Mice
 
@@ -763,13 +763,13 @@ def main():
     hiph_df = dlc_hiph_cond_add(hiph_df, age_dtrpre_sin, "12m Pre-DTX", "Sinusoidal")
 
     # 12m Mice Post-DTX
-    hiph_df = dlc_hiph_cond_add(
-        hiph_df, age_dtrpost_non, "12m Post-DTX", "Non-Perturbation"
-    )
-    hiph_df = dlc_hiph_cond_add(
-        hiph_df, age_dtrpost_per, "12m Post-DTX", "Perturbation"
-    )
-    hiph_df = dlc_hiph_cond_add(hiph_df, age_dtrpost_sin, "12m Post-DTX", "Sinusoidal")
+    # hiph_df = dlc_hiph_cond_add(
+    #     hiph_df, age_dtrpost_non, "12m Post-DTX", "Non-Perturbation"
+    # )
+    # hiph_df = dlc_hiph_cond_add(
+    #     hiph_df, age_dtrpost_per, "12m Post-DTX", "Perturbation"
+    # )
+    # hiph_df = dlc_hiph_cond_add(hiph_df, age_dtrpost_sin, "12m Post-DTX", "Sinusoidal")
 
     # 18m Mice
     hiph_df = dlc_hiph_cond_add(
@@ -818,13 +818,13 @@ def main():
         [("Pre-DTX", "Sinusoidal"), ("Pre-DTX", "Perturbation")],
         [("Pre-DTX", "Non-Perturbation"), ("Pre-DTX", "Sinusoidal")],
         # Comparison within Post-DTX condition
-        [("Post-DTX", "Non-Perturbation"), ("Post-DTX", "Perturbation")],
-        [("Post-DTX", "Sinusoidal"), ("Post-DTX", "Perturbation")],
-        [("Post-DTX", "Non-Perturbation"), ("Post-DTX", "Sinusoidal")],
+        # [("Post-DTX", "Non-Perturbation"), ("Post-DTX", "Perturbation")],
+        # [("Post-DTX", "Sinusoidal"), ("Post-DTX", "Perturbation")],
+        # [("Post-DTX", "Non-Perturbation"), ("Post-DTX", "Sinusoidal")],
         # Comparison Between DTX conditions
-        [("Pre-DTX", "Non-Perturbation"), ("Post-DTX", "Non-Perturbation")],
-        [("Pre-DTX", "Sinusoidal"), ("Post-DTX", "Sinusoidal")],
-        [("Pre-DTX", "Perturbation"), ("Post-DTX", "Perturbation")],
+        # [("Pre-DTX", "Non-Perturbation"), ("Post-DTX", "Non-Perturbation")],
+        # [("Pre-DTX", "Sinusoidal"), ("Post-DTX", "Sinusoidal")],
+        # [("Pre-DTX", "Perturbation"), ("Post-DTX", "Perturbation")],
         # Comparison within 12m conditions
         [("12m Pre-DTX", "Non-Perturbation"), ("12m Pre-DTX", "Perturbation")],
         [("12m Pre-DTX", "Sinusoidal"), ("12m Pre-DTX", "Perturbation")],
@@ -886,7 +886,7 @@ def main():
     print("\nHip Height Stats\n")
     plt.title("Hip Height Between Conditions")
     hiph_plot = sns.barplot(**hiph_plot_params, ci=95, capsize=0.05)
-    plt.legend(loc="center right", fontsize=16)
+    plt.legend(loc="best", fontsize=16)
     annotator = Annotator(hiph_plot, condition_pairs, **hiph_plot_params)
     annotator.new_plot(hiph_plot, condition_pairs, plot="barplot", **hiph_plot_params)
     annotator.configure(

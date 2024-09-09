@@ -2,6 +2,8 @@
 
 - This for notes regarding what I am noticing while doing kinematic analysis.
 
+[notes_on_falls](notes_on_falls.md)
+
 # Hip Height
 
 [hip_heights](hip_heights.md)
@@ -209,6 +211,7 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 
 ### 1yrDTRnoRosa M1 preDTX
 
+- Currently going with vid 0, 9, 18 for plot
 
 - 0.100 non --> 0
     - There are more than one recording session revisit to see if other viable recordings
@@ -228,7 +231,7 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
     - very clear which regions are the ones select
     - vid 17, 18 and 20 very solid, 19 not as much
 
-- Currently going with vid 0, 9, 18 for plot
+
 
 
 ### 1yrDTRnoRosa M1 postDTX
@@ -243,9 +246,9 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 
 ## 1yrDTRnoRosa M2 preDTX
 
+- Currently using 0, 16, 19
 - MoS values pretty level for this mouse, worth looking into
 - Not so much the case for sinusoidal but definitely early on.
-- Currently using 0, 16, 19
 
 - 0.100 non --> 0 and 1
     - vid 0 look pretty good *noting that it's pretty level*
@@ -298,8 +301,8 @@ NOTE: Still definitely noticing some of the drift I mentioned previously with th
 
 ## 1-6yr RAP M1 preDTX
 
-- Caveat similar to 1yrShamPvCre-1 where analyzed with previous model.
 - Currently using 01, 14, 20
+- Caveat similar to 1yrShamPvCre-1 where analyzed with previous model.
     - If adding additional 00, 13(maybe 17), 18 or 19 really
 
 - 0.100 non --> 0 to 2

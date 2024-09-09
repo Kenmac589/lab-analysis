@@ -81,9 +81,9 @@ def main():
     # Pre-DTX mice
 
     # Need to get hip heights for xcom
-    # dtrpre_2non = pd.read_csv(
-    #     "./dtr_data/predtx/dtr-pre-2-non-all.txt", delimiter=",", header=0
-    # )
+    dtrpre_2non = pd.read_csv(
+        "./dtr_data/predtx/dtr-pre-2-non-all.txt", delimiter=",", header=0
+    )  # Noting this is from the second video in the recording
     # dtrpre_2per = pd.read_csv(
     #     "./dtr_data/predtx/dtr-pre-2-per-all.txt", delimiter=",", header=0
     # )
@@ -132,9 +132,9 @@ def main():
     # dtrpost_2per = pd.read_csv(
     #     "./dtr_data/postdtx/dtr-post-2-per-xcom.txt", delimiter=",", header=0
     # )
-    dtrpost_2sin = pd.read_csv(
-        "./dtr_data/postdtx/dtr-post-2-sin-xcom.txt", delimiter=",", header=0
-    )
+    # dtrpost_2sin = pd.read_csv(
+    #     "./dtr_data/postdtx/dtr-post-2-sin-xcom.txt", delimiter=",", header=0
+    # )
     # dtrpost_3non = pd.read_csv(
     #     "./dtr_data/postdtx/dtr-post-3-non-xcom.txt", delimiter=",", header=0
     # )
@@ -167,21 +167,21 @@ def main():
     # )
 
     # Some things to set for plotting/saving
-    condition = "postdtx"
-    trial = "2-sin"
+    condition = "predtx"
+    trial = "2-non"
     manual_analysis = False
     save_auto = False
-    lmos_filename = f"./dtr_data/postdtx/postdtx_{trial}_lmos.csv"
-    rmos_filename = f"./dtr_data/postdtx/postdtx_{trial}_rmos.csv"
-    figure_title = f"Measurement of Stability For DTR M{trial} post-DTX"
+    lmos_filename = f"./dtr_data/{condition}/{condition}_{trial}_lmos.csv"
+    rmos_filename = f"./dtr_data/{condition}/{condition}_{trial}_rmos.csv"
+    figure_title = f"Measurement of Stability For DTR M{trial} Pre-DTX"
     figure_filename = f"./dtr_data/{condition}/{condition}_{trial}-mos.svg"
 
     # Grabbing individual channels
-    xcom = dtrpost_2sin["v1 xCoM"].to_numpy(dtype=float)
-    leftcop = dtrpost_2sin["v3 L COP"].to_numpy(dtype=float)
-    rightcop = dtrpost_2sin["v2 R COP"].to_numpy(dtype=float)
-    left_DS = dtrpost_2sin["50 LDS cle"].to_numpy(dtype=float)
-    right_DS = dtrpost_2sin["49 RDS cle"].to_numpy(dtype=float)
+    xcom = dtrpre_2non["v3 xCoM"].to_numpy(dtype=float)
+    leftcop = dtrpre_2non["v2 L COP"].to_numpy(dtype=float)
+    rightcop = dtrpre_2non["v1 R COP"].to_numpy(dtype=float)
+    left_DS = dtrpre_2non["52 LDS cle"].to_numpy(dtype=float)
+    right_DS = dtrpre_2non["51 RDS cle"].to_numpy(dtype=float)
 
     # Remove periods where it is not present or not valid
     # leftcop = np.where(leftcop == 0.0, np.nan, leftcop)

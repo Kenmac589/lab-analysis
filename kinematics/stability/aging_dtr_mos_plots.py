@@ -10,7 +10,7 @@ from statannotations.Annotator import Annotator
 
 
 def condition_add(
-    input_df, file_list, condition, limb, perturbation_state, print_neg=False
+    input_df, file_list, condition, limb, perturbation_state, print_neg=True
 ):
     for i in range(len(file_list)):
         limb = limb
@@ -550,4 +550,4 @@ if save_fig_and_df is True:
 else:
     print("Results not saved")
 
-plt.show()
+# plt.show()

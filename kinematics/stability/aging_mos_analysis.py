@@ -19,8 +19,8 @@ def main():
     # Currently using non:01, per:14, sin:20 for analysis
 
     mouse = 1
-    video = "20"
-    condition = "sin"
+    video = "00"
+    condition = "non"
     hiph_entry = f"18mo-predtx-{mouse}-{condition}-{video}"
     manual_analysis = False
     save_auto = False

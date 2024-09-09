@@ -1,0 +1,3 @@
+' Message("Hello World");
+PrintLog("Hello World\n");
+
