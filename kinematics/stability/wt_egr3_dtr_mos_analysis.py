@@ -277,9 +277,9 @@ con_mos_combo = mos_df.drop(columns=["Limb"])
 
 # Plotting
 custom_params = {"axes.spines.right": False, "axes.spines.top": False}
-sns.set(
-    style="white", font="serif", font_scale=1.8, palette="colorblind", rc=custom_params
-)
+plt.rcParams["font.family"] = "sans-serif"
+plt.rcParams["font.sans-serif"] = ["Nimbus Sans"]
+sns.set(style="white", font_scale=1.8, palette="colorblind", rc=custom_params)
 
 
 combo_pairs = [
@@ -322,19 +322,19 @@ cond_combo_plot_params = {
     "y": "MoS (cm)",
     "hue": "Perturbation State",
     "hue_order": perturbation_state_order,
-    "inner": "point",
+    # "inner": "point",
 }
 
 # axs[0].set_title("MoS between conditions")
-cond_combo_comp = sns.violinplot(**cond_combo_plot_params, ci=95, capsize=0.05)
+cond_combo_comp = sns.barplot(**cond_combo_plot_params, ci=95, capsize=0.05)
 plt.legend(loc="upper left", fontsize=16)
-plt.axhline(0, color="r")
+# plt.axhline(0, color="r")
 annotator = Annotator(cond_combo_comp, condition_pairs, **cond_combo_plot_params)
 annotator.new_plot(
-    cond_combo_comp, condition_pairs, plot="violinplot", **cond_combo_plot_params
+    cond_combo_comp, condition_pairs, plot="barplot", **cond_combo_plot_params
 )
 annotator.configure(
-    hide_non_significant=True, test="t-test_ind", text_format="star", loc="inside"
+    hide_non_significant=True, test="t-test_paired", text_format="star", loc="inside"
 )
 
 annotator.apply_test().annotate(line_offset_to_group=0.2, line_offset=0.1)

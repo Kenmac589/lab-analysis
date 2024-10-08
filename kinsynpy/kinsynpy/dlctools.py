@@ -416,6 +416,7 @@ def xcom(comy, vcom, hip_height):
     return xcom
 
 
+# NOTE: SHIT DONT WORK
 def double_support(fl_x, hl_x, manual_analysis=False, filt_window=40):
     """Finds double support phases from forlimb movement
     :param fl_x: forelimb x coordinate

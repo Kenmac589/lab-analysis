@@ -830,7 +830,7 @@ def sel_primitive_trace(
         ]
 
         primitive_mask = current_primitive > 0.0
-        primitive_mask = interpolate_primitive(primitive_mask)
+        # primitive_mask = interpolate_primitive(primitive_mask)
         # applying mask to exclude values which were subject to rounding errors
         mcurrent_primitive = np.asarray(current_primitive[primitive_mask])
 

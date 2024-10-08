@@ -1,5 +1,6 @@
 mouse line ID: 94-2-4 (210)
-weight: 
+date: July 9th 2024
+weight: 18.8
 Crest -> Hip   (/): 0.9
 Hip   -> Knee  (\): 1.4
 Knee  -> Ankle (/): 1.4

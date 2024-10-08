@@ -1,0 +1,31 @@
+mouse line ID: 94-2-4 (210)
+date: Ausgust 12th 2024
+weight: 22.6
+Crest -> Hip   (/): 1.0
+Hip   -> Knee  (\): 1.4
+Knee  -> Ankle (/): 
+Ankle -> Paw   (\): 
+Paw   -> Digit (-): 
+
+- This is the actual mouse that we went with for the surgery.
+
+- [X] 1 X @ 0.050 m/s non-perturbation level
+- [X] 3 X @ 0.100 m/s non-perturbation level
+- [X] 2 X @ 0.100 m/s perturbation level
+- [X] 2 X @ 0.100 m/s sinusoidal level
+	- Couldn't get one
+- [X] 2 X @ 0.100 m/s non-perturbation unlevel
+
+Videos:
+
+vid 00: 0.05 non level
+vid 01: 0.10 non level
+vid 02: 0.10 non level
+vid 03: 0.10 non level
+vid 04: 0.10 per level
+vid 05: 0.10 per level
+vid 06: 0.10 sin level
+	- Not good
+vid 07: 0.10 non unlevel
+vid 08: 0.10 non unlevel
+	- scratching at beginning

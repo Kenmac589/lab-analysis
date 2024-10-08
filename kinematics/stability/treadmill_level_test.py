@@ -6,6 +6,7 @@ import pandas as pd
 import scipy as sp
 import seaborn as sns
 from dlc2kinematics import Visualizer2D
+from kinsynpy import dlctools as dlt
 from scipy import signal
 
 # import latstability as ls

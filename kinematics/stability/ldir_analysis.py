@@ -6,9 +6,8 @@ import pandas as pd
 import scipy as sp
 import seaborn as sns
 from dlc2kinematics import Visualizer2D
+from kinsynpy import latstability as ls
 from scipy import signal
-
-import latstability as ls
 
 
 def frame_to_time(frame_index):
@@ -444,12 +443,17 @@ def main():
     toe_med = median_filter(toe_np, filter_k)
     toey_med = median_filter(toey_np, filter_k)
     hipy_med = median_filter(hipy_np, filter_k)
-    com_med = median_filter(comy_np, filter_k)
+    # com_med = median_filter(comy_np, filter_k)
+    com_med = sp.signal.savgol_filter(comy_np, 40, 3)
 
     rfl_med = median_filter(rfl_np, filter_k)
+    rfl_med = sp.signal.savgol_filter(rfl_np, 40, 3)
     rhl_med = median_filter(rhl_np, filter_k)
+    rhl_med = sp.signal.savgol_filter(rhl_np, 40, 3)
     lfl_med = median_filter(lfl_np, filter_k)
+    lfl_med = sp.signal.savgol_filter(lfl_np, 40, 3)
     lhl_med = median_filter(lhl_np, filter_k)
+    lhl_med = sp.signal.savgol_filter(lhl_np, 40, 3)
 
     # Cleaning up selection to region before mouse moves back
     # toe_roi_selection_fil = toe_filtered[0:2550]

@@ -1,0 +1,26 @@
+recording: EMG-test-1-post-emg-session-2
+date: 19th July 2024
+mouse line ID: 92-1-4 (68)
+weight: 
+Crest -> Hip   (/): 
+Hip   -> Knee  (\): 
+Knee  -> Ankle (/): 
+Ankle -> Paw   (\): 
+Paw   -> Digit (-): 
+
+Got nothing
+
+- [ ] 3 X @ 0.050 m/s non-perturbation level
+- [ ] 3 X @ 0.100 m/s non-perturbation level
+- [ ] 1 X @ 0.200 m/s non-perturbation level
+- [ ] 2 X @ 0.100 m/s perturbation level
+- [ ] 2 X @ 0.100 m/s sinusoidal level
+- [ ] 3 X @ 0.100 m/s non-perturbation unlevel
+
+Videos:
+
+vid 00: 0.05 non level
+
+
+Notes:
+

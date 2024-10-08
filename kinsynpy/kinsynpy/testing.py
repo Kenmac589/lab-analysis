@@ -5,6 +5,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+
+# import latstability as ls
+# import motorpyrimitives as mp
+import skinematics as ski
 from scipy import signal
 
 
@@ -38,6 +42,36 @@ def xcom_flux(xcom, width_threshold=40):
     avg_flux = np.mean(difs)
 
     return avg_flux
+
+
+def spike_angle_calc(x_cord, y_cord):
+
+    if x_cord == 0 and y_cord == 0:
+        angle = 999
+
+    angle = 90  # default if on y-axis
+
+    if x_cord != 0:
+        angle = 360.0 * np.arctan(y_cord / x_cord) / (2.0 * np.pi)
+
+    if y_cord <= 0.0 and x_cord >= 0.0:
+        angle += 180.0
+    elif y_cord < 0.0 and x_cord >= 0.0:
+        angle += 360.0
+    elif y_cord > 0.0 and x_cord < 0.0:
+        angle += 180.0
+
+    return angle
+
+
+# def calc_knee(hipx, hipy, anklex, ankley):
+
+
+def get_angle(ax, ay, bx, by):
+    # test = ski.vector.angle
+    angle = ski.vector.angle((ax, ay), (bx, by))
+
+    return angle
 
 
 def main():
@@ -104,6 +138,9 @@ def main():
     toex_np = dlt.mark_process(df, scorer, "toe", "x", calib_factor)
     toey_np = dlt.mark_process(df, scorer, "toe", "y", calib_factor)
     hipy_np = dlt.mark_process(df, scorer, "hip", "y", calib_factor)
+    hipx_np = dlt.mark_process(df, scorer, "hip", "x", calib_factor)
+    kneey_np = dlt.mark_process(df, scorer, "knee", "y", calib_factor)
+    kneex_np = dlt.mark_process(df, scorer, "knee", "x", calib_factor)
     comy_np = dlt.mark_process(df, scorer, "mirror_com", "y", calib_factor)
     rfly_np = dlt.mark_process(df, scorer, "mirror_rfl", "y", calib_factor)
     rhly_np = dlt.mark_process(df, scorer, "mirror_rhl", "y", calib_factor)
@@ -136,6 +173,10 @@ def main():
     # Getting a time adjusted array of equal length for time
     time = np.arange(0, len(comy_np), 1)
     time = dlt.frame_to_time(time)
+
+    angle_test = get_angle(ax=hipx_np, ay=hipy_np, bx=kneex_np, by=kneey_np)
+
+    print(f"Angle test\n{angle_test}")
 
     # Center of pressures
     com_slope = dlt.spike_slope(comy_np, 30)
@@ -245,7 +286,7 @@ def main():
     rmos = dlt.stepw_mos_corr(fl_stepw=fl_step, hl_stepw=hl_step, mos_values=rmos)
 
     avg_flux = xcom_flux(xcom=xcom_trimmed)
-    print(avg_flux)
+    # print(avg_flux)
 
     # print(f"L MoS unaltered {lmos}\n")
     # print(f"L MoS adjusted by step width {lmos_corr_test}\n")

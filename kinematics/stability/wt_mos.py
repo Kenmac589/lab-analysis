@@ -3,8 +3,7 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 import seaborn as sns
-
-import latstability as ls
+from kinsynpy import latstability as ls
 
 
 def double_support_timings(input_dataframe, ds_channel):

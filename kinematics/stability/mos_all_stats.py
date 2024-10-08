@@ -332,6 +332,8 @@ def main():
         "cbar_ax_bbox": [0.80, 0.35, 0.04, 0.3],
     }
 
+    plt.rcParams["font.family"] = "sans-serif"
+    plt.rcParams["font.sans-serif"] = ["Nimbus Sans"]
     # Comparing aggregate of all state MoS values
     condition_post_hoc = sp.posthoc_conover(
         mos_analysis_all, val_col="mos", group_col="mouse_type", p_adjust="holm"
@@ -349,7 +351,7 @@ def main():
     )
     plt.title("Comparison of unperturbed locomotion")
     sp.sign_plot(non_post_hoc, **heatmap_args)
-    # plt.savefig("./combined_figures/man-whitney/non_post_hoc_mannwhit.pdf", dpi=300)
+    plt.savefig("./combined_figures/man-whitney/non_post_hoc_mannwhit.svg", dpi=300)
     plt.show()
 
     # Comparing Cautious walking/Perturbed Data
@@ -361,7 +363,7 @@ def main():
     )
     plt.title("Comparison of perturbed locomotion")
     sp.sign_plot(per_post_hoc, **heatmap_args)
-    # plt.savefig("./combined_figures/man-whitney/per_post_hoc_mannwhit.pdf", dpi=300)
+    plt.savefig("./combined_figures/man-whitney/per_post_hoc_mannwhit.svg", dpi=300)
     plt.show()
 
     # Comparing Sinusoidal Stimulation Data
@@ -373,7 +375,7 @@ def main():
     )
     plt.title("Comparison of sinusoidal stimulation locomotion")
     sp.sign_plot(sin_post_hoc, **heatmap_args)
-    # plt.savefig("./combined_figures/man-whitney/sin_post_hoc_mannwhit.pdf")
+    plt.savefig("./combined_figures/man-whitney/sin_post_hoc_mannwhit.svg")
     plt.show()
 
     # Comparing

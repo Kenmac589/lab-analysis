@@ -266,7 +266,7 @@ def hiph_condition_add(
 def main():
     # Some Parameters about what to do
     save_stepw = False
-    save_hiph = True
+    save_hiph = False
 
     step_width_df = df(
         columns=["Condition", "Limb", "Perturbation State", "Step Width (cm)"]
@@ -784,7 +784,7 @@ def main():
     custom_params = {"axes.spines.right": False, "axes.spines.top": False}
     sns.set(
         style="white",
-        font="serif",
+        # font="serif",
         font_scale=1.7,
         palette="colorblind",
         rc=custom_params,

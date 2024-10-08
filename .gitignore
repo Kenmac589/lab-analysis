@@ -12,6 +12,7 @@
 !*.ipynb
 !*.R
 !*.r
+!*.jl
 !*.qmd
 !*.s2s
 !*.s2cx

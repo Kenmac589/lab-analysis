@@ -19,8 +19,8 @@ mspu:=(1/frpersec%)*1000000;
 
 ntrial%:=numbtr%;
 
-
-FileNew(7, 1, 10, 10, ntrial%*20);
+' FileNew is where you can set the channel max
+FileNew(7, 1, 10, 10, ntrial%*20, 64);
 
 '*************************creates the nessecarry buffer channels**************************************
 for I%:=1 to 30 do
@@ -34,7 +34,7 @@ for tr%:=1 to ntrial% do										'repat this proces for each trial
 
     Fileopen("*.CSV",8);                                        'opens the .CSV file for the trials
     
-'********************************Figures out the size of the .cvs file************************************    
+'********************************Figures out the size of the .csv file************************************    
 for I%:=1 to 3920 do												
     read(x[][I%]);
         summe:=x[3][I%]+x[4][I%]+x[5][I%]+x[6][I%];
@@ -47,7 +47,7 @@ for I%:=1 to 3920 do
 next;
 '************************************************************************************************************    
     
-'*******************************Reads the information from the .cvs file***************************************
+'*******************************Reads the information from the .csv file***************************************
 for I%:=1 to nvar% do													
     read(x[][I%]);
 	II:=I%;
@@ -240,36 +240,36 @@ next;
 next;
 
 '*************saves the buffers into real channels****************************************************
-Memsave(a%[1],14);
-Memsave(a%[2],15);
-Memsave(a%[3],16);
-Memsave(a%[4],17);
-Memsave(a%[5],18);
-Memsave(a%[6],19);
-Memsave(a%[7],20);
-Memsave(a%[8],21);
-Memsave(a%[9],22);
-Memsave(a%[10],23);
-Memsave(a%[11],24);
-Memsave(a%[12],25);
-Memsave(a%[13],26);
-Memsave(a%[14],27);
-Memsave(a%[15],28);
-Memsave(a%[16],29);
-Memsave(a%[17],30);
-Memsave(a%[18],32);
-Memsave(a%[19],33);
-Memsave(a%[20],34);
-Memsave(a%[21],35);
-Memsave(a%[22],36);
-Memsave(a%[23],37);
-Memsave(a%[24],38);
-Memsave(a%[25],39);
-Memsave(a%[26],40);
-Memsave(a%[27],41);
-Memsave(a%[28],42);
-Memsave(a%[29],43);
-Memsave(a%[30],44);
+Memsave(a%[1],1);
+Memsave(a%[2],2);
+Memsave(a%[3],3);
+Memsave(a%[4],4);
+Memsave(a%[5],5);
+Memsave(a%[6],6);
+Memsave(a%[7],7);
+Memsave(a%[8],8);
+Memsave(a%[9],9);
+Memsave(a%[10],10);
+Memsave(a%[11],11);
+Memsave(a%[12],12);
+Memsave(a%[13],13);
+Memsave(a%[14],14);
+Memsave(a%[15],15);
+Memsave(a%[16],16);
+Memsave(a%[17],17);
+Memsave(a%[18],18);
+Memsave(a%[19],19);
+Memsave(a%[20],20);
+Memsave(a%[21],21);
+Memsave(a%[22],22);
+Memsave(a%[23],23);
+Memsave(a%[24],24);
+Memsave(a%[25],25);
+Memsave(a%[26],26);
+Memsave(a%[27],27);
+Memsave(a%[28],28);
+Memsave(a%[29],29);
+Memsave(a%[30],30);
 '**************************************************************************************************
 
 '********Calculates angles of a line with the x-axis in an anticlockwise direction*****************
