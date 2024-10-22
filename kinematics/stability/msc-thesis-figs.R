@@ -6,6 +6,7 @@ library(cowplot)
 library(dplyr)
 library(rstatix)
 
+
 # Read in data
 moddf <- read_csv("./mos_limbs_combined_all.csv", col_names = TRUE)
 print(moddf)
@@ -27,23 +28,23 @@ stat.test
 # }
 
 anova_box <- ggboxplot(moddf, x = "Condition", y = "MoS") +
-  stat_pvalue_manual(
-    stat.test,
-    label = "p.adj",
-    y.position = c(2.5, 2.6, 2.7, 2.8, 2.9, 3.0)
-  )
+    stat_pvalue_manual(
+        stat.test,
+        label = "p.adj",
+        y.position = c(2.5, 2.6, 2.7, 2.8, 2.9, 3.0)
+    )
 anova_box
 
 anova_mos <- mos_violin + stat_pvalue_manual(stat.test,
-  label = "p.adj",
-  y.position = c(2.5, 2.6, 2.6, 2.7)
+    label = "p.adj",
+    y.position = c(2.5, 2.6, 2.6, 2.7)
 )
 
 anova_mos
 
 ggexport(anova_mos,
-  filename = "./r_figures/anova_mos.svg",
-  width = 15,
-  # height = 1080,
-  res = 300
+    filename = "./r_figures/anova_mos.svg",
+    width = 15,
+    # height = 1080,
+    res = 300
 )

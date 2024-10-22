@@ -1,4 +1,3 @@
-import dlc2kinematics as dlck
 import dlctools as dlt
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -98,7 +97,7 @@ def main():
     mos_figure_filename = f"../tests/dlctools/m{mouse_number}-mos-{video}.pdf"
 
     # Loading in a dataset
-    df, bodyparts, scorer = dlck.load_data(
+    df, bodyparts, scorer = dlt.load_data(
         f"../data/kinematics/EMG-test-1-pre-emg_0000{video}DLC_resnet50_dtr_update_predtxApr8shuffle1_1110000_filtered.h5"
     )
 

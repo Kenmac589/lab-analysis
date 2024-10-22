@@ -2,7 +2,6 @@ import csv
 import os
 from typing import Union
 
-import dlc2kinematics as dlck
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
